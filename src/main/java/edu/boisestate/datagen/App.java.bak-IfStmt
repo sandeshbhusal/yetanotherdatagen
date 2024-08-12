@@ -1,0 +1,145 @@
+package edu.boisestate.datagen;
+
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.IfStmt;
+import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
+import java.util.HashSet;
+import java.io.StringReader;
+
+public class App extends VoidVisitorAdapter<Void> {
+    private CompilationUnit cu;
+    private InstrumentationMode mode;
+    private String currentClass = "";
+    private String currentMethod = "";
+
+    public CompilationUnit instrument(CompilationUnit cu, InstrumentationMode mode) {
+        this.cu = cu;
+        this.mode = mode;
+        visit(cu, null);
+        return cu;
+    }
+
+    @Override
+    public void visit(ClassOrInterfaceDeclaration n, Void arg) {
+        currentClass = n.getNameAsString();
+        super.visit(n, arg);
+        currentClass = "";
+    }
+
+    @Override
+    public void visit(MethodDeclaration n, Void arg) {
+        currentMethod = n.getNameAsString();
+        super.visit(n, arg);
+        currentMethod = "";
+    }
+
+    @Override
+    public void visit(IfStmt ifStmt, Void arg) {
+        if (ifStmt.getCondition().toString().startsWith("true")) {
+            return;
+        }
+    
+        if (mode == InstrumentationMode.INSTRUMENTATION) {
+            SimpleNameCollector snc = new SimpleNameCollector();
+            ifStmt.getCondition().accept(snc, null);
+            HashSet<String> variables = snc.getCollected();
+    
+            Statement thenStmt = ifStmt.getThenStmt();
+            Statement elseStmt = ifStmt.getElseStmt().orElse(null);
+    
+            MethodCallExpr truePathInstrumentation = createDataPointReportCall(true, ifStmt.getCondition(), variables);
+            MethodCallExpr falsePathInstrumentation = createDataPointReportCall(false, ifStmt.getCondition(), variables);
+    
+            BlockStmt thenBlock;
+            if (thenStmt instanceof BlockStmt) {
+                thenBlock = (BlockStmt) thenStmt;
+                thenBlock.addStatement(0, new ExpressionStmt(truePathInstrumentation));
+            } else {
+                thenBlock = new BlockStmt();
+                thenBlock = thenBlock.addStatement(new ExpressionStmt(truePathInstrumentation));
+                thenBlock = thenBlock.addStatement(thenStmt);
+            }
+            ifStmt = ifStmt.setThenStmt(thenBlock);
+    
+            if (elseStmt != null) {
+                BlockStmt elseBlock;
+                if (elseStmt instanceof BlockStmt) {
+                    elseBlock = (BlockStmt) elseStmt;
+                    elseBlock = elseBlock.addStatement(0, new ExpressionStmt(falsePathInstrumentation));
+                } else {
+                    elseBlock = new BlockStmt();
+                    elseBlock = elseBlock.addStatement(new ExpressionStmt(falsePathInstrumentation));
+                    elseBlock = elseBlock.addStatement(elseStmt);
+                }
+                ifStmt = ifStmt.setElseStmt(elseBlock);
+            }
+        }
+    }
+
+    private MethodCallExpr createDataPointReportCall(boolean condition, Expression ifCondition, HashSet<String> variables) {
+        NodeList<Expression> args = new NodeList<>();
+        args.add(new StringLiteralExpr(currentClass));
+        args.add(new StringLiteralExpr(currentMethod));
+        args.add(new NameExpr("DataPoint.DataPointType.IF_STMT"));
+        args.add(new StringLiteralExpr(ifCondition.toString()));
+        args.add(new BooleanLiteralExpr(condition));
+        args.addAll(generateVarArgs(variables));
+
+        return new MethodCallExpr(new NameExpr("DataPoint"), "report", args);
+    }
+
+    private NodeList<Expression> generateVarArgs(HashSet<String> variables) {
+        NodeList<Expression> args = new NodeList<>();
+        for (String variable : variables) {
+            args.add(new StringLiteralExpr(variable));
+            args.add(new NameExpr(variable));
+        }
+        return args;
+    }
+
+    private class SimpleNameCollector extends VoidVisitorAdapter<Void> {
+        private HashSet<String> collected = new HashSet<>();
+
+        @Override
+        public void visit(SimpleName n, Void arg) {
+            collected.add(n.getIdentifier());
+        }
+
+        public HashSet<String> getCollected() {
+            return collected;
+        }
+    }
+
+    public enum InstrumentationMode {
+        INSTRUMENTATION, AUGMENTATION
+    }
+    
+    public static void main(String[] args) {
+        String code = String.join("\n", 
+            "public class Example{",
+            "public void loop(){",
+            "int a = 1; int b = 2;",
+            "if (a == b){",
+            "a++;",
+            "else{",
+            "b++;",
+            "}}}"
+        );
+
+        JavaParser parser = new JavaParser();
+        CompilationUnit cu = parser.parse(new StringReader(code)).getResult().orElseThrow();
+
+        App instrumenter = new App();
+        cu = instrumenter.instrument(cu, InstrumentationMode.INSTRUMENTATION);
+        System.out.println(cu.toString());
+    }
+}

@@ -1,0 +1,98 @@
+package com.mycompany.app;
+
+import java.io.StringReader;
+
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.BooleanLiteralExpr;
+import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.ForStmt;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
+public class App extends VoidVisitorAdapter<Void> {
+    private CompilationUnit cu;
+    private InstrumentationMode mode;
+    private String currentClass = "";
+    private String currentMethod = "";
+
+    public CompilationUnit instrument(CompilationUnit cu, InstrumentationMode mode) {
+        this.cu = cu;
+        this.mode = mode;
+        visit(cu, null);
+        return cu;
+    }
+
+    @Override
+    public void visit(ClassOrInterfaceDeclaration n, Void arg) {
+        currentClass = n.getNameAsString();
+        super.visit(n, arg);
+        currentClass = "";
+    }
+
+    @Override
+    public void visit(MethodDeclaration n, Void arg) {
+        currentMethod = n.getNameAsString();
+        super.visit(n, arg);
+        currentMethod = "";
+    }
+
+    @Override
+    public void visit(ForStmt forStmt, Void arg) {
+        if (mode == InstrumentationMode.INSTRUMENTATION) {
+            BlockStmt body;
+            if (forStmt.getBody() instanceof BlockStmt) {
+                body = (BlockStmt) forStmt.getBody();
+            } else {
+                body = new BlockStmt();
+                body = body.addStatement(forStmt.getBody());
+                forStmt.setBody(body);
+            }
+
+            MethodCallExpr reportCall = new MethodCallExpr(
+                    new NameExpr("DataPoint"),
+                    "report",
+                    new NodeList<>(
+                            new StringLiteralExpr(currentClass),
+                            new StringLiteralExpr(currentMethod),
+                            new NameExpr("DataPoint.DataPointType.FOR_LOOP"),
+                            new StringLiteralExpr(forStmt.getCompare().map(Node::toString).orElse("")),
+                            new BooleanLiteralExpr(true)
+                    )
+            );
+
+            body = body.addStatement(0, new ExpressionStmt(reportCall));
+        } else if (mode == InstrumentationMode.AUGMENTATION) {
+        }
+
+        super.visit(forStmt, arg);
+    }
+
+    public static void main(String[] args) {
+        String code = String.join("\n", 
+            "public class Example{",
+            "public void loop(){",
+            "int i = 1;",
+            "for (i = 1; i < 10; i++){",
+            "i++;",
+            "}}}"
+        );
+        JavaParser parser = new JavaParser();
+        CompilationUnit cu = parser.parse(new StringReader(code)).getResult().orElseThrow();
+
+        App instrumenter = new App();
+        instrumenter.instrument(cu, InstrumentationMode.INSTRUMENTATION);
+        System.out.println(cu.toString());
+    }
+
+    public enum InstrumentationMode {
+        INSTRUMENTATION, AUGMENTATION
+    }
+}

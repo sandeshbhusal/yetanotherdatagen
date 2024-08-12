@@ -1,0 +1,33 @@
+package com.mycompany.app;
+
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.ImportDeclaration;
+import com.github.javaparser.ast.expr.Name;
+import java.io.StringReader;
+
+public class App {
+    public static void main(String[] args) {
+        // Example Java source code
+        String code = "public class Example { }";
+        
+        // Create a JavaParser instance and parse the code
+        JavaParser parser = new JavaParser();
+        CompilationUnit cu = parser.parse(new StringReader(code)).getResult().orElseThrow();
+        
+        // Define the import you want to add
+        String importName = "contracts.data";
+        
+        // Check if the import already exists
+        boolean importExists = cu.getImports().stream()
+                .anyMatch(existingImport -> existingImport.getNameAsString().equals(importName));
+        
+        // Add the import only if it doesn't exist
+        if (!importExists) {
+            cu = cu.addImport(importName);
+        }
+        
+        // Output the modified code
+        System.out.println(cu.toString());
+    }
+}
