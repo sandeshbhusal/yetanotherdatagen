@@ -1,7 +1,6 @@
 package edu.boisestate.datagen.instrumenters;
 
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.github.javaparser.ast.CompilationUnit;
 
 public class IfStatement extends VoidVisitorAdapter<Void> {
     private String currentClass = "";
@@ -14,8 +13,9 @@ public class IfStatement extends VoidVisitorAdapter<Void> {
 
     @Override
     public void visit(com.github.javaparser.ast.stmt.IfStmt n, Void arg) {
-        // System.out.println("Visiting if statement");
-        // CompilationUnit cu = new CompilationUnit(currentClass, currentMethod);
-        // cu.findAll(IfStatement).stream().forEach(ifStmt -> System.out.println(ifStmt.toString()));
+        // Modify the if statement block such that it calls the augmentation method.
+        SimpleNameCollector snc = new SimpleNameCollector();
+        n.getCondition().accept(snc, null);
+        System.out.println(snc.getNames());
     }
 }

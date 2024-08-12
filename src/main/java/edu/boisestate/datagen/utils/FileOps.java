@@ -3,10 +3,10 @@ package edu.boisestate.datagen.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileOps {
-    // Function to create a directory if not exists, if exists, recursively delete contents.
     public void createDirectory(String path) {
         File file = new File(path);
         if (!file.exists()) {
@@ -36,5 +36,16 @@ public class FileOps {
             e.printStackTrace();
         }
         return sb.toString();
+    }
+
+    public static void writeFile(File file, String content) {
+        try {
+            FileWriter fw = new FileWriter(file);
+            fw.write(content);
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 }

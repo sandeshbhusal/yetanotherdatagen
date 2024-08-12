@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Compiler {
-    public static void compile(String sourcePath, String outputPath, String... classPaths) {
-        // Ensure sourcePath is a directory and exists
-        File sourceDir = new File(sourcePath);
-        if (!sourceDir.isDirectory()) {
-            System.err.println("Source path is not a directory.");
+    public static void compile(String sourceFilePath, String outputPath, String... classPaths) {
+        // Ensure sourceFilePath is a file and exists
+        File sourceFile = new File(sourceFilePath);
+        if (!sourceFile.isFile()) {
+            System.err.println("Source path is not a file.");
             System.exit(1);
         }
-        if (!sourceDir.exists()) {
-            System.err.println("Source path does not exist.");
+        if (!sourceFile.exists()) {
+            System.err.println("Source file does not exist.");
             System.exit(1);
         }
 
@@ -39,10 +39,19 @@ public class Compiler {
 
         // Set up the file manager
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-        Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(sourceDir.listFiles(file -> file.getName().endsWith(".java")));
+        Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(sourceFile);
 
         // Set up the compilation options
         List<String> options = new ArrayList<>();
+        
+        // Add the base directory of the source file to the classpath
+        String baseDir = sourceFile.getParent();
+        if (baseDir != null && !baseDir.isEmpty()) {
+            options.add("-classpath");
+            options.add(baseDir);
+        }
+        
+        // Add any additional class paths
         if (classPaths.length > 0) {
             String classPath = String.join(File.pathSeparator, classPaths);
             options.add("-classpath");
@@ -78,6 +87,7 @@ public class Compiler {
     }
 
     public static void main(String[] args) {
-        compile("/tmp/sources/", "/tmp/compiled/");
+        // Example usage: compile a single file
+        compile("/tmp/sources/MyClass.java", "/tmp/compiled/");
     }
 }

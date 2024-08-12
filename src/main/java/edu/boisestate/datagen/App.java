@@ -2,10 +2,9 @@ package edu.boisestate.datagen;
 
 import java.io.File;
 
-import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.stmt.IfStmt;
 
+import edu.boisestate.datagen.utils.Compiler;
 import edu.boisestate.datagen.utils.FileOps;
 import net.sourceforge.argparse4j.*;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -55,28 +54,33 @@ public class App {
             }
 
             // Create working directory structure.
+            String augmentedPath = workdir + "/instrumented/augmented";
+            String reportingPath = workdir + "/instrumented/reporting";
+            String compiledPath = workdir + "/compiled";
+
             FileOps fileOps = new FileOps();
-            fileOps.createDirectory(workdir + "/instrumented/augmented");
-            fileOps.createDirectory(workdir + "/instrumented/reporting");
-            fileOps.createDirectory(workdir + "/compiled");
+            fileOps.createDirectory(augmentedPath);
+            fileOps.createDirectory(reportingPath);
+            fileOps.createDirectory(compiledPath);
 
 
             // Find all .java files in the source directory.
             File[] javaFiles = sourceDir.listFiles(file -> file.getName().endsWith(".java"));
+            
             for (File javaFile : javaFiles) {
                 // Print file contents.
                 File file = new File(javaFile.getAbsolutePath());
                 System.out.println("File: " + file.getName());
-                String fileContents = FileOps.readFile(file);
-                
-                JavaParser parser = new JavaParser();
-                CompilationUnit cu = parser.parse(fileContents).getResult().orElseThrow();
-                cu.findAll(IfStmt.class).stream().forEach(ifStmt -> System.out.println(ifStmt.toString()));
+
+                Compiler.compile(javaFile.getAbsolutePath(), compiledPath);
             }
 
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
             System.exit(1);
         }
+    }
+
+    public static void addReportingMethods(CompilationUnit cu) {
     }
 }
