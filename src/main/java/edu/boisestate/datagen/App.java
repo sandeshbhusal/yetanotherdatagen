@@ -2,6 +2,10 @@ package edu.boisestate.datagen;
 
 import java.io.File;
 
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.stmt.IfStmt;
+
 import edu.boisestate.datagen.utils.FileOps;
 import net.sourceforge.argparse4j.*;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -17,22 +21,22 @@ public class App {
         //    - A {{workdir}}/instrumented/reporting     contains the code that will report the data to our lib.
         //    - A {{workdir}}/compiled/             contains the compiled instrumented code.
 
-        ArgumentParser parser = ArgumentParsers.newFor("datagen").build()
+        ArgumentParser argParser = ArgumentParsers.newFor("datagen").build()
                 .description("DataGen is a tool for generating data-driven tests for Java programs.");
 
-        parser.addArgument("-s", "--source")
+        argParser.addArgument("-s", "--source")
                 .help("The path to the source code file(s), This is a folder.")
                 .required(true)
                 .type(String.class);
 
-        parser.addArgument("-w", "--workdir")
+        argParser.addArgument("-w", "--workdir")
                 .help("Working directory for datagen.")
                 .required(true)
                 .type(String.class);
 
         try {
             // Parse the arguments.
-            Namespace ns = parser.parseArgs(args);
+            Namespace ns = argParser.parseArgs(args);
             String source  = ns.getString("source");
             String workdir = ns.getString("workdir");
             
@@ -56,8 +60,22 @@ public class App {
             fileOps.createDirectory(workdir + "/instrumented/reporting");
             fileOps.createDirectory(workdir + "/compiled");
 
+
+            // Find all .java files in the source directory.
+            File[] javaFiles = sourceDir.listFiles(file -> file.getName().endsWith(".java"));
+            for (File javaFile : javaFiles) {
+                // Print file contents.
+                File file = new File(javaFile.getAbsolutePath());
+                System.out.println("File: " + file.getName());
+                String fileContents = FileOps.readFile(file);
+                
+                JavaParser parser = new JavaParser();
+                CompilationUnit cu = parser.parse(fileContents).getResult().orElseThrow();
+                cu.findAll(IfStmt.class).stream().forEach(ifStmt -> System.out.println(ifStmt.toString()));
+            }
+
         } catch (ArgumentParserException e) {
-            parser.handleError(e);
+            argParser.handleError(e);
             System.exit(1);
         }
     }
