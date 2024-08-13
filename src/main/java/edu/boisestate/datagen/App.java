@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -60,16 +61,24 @@ public class App {
                 .required(false)
                 .type(String.class);
 
+        argParser.addArgument("-j", "--junit")
+                .help("JUnit jar file path. This should also contain the hamcrest jar.")
+                .required(false)
+                .type(String.class);
+
         try {
             // Parse the arguments.
             Namespace ns = argParser.parseArgs(args);
             source = ns.getString("source");
             workdir = ns.getString("workdir");
 
-            String evosuiteJarPath = ns.getString("evosuite");
-            if (evosuiteJarPath == null && !evosuitePresentInClassPath()) {
-                System.err.println("Evosuite jar file not provided, and evosuite is not present in the classpath.");
-                System.err.println("Provide the evosuite jar path using the -e flag.");
+            String evosuiteJarPath = evosuitePresentInClassPath().orElse(ns.getString("evosuite"));
+            String junitJarPath = isJunitPresentInClassPath().orElse(ns.getString("junit"));
+
+            if (evosuiteJarPath == null || junitJarPath == null) {
+                System.err.println(
+                        "Evosuite jar file not provided, and evosuite or junit is not present in the classpath.");
+                System.err.println("Use the -e and -j flags to provide the evosuite and junit jar paths.");
                 System.exit(1);
             }
 
@@ -97,6 +106,21 @@ public class App {
             FileOps.createDirectory(reportingPath);
             FileOps.createDirectory(compiledPath);
             FileOps.createDirectory(checkpointPath);
+
+            File evosuiteTests = new File("./evosuite-tests");
+            
+            // Setup classpaths.
+            ArrayList<String> classpathsList = new ArrayList<>();
+            classpathsList.add(compiledPath);
+            classpathsList.add(reportingPath);
+            classpathsList.add(checkpointPath);
+            classpathsList.add(sourceDir.getAbsolutePath());
+            classpathsList.addAll(Arrays.asList(getDatagenClassPath()));
+            classpathsList.addAll(Arrays.asList(evosuiteJarPath, junitJarPath));
+            classpathsList.add(evosuiteTests.getAbsolutePath());
+
+            String[] classpaths = classpathsList.toArray(new String[]{});
+
 
             // Find all .java files in the source directory.
             File[] javaFiles = sourceDir.listFiles(file -> file.getName().endsWith(".java"));
@@ -172,7 +196,7 @@ public class App {
 
                     // Now here. The files require the classpath to be set to the library,
                     // and the source folder passed as the first argument.
-                    Compiler.compile(file.getAbsolutePath(), compiledPath, getRunningClassPath());
+                    Compiler.compile(file.getAbsolutePath(), compiledPath, classpaths);
                 }
 
                 // List all compiled files in the compiled folder.
@@ -187,53 +211,34 @@ public class App {
                     String className = file.getName().substring(0, file.getName().length() - 6);
                     System.out.println("Class name: " + className);
 
-                    if (evosuitePresentInClassPath() || evosuiteJarPath != null) {
-                        String jarPath = null;
+                    // Build a prcess builder to run evosuite.
+                    ProcessBuilder pb = new ProcessBuilder("java", "-jar", evosuiteJarPath, "-projectCP",
+                            compiledFiles.getAbsolutePath(),
+                            "-class", className, "-Dcriterion=BRANCH");
 
-                        // Precedence is given to the evosuite jar path provided by the user.
-                        if (evosuiteJarPath != null) {
-                            jarPath = evosuiteJarPath;
-
-                        } else {
-                            // Evosuite was in the classpath, find the jar file for it.
-                            String[] classpathEntries = System.getProperty("java.class.path").split(File.pathSeparator);
-                            for (String classpathEntry : classpathEntries) {
-                                // We run the evosuite jar, not the runtime jar.
-                                if (classpathEntry.contains("evosuite") && !classpathEntry.contains("runtime")) {
-                                    jarPath = classpathEntry;
-                                    break;
-                                }
-                            }
+                    pb.redirectErrorStream(true);
+                    try {
+                        System.out.println("# Running evosuite on " + className);
+                        Process p = pb.start();
+                        // print the output of the process
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                        String line;
+                        StringBuilder sb = new StringBuilder();
+                        while ((line = reader.readLine()) != null) {
+                            sb.append(line);
                         }
-
-                        // Build a prcess builder to run evosuite.
-                        ProcessBuilder pb = new ProcessBuilder("java", "-jar", jarPath, "-projectCP",
-                                compiledFiles.getAbsolutePath(),
-                                "-class", className, "-Dcriterion=BRANCH");
-                        pb.redirectErrorStream(true);
-                        try {
-                            System.out.println("# Running evosuite on " + className);
-                            Process p = pb.start();
-                            // print the output of the process
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                            String line;
-                            StringBuilder sb = new StringBuilder();
-                            while ((line = reader.readLine()) != null) {
-                                sb.append(line);
-                            }
-                            p.waitFor();
-                            System.out.println("# Evosuite finished running on " + className);
-                            // Check the exit code of the process.
-                            if (p.exitValue() != 0) {
-                                System.err.println("Evosuite exited with non-zero exit code.");
-                                System.err.println("Evosuite output:");
-                                System.err.println(sb.toString());
-                                System.exit(1);
-                            }
-                        } catch (IOException | InterruptedException e) {
-                            e.printStackTrace();
+                        p.waitFor();
+                        System.out.println("# Evosuite finished running on " + className);
+                        // Check the exit code of the process.
+                        if (p.exitValue() != 0) {
+                            System.err.println("Evosuite exited with non-zero exit code.");
+                            System.err.println("Evosuite output:");
+                            System.err.println(sb.toString());
                             System.exit(1);
                         }
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                        System.exit(1);
                     }
                     System.out.println("Finished running evosuite.");
                 }
@@ -242,8 +247,6 @@ public class App {
                 // instrumentation.
                 // Evosuite tests are generated in the $PWD/evosuite-tests folder.
 
-                String evosuiteTestsPath = "./evosuite-tests";
-                File evosuiteTests = new File(evosuiteTestsPath);
                 File[] evosuiteTestsFiles = evosuiteTests.listFiles(file -> file.getName().endsWith("_ESTest.java"));
                 if (evosuiteTestsFiles == null) {
                     System.err.println("No evosuite tests were generated.");
@@ -273,19 +276,59 @@ public class App {
                 // from the source directory.
                 for (File evosuiteTestFile : evosuiteTestsFiles) {
                     File file = new File(evosuiteTestFile.getAbsolutePath());
-
-                    // Compile the evosuite test file along with the compiled files
-                    // from the source directory, so that we can run them on it.
-                    ArrayList<String> classPaths = new ArrayList<>();
-                    classPaths.addAll(Arrays.asList(getRunningClassPath()));
-                    classPaths.add(compiledPath);
-
-                    Compiler.compile(file.getAbsolutePath(), compiledPath, classPaths.toArray(String[]::new));
+                    Compiler.compile(file.getAbsolutePath(), compiledPath, classpaths);
                 }
 
-                // Run the compiled evosuite tests along with source classfiles on daikon,
-                // so that we can get the invariants from Daikon.
-                // TODO: Run daikon here.
+                // Run evosuite tests on the files generated in the compiled folder, so that
+                // we can get reported data points from them.
+                // In order to use the reporting code, we will first need to compile the
+                // "reporting" dir
+                // into the compiled folder (as opposed to the augmented files), because
+                // augmented files
+                // do not report data points.
+                File[] reportingFiles = new File(reportingPath).listFiles(file -> file.getName().endsWith(".java"));
+                for (File reportingFile : reportingFiles) {
+                    Compiler.compile(reportingFile.getAbsolutePath(), compiledPath, classpaths);
+                }
+
+                // Run JUnit.
+                for (File evosuiteTestFile : (new File(compiledPath))
+                        .listFiles(file -> file.getName().endsWith("_ESTest.class"))) {
+                    String[] command = {
+                            "java",
+                            "-cp",
+                            String.join(File.pathSeparator, classpaths),
+                            "org.junit.runner.JUnitCore",
+                            evosuiteTestFile.getName().substring(0, evosuiteTestFile.getName().length() - 6),
+                    };
+
+                    ProcessBuilder pb = new ProcessBuilder(command);
+                    pb.redirectErrorStream(true);
+                    try {
+                        System.out.println("# Running JUnit tests from " + evosuiteTestFile.getName());
+                        Process p = pb.start();
+                        // print the output of the process
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                        String line;
+                        StringBuilder sb = new StringBuilder();
+                        while ((line = reader.readLine()) != null) {
+                            sb.append(line);
+                        }
+                        p.waitFor();
+                        System.out.println("# JUnit finished running on " + evosuiteTestFile.getName());
+                        // Check the exit code of the process.
+                        if (p.exitValue() != 0) {
+                            System.err.println("JUnit exited with non-zero exit code.");
+                            System.err.println("JUnit output:");
+                            System.err.println(sb.toString());
+                            System.exit(1);
+                        }
+                    } catch (IOException | InterruptedException e) {
+                        System.err.println("Could not run junit");
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
+                }
 
                 // Parse the daikon output, store the invariants, and check for fixed point.
                 // TODO: Check fixed point here.
@@ -298,12 +341,9 @@ public class App {
         }
     }
 
-    private static String[] getRunningClassPath() {
+    private static String[] getDatagenClassPath() {
         String classpath = System.getProperty("java.class.path");
         String[] classpathEntries = classpath.split(File.pathSeparator);
-
-        ArrayList<String> classpathEntriesExt = new ArrayList<>();
-        classpathEntriesExt.add(compiledPath);
         return classpathEntries;
     }
 
@@ -313,18 +353,34 @@ public class App {
         return true;
     }
 
-    private static boolean evosuitePresentInClassPath() {
+    private static Optional<String> evosuitePresentInClassPath() {
         // Checks if evosuite is present in the classpath.
         String classpath = System.getProperty("java.class.path");
         String[] classpathEntries = classpath.split(File.pathSeparator);
 
         for (String classpathEntry : classpathEntries) {
             if (classpathEntry.contains("evosuite")) {
-                System.out.println("Evosuite jar found in classpath.");
-                return true;
+                return Optional.of((new File(classpathEntry)).getAbsolutePath());
             }
         }
 
-        return false;
+        return Optional.empty();
+    }
+
+    private static Optional<String> isJunitPresentInClassPath() {
+        // Checks if junit is present in the classpath. If present, returns the path to
+        // the jar.
+        String classpath = System.getProperty("java.class.path");
+        String[] classpathEntries = classpath.split(File.pathSeparator);
+
+        for (String classpathEntry : classpathEntries) {
+            if (classpathEntry.contains("junit")) {
+                String classPathAbsolute = new File(classpathEntry).getAbsolutePath();
+                System.out.println("JUnit jar found in classpath: " + classPathAbsolute);
+                return Optional.of(classPathAbsolute);
+            }
+        }
+
+        return Optional.empty();
     }
 }
