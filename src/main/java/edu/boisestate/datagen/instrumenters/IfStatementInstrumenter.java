@@ -1,5 +1,6 @@
 package edu.boisestate.datagen.instrumenters;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,22 +9,27 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
+import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.BinaryExpr.Operator;
 import com.github.javaparser.ast.expr.BinaryExpr;
+import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
+import edu.boisestate.datagen.reporting.Record;
 
 public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
     private String currentClass = "";
     private String currentMethod = "";
 
     private final InstrumentationMode mode;
-    private final HashMap<String, HashMap<String, List<Object>>> recordedValues;
+    private final HashMap<String, Record> recordedValues;
 
-    public IfStatementInstrumenter(InstrumentationMode mode, HashMap<String, HashMap<String, List<Object>>> recordedValues) {
+    public IfStatementInstrumenter(InstrumentationMode mode, HashMap<String, Record> recordedValues) {
         this.mode = mode;
         this.recordedValues = recordedValues;
     }
@@ -53,6 +59,35 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
             return;
         }
 
+        // Ensure neither the true nor false branch has a return statement
+        ContainsReturnInstrumenter cri = new ContainsReturnInstrumenter();
+        Statement thenStatement = ifStatementNode.getThenStmt();
+        if (thenStatement instanceof ReturnStmt) {
+            return;
+        }
+
+        // We are sure it;s a block statement
+        thenStatement.asBlockStmt().accept(cri, null);
+        if (cri.containsReturn) {
+            return;
+        }
+
+        Statement elseStmt = ifStatementNode.getElseStmt().orElse(null);
+        if (elseStmt != null) {
+            if (elseStmt instanceof ReturnStmt) {
+                return;
+            }
+
+            // We are sure it;s a block statement
+            elseStmt.asBlockStmt().accept(cri, null);
+            if (cri.containsReturn) {
+                return;
+            }
+        }
+        
+        // Now we are sure there are no returns in the if statement or the else statement
+        // or body. We can proceed with instrumentation / augmentation.
+
         if (mode == InstrumentationMode.AUGMENTATION) {
             this.augmentIfStatement(ifStatementNode, snc);
         }
@@ -68,12 +103,50 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         String falseKey = generateKeyForMap(currentClass, currentMethod, ifStatementNode.getCondition().toString(), false);
 
         String[] variables = snc.getNames().toArray(String[]::new);
-        for (String variable : variables) {
-            // Add the variable to the true and false maps
-            Object valuetrue  = recordedValues.get(trueKey).put(variable, recordedValues.get(currentClass).get(variable));
-            Object valuefalse = recordedValues.get(falseKey).put(variable, recordedValues.get(currentClass).get(variable));
 
+        ArrayList<BinaryExpr> expressions = new ArrayList<>();
+
+        // for (String variable : variables) {
+        //     // Add the variable to the true and false maps
+        //     Object valuetrue  = recordedValues.get(trueKey).put(variable, recordedValues.get(currentClass).get(variable));
+        //     Object valuefalse = recordedValues.get(falseKey).put(variable, recordedValues.get(currentClass).get(variable));
+
+        //     BinaryExpr trueExpr = new BinaryExpr();
+        //     trueExpr.setLeft(new NameExpr(variable));
+        //     trueExpr.setOperator(Operator.NOT_EQUALS);
+
+        //     // TODO: Only works with integers for now
+        //     trueExpr.setRight(new IntegerLiteralExpr(valuetrue.toString()));
+
+        //     expressions.add(trueExpr);
+
+        //     BinaryExpr falseExpr = new BinaryExpr();
+        //     falseExpr.setLeft(new NameExpr(variable));
+        //     falseExpr.setOperator(Operator.NOT_EQUALS);
+
+        //     // TODO: Only works with integers for now
+        //     falseExpr.setRight(new IntegerLiteralExpr(valuefalse.toString()));
+
+        //     expressions.add(falseExpr);
+        // }
+
+        if (expressions.size() > 0) {
+            // Stitch together the expressions with a logical AND.
+            BinaryExpr andExpr = new BinaryExpr();
+            andExpr.setLeft(expressions.get(0));
+            andExpr.setOperator(Operator.AND);
+            for (int i = 1; i < expressions.size(); i++) {
+                andExpr.setRight(expressions.get(i));
+            }
+            
+            // Add the original if statement condition to the start, and the andExpr to the end
+            // to make a new binary expression on the if statement condition.
             BinaryExpr newExpr = new BinaryExpr();
+            newExpr.setLeft(ifStatementNode.getCondition());
+            newExpr.setOperator(Operator.AND);
+            newExpr.setRight(andExpr);
+
+            ifStatementNode = ifStatementNode.setCondition(newExpr);
         }
     }
 
@@ -116,8 +189,8 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
     private MethodCallExpr createMethodCallExpr(String condition, boolean pathTaken, String[] variableNames) {
         MethodCallExpr methodCallExpr = new MethodCallExpr();
 
-        methodCallExpr.setScope(new NameExpr("reporter"));
-        methodCallExpr.setName("report");
+        methodCallExpr.setScope(new NameExpr("Report"));
+        methodCallExpr.setName("reportDataPoint");
 
         methodCallExpr.addArgument(new StringLiteralExpr(currentClass));
         methodCallExpr.addArgument(new StringLiteralExpr(currentMethod));
@@ -134,11 +207,6 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         return methodCallExpr;
     }
 
-    @Override
-    public void instrument(CompilationUnit cu) {
-        cu.accept(this, null);
-    }
-
     public static String generateKeyForMap(String className, String methodName, String condition, boolean pathTaken) {
         StringBuilder sb = new StringBuilder();
 
@@ -147,5 +215,10 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         sb.append(condition);
         sb.append(pathTaken);
         return sb.toString();
+    }
+
+    @Override
+    public void instrument(CompilationUnit cu) {
+        cu.accept(this, null);
     }
 }

@@ -7,7 +7,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 public class ImportInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
     @Override
     public void visit(CompilationUnit cu, Void arg) {
-        ImportDeclaration importDecl = new ImportDeclaration("reporter", false, true);
+        ImportDeclaration importDecl = new ImportDeclaration("edu.boisestate.datagen.reporting", false, true);
         cu = cu.addImport(importDecl);
     }
 
