@@ -6,6 +6,7 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
 import edu.boisestate.datagen.instrumenters.IfStatementInstrumenter;
+import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
 import edu.boisestate.datagen.instrumenters.InstrumentationMode;
 import edu.boisestate.datagen.utils.FileOps;
 import net.sourceforge.argparse4j.*;
@@ -79,10 +80,12 @@ public class App {
                 JavaParser parser = new JavaParser();
                 CompilationUnit cu = parser.parse(contents).getResult().orElseThrow();
 
-                IfStatementInstrumenter instrumenter = new IfStatementInstrumenter(InstrumentationMode.INSTRUMENTATION,
+                ImportInstrumenter importInstrumenter = new ImportInstrumenter();
+                IfStatementInstrumenter ifInstrumenter = new IfStatementInstrumenter(InstrumentationMode.INSTRUMENTATION,
                         null);
 
-                cu.findAll(CompilationUnit.class).stream().forEach(instrumenter::instrument);
+                cu.findAll(CompilationUnit.class).stream().forEach(importInstrumenter::instrument);
+                cu.findAll(CompilationUnit.class).stream().forEach(ifInstrumenter::instrument);
 
                 // Print cu.
                 System.out.println(cu.toString());

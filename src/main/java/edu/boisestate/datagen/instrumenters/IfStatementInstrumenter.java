@@ -13,6 +13,7 @@ import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
@@ -20,9 +21,11 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
     private String currentMethod = "";
 
     private final InstrumentationMode mode;
+    private final HashMap<String, HashMap<String, List<Object>>> recordedValues;
 
-    public IfStatementInstrumenter(InstrumentationMode mode, HashMap<String, List<Object>> recordedValues) {
+    public IfStatementInstrumenter(InstrumentationMode mode, HashMap<String, HashMap<String, List<Object>>> recordedValues) {
         this.mode = mode;
+        this.recordedValues = recordedValues;
     }
 
     @Override
@@ -51,42 +54,66 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         }
 
         if (mode == InstrumentationMode.AUGMENTATION) {
+            this.augmentIfStatement(ifStatementNode, snc);
         }
 
         if (mode == InstrumentationMode.INSTRUMENTATION) {
-            // Collect variable names and values
-            // Build method call for `if` block
-            MethodCallExpr ifMethodCall = createMethodCallExpr(ifStatementNode.getCondition().toString(), true, snc.getNames().toArray(String[]::new));
-
-            // Build method call for `else` block
-            MethodCallExpr elseMethodCall = createMethodCallExpr(ifStatementNode.getCondition().toString(), false, snc.getNames().toArray(String[]::new));
-
-            // Add instrumentation to the `if` block
-            Statement ifBlock = ifStatementNode.getThenStmt();
-            if (!(ifBlock instanceof BlockStmt)) {
-                BlockStmt ifBlockStmt = new BlockStmt();
-                ifBlockStmt = ifBlockStmt.addStatement(ifBlock);
-                ifStatementNode.setThenStmt(ifBlockStmt);
-                ifBlock = ifBlockStmt;
-            }
-
-            ifBlock = ifBlock.asBlockStmt().addStatement(0, ifMethodCall);
-
-            // Add instrumentation to the `else` block if present, and if it is a block statement
-            Statement elseBlock = ifStatementNode.getElseStmt().orElse(null);
-            if (elseBlock != null) {
-                if (!(elseBlock instanceof BlockStmt)) {
-                    BlockStmt elseBlockStmt = new BlockStmt();
-                    elseBlockStmt = elseBlockStmt.addStatement(elseBlock);
-                    ifStatementNode.setElseStmt(elseBlockStmt);
-                    elseBlock = elseBlockStmt;
-                }
-                elseBlock = elseBlock.asBlockStmt().addStatement(0, elseMethodCall);
-            }
-       }
+            this.instrumentIfStatement(ifStatementNode, snc);
+        }
     }
 
-    private MethodCallExpr createMethodCallExpr(String condition,boolean pathTaken, String[] variableNames) {
+    private void augmentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {
+        // Generate a key to lookup the recorded values
+        String trueKey = generateKeyForMap(currentClass, currentMethod, ifStatementNode.getCondition().toString(), true);
+        String falseKey = generateKeyForMap(currentClass, currentMethod, ifStatementNode.getCondition().toString(), false);
+
+        String[] variables = snc.getNames().toArray(String[]::new);
+        for (String variable : variables) {
+            // Add the variable to the true and false maps
+            Object valuetrue  = recordedValues.get(trueKey).put(variable, recordedValues.get(currentClass).get(variable));
+            Object valuefalse = recordedValues.get(falseKey).put(variable, recordedValues.get(currentClass).get(variable));
+
+            BinaryExpr newExpr = new BinaryExpr();
+        }
+    }
+
+    private void instrumentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {
+        // Collect variable names and values
+        // Build method call for `if` block
+        MethodCallExpr ifMethodCall = createMethodCallExpr(ifStatementNode.getCondition().toString(), true,
+                snc.getNames().toArray(String[]::new));
+
+        // Build method call for `else` block
+        MethodCallExpr elseMethodCall = createMethodCallExpr(ifStatementNode.getCondition().toString(), false,
+                snc.getNames().toArray(String[]::new));
+
+        // Add instrumentation to the `if` block. If it's not a block statement, wrap it
+        // in a block statement.
+        Statement ifBlock = ifStatementNode.getThenStmt();
+        if (!(ifBlock instanceof BlockStmt)) {
+            BlockStmt ifBlockStmt = new BlockStmt();
+            ifBlockStmt = ifBlockStmt.addStatement(ifBlock);
+            ifStatementNode.setThenStmt(ifBlockStmt);
+            ifBlock = ifBlockStmt;
+        }
+
+        ifBlock = ifBlock.asBlockStmt().addStatement(0, ifMethodCall);
+
+        // Add instrumentation to the `else` block if present, and if it is a block
+        // statement
+        Statement elseBlock = ifStatementNode.getElseStmt().orElse(null);
+        if (elseBlock != null) {
+            if (!(elseBlock instanceof BlockStmt)) {
+                BlockStmt elseBlockStmt = new BlockStmt();
+                elseBlockStmt = elseBlockStmt.addStatement(elseBlock);
+                ifStatementNode.setElseStmt(elseBlockStmt);
+                elseBlock = elseBlockStmt;
+            }
+            elseBlock = elseBlock.asBlockStmt().addStatement(0, elseMethodCall);
+        }
+    }
+
+    private MethodCallExpr createMethodCallExpr(String condition, boolean pathTaken, String[] variableNames) {
         MethodCallExpr methodCallExpr = new MethodCallExpr();
 
         methodCallExpr.setScope(new NameExpr("reporter"));
@@ -107,7 +134,18 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         return methodCallExpr;
     }
 
+    @Override
     public void instrument(CompilationUnit cu) {
         cu.accept(this, null);
+    }
+
+    public static String generateKeyForMap(String className, String methodName, String condition, boolean pathTaken) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(className);
+        sb.append(methodName);
+        sb.append(condition);
+        sb.append(pathTaken);
+        return sb.toString();
     }
 }
