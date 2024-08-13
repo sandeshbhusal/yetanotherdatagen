@@ -1,0 +1,113 @@
+package edu.boisestate.datagen.instrumenters;
+
+import java.util.HashMap;
+import java.util.List;
+
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.IfStmt;
+import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.expr.BooleanLiteralExpr;
+import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
+public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
+    private String currentClass = "";
+    private String currentMethod = "";
+
+    private final InstrumentationMode mode;
+
+    public IfStatementInstrumenter(InstrumentationMode mode, HashMap<String, List<Object>> recordedValues) {
+        this.mode = mode;
+    }
+
+    @Override
+    public void visit(ClassOrInterfaceDeclaration def, Void arg) {
+        this.currentClass = def.getNameAsString();
+        super.visit(def, arg);
+        this.currentClass = "";
+    }
+
+    @Override
+    public void visit(MethodDeclaration def, Void arg) {
+        this.currentMethod = def.getNameAsString();
+        super.visit(def, arg);
+        this.currentMethod = "";
+    }
+
+    @Override
+    public void visit(IfStmt ifStatementNode, Void arg) {
+        // Modify the if statement block such that it calls the augmentation method.
+        SimpleNameCollector snc = new SimpleNameCollector();
+        ifStatementNode.getCondition().accept(snc, null);
+
+        // if there are no variables, then we don't need to instrument
+        if (snc.getNames().size() == 0) {
+            return;
+        }
+
+        if (mode == InstrumentationMode.AUGMENTATION) {
+        }
+
+        if (mode == InstrumentationMode.INSTRUMENTATION) {
+            // Collect variable names and values
+            // Build method call for `if` block
+            MethodCallExpr ifMethodCall = createMethodCallExpr(ifStatementNode.getCondition().toString(), true, snc.getNames().toArray(String[]::new));
+
+            // Build method call for `else` block
+            MethodCallExpr elseMethodCall = createMethodCallExpr(ifStatementNode.getCondition().toString(), false, snc.getNames().toArray(String[]::new));
+
+            // Add instrumentation to the `if` block
+            Statement ifBlock = ifStatementNode.getThenStmt();
+            if (!(ifBlock instanceof BlockStmt)) {
+                BlockStmt ifBlockStmt = new BlockStmt();
+                ifBlockStmt = ifBlockStmt.addStatement(ifBlock);
+                ifStatementNode.setThenStmt(ifBlockStmt);
+                ifBlock = ifBlockStmt;
+            }
+
+            ifBlock = ifBlock.asBlockStmt().addStatement(0, ifMethodCall);
+
+            // Add instrumentation to the `else` block if present, and if it is a block statement
+            Statement elseBlock = ifStatementNode.getElseStmt().orElse(null);
+            if (elseBlock != null) {
+                if (!(elseBlock instanceof BlockStmt)) {
+                    BlockStmt elseBlockStmt = new BlockStmt();
+                    elseBlockStmt = elseBlockStmt.addStatement(elseBlock);
+                    ifStatementNode.setElseStmt(elseBlockStmt);
+                    elseBlock = elseBlockStmt;
+                }
+                elseBlock = elseBlock.asBlockStmt().addStatement(0, elseMethodCall);
+            }
+       }
+    }
+
+    private MethodCallExpr createMethodCallExpr(String condition,boolean pathTaken, String[] variableNames) {
+        MethodCallExpr methodCallExpr = new MethodCallExpr();
+
+        methodCallExpr.setScope(new NameExpr("reporter"));
+        methodCallExpr.setName("report");
+
+        methodCallExpr.addArgument(new StringLiteralExpr(currentClass));
+        methodCallExpr.addArgument(new StringLiteralExpr(currentMethod));
+        methodCallExpr.addArgument(new StringLiteralExpr(condition));
+        methodCallExpr.addArgument(new BooleanLiteralExpr(pathTaken));
+
+        if (variableNames != null)
+            for (String variableName : variableNames) {
+                // For variable named "a", add two arguments - "a" and a.
+                methodCallExpr.addArgument(new StringLiteralExpr(variableName));
+                methodCallExpr.addArgument(new NameExpr(variableName));
+            }
+
+        return methodCallExpr;
+    }
+
+    public void instrument(CompilationUnit cu) {
+        cu.accept(this, null);
+    }
+}
