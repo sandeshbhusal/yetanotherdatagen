@@ -212,17 +212,22 @@ public class App {
                                 "-class", className, "-Dcriterion=BRANCH");
                         pb.redirectErrorStream(true);
                         try {
+                            System.out.println("# Running evosuite on " + className);
                             Process p = pb.start();
                             // print the output of the process
                             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
                             String line;
+                            StringBuilder sb = new StringBuilder();
                             while ((line = reader.readLine()) != null) {
-                                System.out.println(line);
+                                sb.append(line);
                             }
                             p.waitFor();
+                            System.out.println("# Evosuite finished running on " + className);
                             // Check the exit code of the process.
                             if (p.exitValue() != 0) {
                                 System.err.println("Evosuite exited with non-zero exit code.");
+                                System.err.println("Evosuite output:");
+                                System.err.println(sb.toString());
                                 System.exit(1);
                             }
                         } catch (IOException | InterruptedException e) {
@@ -239,7 +244,7 @@ public class App {
 
                 String evosuiteTestsPath = "./evosuite-tests";
                 File evosuiteTests = new File(evosuiteTestsPath);
-                File[] evosuiteTestsFiles = evosuiteTests.listFiles(file -> file.getName().endsWith(".java"));
+                File[] evosuiteTestsFiles = evosuiteTests.listFiles(file -> file.getName().endsWith("_ESTest.java"));
                 if (evosuiteTestsFiles == null) {
                     System.err.println("No evosuite tests were generated.");
                     System.exit(1);
@@ -247,13 +252,16 @@ public class App {
 
                 // Instrument the evosuite test file with method invocation.
                 for (File evosuiteTestFile : evosuiteTestsFiles) {
+                    // Because evosuite generates some scaffolding files, we only want to
+                    // instrument the actual test files.
                     String contents = FileOps.readFile(evosuiteTestFile);
                     JavaParser parser = new JavaParser();
                     CompilationUnit cu = parser.parse(contents).getResult().orElseThrow();
-
-                    // Run the instrumentation on the evosuite test files.
-                    cu.findAll(CompilationUnit.class).stream().forEach(new ImportInstrumenter()::instrument);
-                    cu.findAll(CompilationUnit.class).stream().forEach(new TestCaseInstrumenter()::instrument);
+                    if (evosuiteTestFile.getName().endsWith("_ESTest.java")) {
+                        // Run the instrumentation on the evosuite test files.
+                        cu.findAll(CompilationUnit.class).stream().forEach(new ImportInstrumenter()::instrument);
+                        cu.findAll(CompilationUnit.class).stream().forEach(new TestCaseInstrumenter()::instrument);
+                    }
 
                     String modifiedSource = cu.toString();
                     FileOps.writeFile(evosuiteTestFile, modifiedSource);
