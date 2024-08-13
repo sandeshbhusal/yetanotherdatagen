@@ -1,5 +1,7 @@
 package edu.boisestate.datagen.reporting;
 
+import java.util.Optional;
+
 public class Record {
     public final String className;
     public final String methodName;
@@ -29,7 +31,8 @@ public class Record {
         this.variableValues = null;
     }
 
-    // Override toString() to print the record in a format that can be used as a key.
+    // Override toString() to print the record in a format that can be used as a
+    // key.
     public String toStringKey() {
         StringBuilder sb = new StringBuilder();
 
@@ -40,5 +43,14 @@ public class Record {
         sb.append(variableNames);
 
         return sb.toString();
+    }
+
+    public <T> Optional<T> getValue(Class<T> clazz) {
+        try {
+            return Optional.of(clazz.cast(this.variableValues));
+        } catch (ClassCastException e) {
+            System.err.println("Failed to cast value to " + clazz.getName());
+            return Optional.empty();
+        }
     }
 }

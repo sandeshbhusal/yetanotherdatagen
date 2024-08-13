@@ -27,9 +27,9 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
     private String currentMethod = "";
 
     private final InstrumentationMode mode;
-    private final HashMap<String, Record> recordedValues;
+    private final HashMap<String, List<Record>> recordedValues;
 
-    public IfStatementInstrumenter(InstrumentationMode mode, HashMap<String, Record> recordedValues) {
+    public IfStatementInstrumenter(InstrumentationMode mode, HashMap<String, List<Record>> recordedValues) {
         this.mode = mode;
         this.recordedValues = recordedValues;
     }
@@ -84,8 +84,9 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
                 return;
             }
         }
-        
-        // Now we are sure there are no returns in the if statement or the else statement
+
+        // Now we are sure there are no returns in the if statement or the else
+        // statement
         // or body. We can proceed with instrumentation / augmentation.
 
         if (mode == InstrumentationMode.AUGMENTATION) {
@@ -98,37 +99,51 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
     }
 
     private void augmentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {
-        // Generate a key to lookup the recorded values
-        String trueKey = generateKeyForMap(currentClass, currentMethod, ifStatementNode.getCondition().toString(), true);
-        String falseKey = generateKeyForMap(currentClass, currentMethod, ifStatementNode.getCondition().toString(), false);
-
+        // Get the variable names involved in the condition
         String[] variables = snc.getNames().toArray(String[]::new);
+        String expression = ifStatementNode.getCondition().toString();
 
         ArrayList<BinaryExpr> expressions = new ArrayList<>();
 
-        // for (String variable : variables) {
-        //     // Add the variable to the true and false maps
-        //     Object valuetrue  = recordedValues.get(trueKey).put(variable, recordedValues.get(currentClass).get(variable));
-        //     Object valuefalse = recordedValues.get(falseKey).put(variable, recordedValues.get(currentClass).get(variable));
+        for (String variable : variables) {
+            // Lookup the values this variable has assumed in this context.
+            // The context is built with class -> method -> condition -> variable name ->
+            // true/false.
+            // We will generate binary expressions for each of the values and negate
+            // the branch expressions so that we can generate more data.
+            Record recordTrueKeyForVariable = new Record(currentClass, currentMethod, expression, variable, true);
+            Record recordFalseKeyForVariable = new Record(currentClass, currentMethod, expression, variable, false);
 
-        //     BinaryExpr trueExpr = new BinaryExpr();
-        //     trueExpr.setLeft(new NameExpr(variable));
-        //     trueExpr.setOperator(Operator.NOT_EQUALS);
+            List<Record> truthyValues = recordedValues.get(recordTrueKeyForVariable.toString());
+            List<Record> falsyValues = recordedValues.get(recordFalseKeyForVariable.toString());
 
-        //     // TODO: Only works with integers for now
-        //     trueExpr.setRight(new IntegerLiteralExpr(valuetrue.toString()));
+            for (Record record : truthyValues) {
+                // Add the variable to the true and false maps
+                BinaryExpr trueExpr = new BinaryExpr();
+                trueExpr.setLeft(new NameExpr(variable));
+                trueExpr.setOperator(Operator.NOT_EQUALS);
 
-        //     expressions.add(trueExpr);
+                Integer value = record.getValue(Integer.class).orElse(null);
+                if (value != null) {
+                    trueExpr.setRight(new IntegerLiteralExpr(value.toString()));
+                    expressions.add(trueExpr);
+                }
+            }
 
-        //     BinaryExpr falseExpr = new BinaryExpr();
-        //     falseExpr.setLeft(new NameExpr(variable));
-        //     falseExpr.setOperator(Operator.NOT_EQUALS);
+            for (Record record : falsyValues) {
+                // Add the variable to the true and false maps
+                BinaryExpr falseExpr = new BinaryExpr();
+                falseExpr.setLeft(new NameExpr(variable));
+                falseExpr.setOperator(Operator.NOT_EQUALS);
 
-        //     // TODO: Only works with integers for now
-        //     falseExpr.setRight(new IntegerLiteralExpr(valuefalse.toString()));
+                Integer value = record.getValue(Integer.class).orElse(null);
+                if (value != null) {
+                    falseExpr.setRight(new IntegerLiteralExpr(value.toString()));
+                    expressions.add(falseExpr);
+                }
 
-        //     expressions.add(falseExpr);
-        // }
+            }
+        }
 
         if (expressions.size() > 0) {
             // Stitch together the expressions with a logical AND.
@@ -138,8 +153,9 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
             for (int i = 1; i < expressions.size(); i++) {
                 andExpr.setRight(expressions.get(i));
             }
-            
-            // Add the original if statement condition to the start, and the andExpr to the end
+
+            // Add the original if statement condition to the start, and the andExpr to the
+            // end
             // to make a new binary expression on the if statement condition.
             BinaryExpr newExpr = new BinaryExpr();
             newExpr.setLeft(ifStatementNode.getCondition());

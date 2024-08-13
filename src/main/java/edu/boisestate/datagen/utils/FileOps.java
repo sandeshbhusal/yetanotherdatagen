@@ -5,9 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class FileOps {
-    public void createDirectory(String path) {
+    public static void createDirectory(String path) {
         File file = new File(path);
         if (!file.exists()) {
             file.mkdirs();
@@ -46,6 +47,22 @@ public class FileOps {
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
+        }
+    }
+
+    public static void recursivelyCopyFolder(File sourceFolder, File destinationFolder) {
+        if (sourceFolder.isDirectory()) {
+            destinationFolder.mkdirs();
+            for (File child : sourceFolder.listFiles()) {
+                recursivelyCopyFolder(child, new File(destinationFolder, child.getName()));
+            }
+        } else {
+            try {
+                Files.copy(sourceFolder.toPath(), destinationFolder.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
         }
     }
 }

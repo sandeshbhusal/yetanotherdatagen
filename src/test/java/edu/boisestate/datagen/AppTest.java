@@ -1,6 +1,7 @@
 package edu.boisestate.datagen;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -36,11 +37,11 @@ public class AppTest {
         Record point1bt = new Record("Test", "main", "a < b", "b", true, 5);        Record point1af = new Record("Test", "main", "a < b", "a", true, 10);
         Record point1bf = new Record("Test", "main", "a < b", "b", true, 3);
         
-        HashMap<String, Record> points = new HashMap<>();
-        points.put(point1at.toStringKey(), point1at);
-        points.put(point1bt.toStringKey(), point1bt);
-        points.put(point1af.toStringKey(), point1af);
-        points.put(point1bf.toStringKey(), point1bf);
+        HashMap<String, List<Record>> points = new HashMap<>();
+        points.put(point1at.toStringKey(), List.of(point1at));
+        points.put(point1bt.toStringKey(), List.of(point1bt));
+        points.put(point1af.toStringKey(), List.of(point1af));
+        points.put(point1bf.toStringKey(), List.of(point1bf));
         
         IfStatementInstrumenter ifInstrumenter = new IfStatementInstrumenter(
                 InstrumentationMode.AUGMENTATION, points);
