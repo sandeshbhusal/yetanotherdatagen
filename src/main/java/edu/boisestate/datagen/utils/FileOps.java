@@ -65,4 +65,14 @@ public class FileOps {
             }
         }
     }
+
+    public static void recursivelyDeleteFolder(File folder) {
+        if (folder.isDirectory()) {
+            for (File file : folder.listFiles()) {
+                recursivelyDeleteFolder(file);
+            }
+        } else {
+            folder.delete();
+        }
+    }
 }

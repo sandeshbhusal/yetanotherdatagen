@@ -21,17 +21,16 @@ import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import edu.boisestate.datagen.reporting.Record;
+import edu.boisestate.datagen.server.Cache;
 
 public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
     private String currentClass = "";
     private String currentMethod = "";
 
     private final InstrumentationMode mode;
-    private final HashMap<String, List<Record>> recordedValues;
 
-    public IfStatementInstrumenter(InstrumentationMode mode, HashMap<String, List<Record>> recordedValues) {
+    public IfStatementInstrumenter(InstrumentationMode mode) {
         this.mode = mode;
-        this.recordedValues = recordedValues;
     }
 
     @Override
@@ -103,67 +102,20 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         String[] variables = snc.getNames().toArray(String[]::new);
         String expression = ifStatementNode.getCondition().toString();
 
-        ArrayList<BinaryExpr> expressions = new ArrayList<>();
+        System.out.println("Augmenting if statement with " + variables.length + " variables");
+        // Print out the cached values for each variable.
+        Cache cache = Cache.getInstance();
+        System.out.println("Cache has " + Cache.dataCache.size() + " entries");
 
         for (String variable : variables) {
-            // Lookup the values this variable has assumed in this context.
-            // The context is built with class -> method -> condition -> variable name ->
-            // true/false.
-            // We will generate binary expressions for each of the values and negate
-            // the branch expressions so that we can generate more data.
-            Record recordTrueKeyForVariable = new Record(currentClass, currentMethod, expression, variable, true);
-            Record recordFalseKeyForVariable = new Record(currentClass, currentMethod, expression, variable, false);
+            ArrayList<Record> trueValues = cache.getDataPointsForAVariable(currentClass, currentMethod, expression,
+                    true, variable);
+            ArrayList<Record> falseValues = cache.getDataPointsForAVariable(currentClass, currentMethod, expression,
+                    false, variable);
 
-            List<Record> truthyValues = recordedValues.get(recordTrueKeyForVariable.toString());
-            List<Record> falsyValues = recordedValues.get(recordFalseKeyForVariable.toString());
-
-            for (Record record : truthyValues) {
-                // Add the variable to the true and false maps
-                BinaryExpr trueExpr = new BinaryExpr();
-                trueExpr.setLeft(new NameExpr(variable));
-                trueExpr.setOperator(Operator.NOT_EQUALS);
-
-                Integer value = record.getValue(Integer.class).orElse(null);
-                if (value != null) {
-                    trueExpr.setRight(new IntegerLiteralExpr(value.toString()));
-                    expressions.add(trueExpr);
-                }
-            }
-
-            for (Record record : falsyValues) {
-                // Add the variable to the true and false maps
-                BinaryExpr falseExpr = new BinaryExpr();
-                falseExpr.setLeft(new NameExpr(variable));
-                falseExpr.setOperator(Operator.NOT_EQUALS);
-
-                Integer value = record.getValue(Integer.class).orElse(null);
-                if (value != null) {
-                    falseExpr.setRight(new IntegerLiteralExpr(value.toString()));
-                    expressions.add(falseExpr);
-                }
-
-            }
+            System.out.println(variable + " has " + trueValues.size() + " values for true and " + falseValues.size() + " for false");
         }
-
-        if (expressions.size() > 0) {
-            // Stitch together the expressions with a logical AND.
-            BinaryExpr andExpr = new BinaryExpr();
-            andExpr.setLeft(expressions.get(0));
-            andExpr.setOperator(Operator.AND);
-            for (int i = 1; i < expressions.size(); i++) {
-                andExpr.setRight(expressions.get(i));
-            }
-
-            // Add the original if statement condition to the start, and the andExpr to the
-            // end
-            // to make a new binary expression on the if statement condition.
-            BinaryExpr newExpr = new BinaryExpr();
-            newExpr.setLeft(ifStatementNode.getCondition());
-            newExpr.setOperator(Operator.AND);
-            newExpr.setRight(andExpr);
-
-            ifStatementNode = ifStatementNode.setCondition(newExpr);
-        }
+        // Do nothing else for now.
     }
 
     private void instrumentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {

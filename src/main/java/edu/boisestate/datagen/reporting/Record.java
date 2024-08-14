@@ -13,7 +13,8 @@ public class Record implements Serializable {
     public String variableNames;
     public Object variableValues;
 
-    public Record(){} // Need this for partial initialization. Can't have final types.
+    public Record() {
+    } // Need this for partial initialization. Can't have final types.
 
     // Default constructor with all fields.
     public Record(String className, String methodName, String condition, String variableNames, boolean pathTaken,
@@ -36,17 +37,12 @@ public class Record implements Serializable {
         this.variableValues = null;
     }
 
-    // Override toString() to print the record in a format that can be used as a
-    // key.
-    public String toStringKey() {
-        StringBuilder sb = new StringBuilder();
+    public String genPathKey() {
+        return className + methodName + condition + pathTaken;
+    }
 
-        sb.append(className);
-        sb.append(methodName);
-        sb.append(condition);
-        sb.append(pathTaken);
-
-        return sb.toString();
+    public String genVariableKey() {
+        return className + methodName + condition + pathTaken + variableNames;
     }
 
     public <T> Optional<T> getValue(Class<T> clazz) {
