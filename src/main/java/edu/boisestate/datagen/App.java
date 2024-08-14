@@ -196,6 +196,10 @@ public class App {
 
             // In a loop:
             do {
+                System.out.println("################################################################################");
+                System.out.println("#                     Iteration " + iteration++);
+                System.out.println("################################################################################");
+
                 // Start off by creating a checkpoint folder.
                 String checkpointFolder = (checkpointPath + File.separator + iteration);
                 FileOps.createDirectory(checkpointFolder);
@@ -330,8 +334,6 @@ public class App {
                         String line;
                         StringBuilder sb = new StringBuilder();
                         while ((line = reader.readLine()) != null) {
-                            // TODO: Delete this line.
-                            System.out.println(line);
                             sb.append(line);
                         }
                         p.waitFor();
@@ -374,7 +376,7 @@ public class App {
     private static boolean fixedPointReached() {
         // Dummy implementation for now.
         // Always returns false.
-        return true;
+        return false;
     }
 
     private static Optional<String> evosuitePresentInClassPath() {

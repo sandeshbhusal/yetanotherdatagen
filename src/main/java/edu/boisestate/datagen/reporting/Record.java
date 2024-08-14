@@ -45,7 +45,6 @@ public class Record implements Serializable {
         sb.append(methodName);
         sb.append(condition);
         sb.append(pathTaken);
-        sb.append(variableNames);
 
         return sb.toString();
     }
