@@ -1,17 +1,6 @@
 package edu.boisestate.datagen;
 
-import java.util.HashMap;
-import java.util.List;
-
 import org.junit.Test;
-
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ast.CompilationUnit;
-
-import edu.boisestate.datagen.instrumenters.IfStatementInstrumenter;
-import edu.boisestate.datagen.instrumenters.InstrumentationMode;
-import edu.boisestate.datagen.reporting.Record;
-
 /**
  * Unit test for simple App.
  */

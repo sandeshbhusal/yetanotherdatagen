@@ -27,7 +27,7 @@ public class Report {
         int i = 0;
         for (Object arg : args) {
             if (i % 2 == 0) {
-                record.variableNames = arg.getClass().getName();
+                record.variableNames = String.valueOf(arg);
             } else {
                 record.variableValues = arg;
 

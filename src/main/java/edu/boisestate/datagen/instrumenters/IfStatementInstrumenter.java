@@ -1,8 +1,6 @@
 package edu.boisestate.datagen.instrumenters;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -15,9 +13,6 @@ import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.github.javaparser.ast.expr.BinaryExpr.Operator;
-import com.github.javaparser.ast.expr.BinaryExpr;
-import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import edu.boisestate.datagen.reporting.Record;
@@ -49,7 +44,7 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
 
     @Override
     public void visit(IfStmt ifStatementNode, Void arg) {
-        // Modify the if statement block such that it calls the augmentation method.
+        // Get the variables in the condition
         SimpleNameCollector snc = new SimpleNameCollector();
         ifStatementNode.getCondition().accept(snc, null);
 
@@ -106,6 +101,9 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         // Print out the cached values for each variable.
         Cache cache = Cache.getInstance();
         System.out.println("Cache has " + Cache.dataCache.size() + " entries");
+        for (String key: Cache.dataCache.keySet()) {
+            System.out.println(Cache.dataCache.get(key));
+        }
 
         for (String variable : variables) {
             ArrayList<Record> trueValues = cache.getDataPointsForAVariable(currentClass, currentMethod, expression,
