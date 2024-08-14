@@ -1,6 +1,7 @@
 package edu.boisestate.datagen.instrumenters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -9,7 +10,9 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
+import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
@@ -97,23 +100,37 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         String[] variables = snc.getNames().toArray(String[]::new);
         String expression = ifStatementNode.getCondition().toString();
 
-        System.out.println("Augmenting if statement with " + variables.length + " variables");
         // Print out the cached values for each variable.
         Cache cache = Cache.getInstance();
-        System.out.println("Cache has " + Cache.dataCache.size() + " entries");
-        for (String key: Cache.dataCache.keySet()) {
-            System.out.println(Cache.dataCache.get(key));
-        }
-
+        ArrayList<BinaryExpr> expressions = new ArrayList<>();
         for (String variable : variables) {
             ArrayList<Record> trueValues = cache.getDataPointsForAVariable(currentClass, currentMethod, expression,
                     true, variable);
             ArrayList<Record> falseValues = cache.getDataPointsForAVariable(currentClass, currentMethod, expression,
                     false, variable);
 
-            System.out.println(variable + " has " + trueValues.size() + " values for true and " + falseValues.size() + " for false");
+            // Generate binary expressions for each value and this variable.
+            trueValues.addAll(falseValues);
+
+            for (Record record : trueValues) {
+                BinaryExpr expr = new BinaryExpr();
+                expr.setLeft(new NameExpr(variable));
+                Integer value = record.getValue(Integer.class).orElseThrow();
+                expr.setRight(new IntegerLiteralExpr(String.valueOf(value)));
+
+                expr.setOperator(BinaryExpr.Operator.NOT_EQUALS);
+                expressions.add(expr);
+            }
         }
-        // Do nothing else for now.
+
+        // Dedup
+        HashMap<String, BinaryExpr> deduped = new HashMap<>();
+        for (BinaryExpr expr : expressions) {
+            deduped.put(expr.toString(), expr);
+        }
+
+        expressions.clear();
+        expressions.addAll(deduped.values());
     }
 
     private void instrumentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {
