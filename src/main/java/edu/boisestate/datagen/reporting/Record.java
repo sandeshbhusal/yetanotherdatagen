@@ -1,14 +1,19 @@
 package edu.boisestate.datagen.reporting;
 
+import java.io.Serializable;
 import java.util.Optional;
 
-public class Record {
-    public final String className;
-    public final String methodName;
-    public final String condition;
-    public final boolean pathTaken;
-    public final String variableNames;
-    public final Object variableValues;
+public class Record implements Serializable {
+    private static final long serialVersionUID = 0x0decaf;
+
+    public String className;
+    public String methodName;
+    public String condition;
+    public boolean pathTaken;
+    public String variableNames;
+    public Object variableValues;
+
+    public Record(){} // Need this for partial initialization. Can't have final types.
 
     // Default constructor with all fields.
     public Record(String className, String methodName, String condition, String variableNames, boolean pathTaken,
@@ -52,5 +57,23 @@ public class Record {
             System.err.println("Failed to cast value to " + clazz.getName());
             return Optional.empty();
         }
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(className);
+        sb.append(",");
+        sb.append(methodName);
+        sb.append(",");
+        sb.append(condition);
+        sb.append(",");
+        sb.append(pathTaken);
+        sb.append(",");
+        sb.append(variableNames);
+        sb.append(",");
+        sb.append(variableValues);
+
+        return sb.toString();
     }
 }

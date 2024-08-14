@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -16,6 +18,7 @@ import edu.boisestate.datagen.instrumenters.IfStatementInstrumenter;
 import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
 import edu.boisestate.datagen.instrumenters.InstrumentationMode;
 import edu.boisestate.datagen.instrumenters.TestCaseInstrumenter;
+import edu.boisestate.datagen.rmi.DataPointServerImpl;
 import edu.boisestate.datagen.utils.Compiler;
 import edu.boisestate.datagen.utils.FileOps;
 import net.sourceforge.argparse4j.*;
@@ -65,6 +68,22 @@ public class App {
                 .help("JUnit jar file path. This should also contain the hamcrest jar.")
                 .required(false)
                 .type(String.class);
+
+        // Start the datapointserverimpl on a thread.
+        Thread dpServerThread = new Thread(() -> {
+            try {
+                DataPointServerImpl dpServer = new DataPointServerImpl();
+                dpServer.start();
+            } catch (AlreadyBoundException e) {
+                System.err.println("Could not start datapointserverimpl.");
+                e.printStackTrace();
+            } catch (RemoteException e) {
+                System.err.println("Could not start datapointserverimpl - RemoteException.");
+                e.printStackTrace();
+            }
+        });
+        dpServerThread.start();
+        
 
         try {
             // Parse the arguments.
@@ -120,7 +139,6 @@ public class App {
             classpathsList.add(evosuiteTests.getAbsolutePath());
 
             String[] classpaths = classpathsList.toArray(new String[]{});
-
 
             // Find all .java files in the source directory.
             File[] javaFiles = sourceDir.listFiles(file -> file.getName().endsWith(".java"));
@@ -312,6 +330,8 @@ public class App {
                         String line;
                         StringBuilder sb = new StringBuilder();
                         while ((line = reader.readLine()) != null) {
+                            // TODO: Delete this line.
+                            System.out.println(line);
                             sb.append(line);
                         }
                         p.waitFor();
@@ -334,11 +354,15 @@ public class App {
                 // TODO: Check fixed point here.
 
             } while (!fixedPointReached());
+            dpServerThread.join();
 
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
             System.exit(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
     }
 
     private static String[] getDatagenClassPath() {
