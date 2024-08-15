@@ -16,6 +16,7 @@ import org.tinylog.Logger;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
+import edu.boisestate.datagen.codegen.Codegen;
 import edu.boisestate.datagen.instrumenters.IfStatementInstrumenter;
 import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
 import edu.boisestate.datagen.instrumenters.InstrumentationMode;
@@ -184,7 +185,7 @@ public class App {
                 File file = new File(augmentedFile.getAbsolutePath());
                 String contents = FileOps.readFile(file);
                 CompilationUnit cu = parser.parse(contents).getResult().orElseThrow();
-
+                System.err.println("Augmenting " + augmentedFile.getName()); 
                 IfStatementInstrumenter ifStatementInstrumenterAugmentation = new IfStatementInstrumenter(
                         InstrumentationMode.AUGMENTATION);
 
@@ -333,12 +334,12 @@ public class App {
                     p.waitFor();
                     System.out.println("# JUnit finished running on " + evosuiteTestFile.getName());
                     // Check the exit code of the process.
-                    if (p.exitValue() != 0) {
-                        System.err.println("JUnit exited with non-zero exit code.");
-                        System.err.println("JUnit output:");
-                        System.err.println(sb.toString());
-                        System.exit(1);
-                    }
+                    // if (p.exitValue() != 0) {
+                    //     System.err.println("JUnit exited with non-zero exit code. Exit code: " + p.exitValue());
+                    //     System.err.println("JUnit output:");
+                    //     System.err.println(sb.toString());
+                    //     System.exit(1);
+                    // }
                 } catch (IOException | InterruptedException e) {
                     System.err.println("Could not run junit");
                     e.printStackTrace();
@@ -346,8 +347,18 @@ public class App {
                 }
             }
 
-            // Parse the daikon output, store the invariants, and check for fixed point.
-            // TODO: Check fixed point here.
+            // Make a directory to store the code.
+            String codefolder = checkpointFolder + File.separator + "code";
+            FileOps.createDirectory(codefolder);
+            // Generate code.
+            Codegen.generateCode(codefolder);
+
+            // Compile the stuff in the checkpoint/code folder, along with 
+            // everything we have in the compiled folder, and run it on daikon to generate the output.
+            // Store the daikon output in the same folder as "code", and compare previous iterations
+            // to the current one for stability and fixed point.
+            // TODO: find numeric metrics to compare strings for equality.
+
 
             // Wipe out the augmented, reporting, and compiled folders.
             FileOps.recursivelyDeleteFolder(new File(augmentedPath));

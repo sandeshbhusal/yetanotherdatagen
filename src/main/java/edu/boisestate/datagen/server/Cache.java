@@ -30,7 +30,8 @@ public class Cache {
         // Add this testcase to the code cache.
         String key = record.genPathKey();
         ArrayList<String> code = codeCache.getOrDefault(key, new ArrayList<>());
-        code.add(record.toString());
+        // TODO: Sanitize the testcase to delete all lines with "assert" in them.
+        code.add(testcase);
         codeCache.put(key, code);
 
         // Add the record to the data cache.
@@ -39,6 +40,18 @@ public class Cache {
         ArrayList<Record> data = dataCache.getOrDefault(variableKeyString, new ArrayList<>());
         data.add(record);
         dataCache.put(variableKeyString, data);
+    }
+
+    public ArrayList<String> getCodeForPath(String className, String methodName, String condition, boolean pathTaken) {
+        // TODO: This is a horrible, horrible way to do this.
+        // Refactor this later.
+        Record tempRecord = new Record();
+        tempRecord.className = className;
+        tempRecord.methodName = methodName;
+        tempRecord.condition = condition;
+        tempRecord.pathTaken = pathTaken;
+        String key = tempRecord.genPathKey();
+        return codeCache.getOrDefault(key, new ArrayList<>());
     }
 
     public ArrayList<Record> getDataPointsForAVariable(

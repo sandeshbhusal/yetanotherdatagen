@@ -54,8 +54,9 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         SimpleNameCollector snc = new SimpleNameCollector();
         ifStatementNode.getCondition().accept(snc, null);
 
-        // if there are no variables, then we don't need to instrument
-        if (snc.getNames().size() == 0) {
+        // if there are no variables, then we don't need to instrument if the condition does not start with "true"
+        if (snc.getNames().size() == 0 && !ifStatementNode.getCondition().toString().startsWith("true")) {
+            Logger.debug("No variables found in condition of if statement. Skipping instrumentation.");
             return;
         }
 
@@ -63,24 +64,30 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         ContainsReturnInstrumenter cri = new ContainsReturnInstrumenter();
         Statement thenStatement = ifStatementNode.getThenStmt();
         if (thenStatement instanceof ReturnStmt) {
+            Logger.debug("Found a return statement in the then branch of the if statement. Skipping instrumentation.");
             return;
         }
 
-        // We are sure it;s a block statement
-        thenStatement.asBlockStmt().accept(cri, null);
+        // If it's not a return statement, it could be a block or some other statement.
+        // If block, it might contain a return statement.
+        thenStatement.accept(cri, null);
         if (cri.containsReturn) {
+            Logger.debug("Found a return statement in the then branch of the if statement. Skipping instrumentation.");
             return;
         }
 
         Statement elseStmt = ifStatementNode.getElseStmt().orElse(null);
         if (elseStmt != null) {
             if (elseStmt instanceof ReturnStmt) {
+                Logger.debug("Found a return statement in the else branch of the if statement. Skipping instrumentation.");
                 return;
             }
-
-            // We are sure it;s a block statement
-            elseStmt.asBlockStmt().accept(cri, null);
+            
+            // If it's not a return statement, it could be a block or some other statement.
+            // If block, it might contain a return statement.
+            elseStmt.accept(cri, null);
             if (cri.containsReturn) {
+                Logger.debug("Found a return statement in the else branch of the if statement. Skipping instrumentation.");
                 return;
             }
         }
@@ -88,8 +95,9 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         // Now we are sure there are no returns in the if statement or the else
         // statement
         // or body. We can proceed with instrumentation / augmentation.
-
+        System.err.println("Instrumenting in mode: " + mode);
         if (mode == InstrumentationMode.AUGMENTATION) {
+            System.err.println("Augmenting if statement...");
             this.augmentIfStatement(ifStatementNode, snc);
         }
 
@@ -105,7 +113,10 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         // This is basically how it works:
         // TODO: add comments and example.
 
+        System.err.println("AUGGGGMETTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+
         if (ifStatementNode.getCondition().toString().startsWith("true")) {
+            Logger.debug("Found a wrapping if statement, traversing into children.");
             ifStatementNode.getThenStmt().accept(this, null);
             ifStatementNode.getElseStmt().ifPresent(elseStmt -> elseStmt.accept(this, null));
             return;
@@ -114,6 +125,7 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         // Get the variable names involved in the condition
         String[] variables = snc.getNames().toArray(String[]::new);
         String expression = ifStatementNode.getCondition().toString();
+        Logger.debug("Found a candidate if statement with condition: " + expression);
 
         // Print out the cached values for each variable.
         Cache cache = Cache.getInstance();
@@ -171,7 +183,37 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
             throw new RuntimeException(
                     "Wrapping if statement is not an if statement, or is not wrapped with a 'true' expression.");
         }
-    }
+
+        // If there is no augmentation to be done (at the start, we don't have data points).
+        // We can just return.
+        if (expressions.size() == 0) {
+            Logger.debug("No data points found for augmentation. Skipping augmenting the branches.");
+            return;
+        }
+
+        // Now that the wrapping if statement is found, add all the binary expressions,
+        // starting with "true" as the starting of the expression in the wrapping if statement.
+        // E.g. for
+        // if (true) if (a < b)
+        // we will make it:
+        // if (true && a != 1 && b != 2) if (a < b)
+        
+        BinaryExpr innerExpr = new BinaryExpr();
+        innerExpr.setLeft(new BooleanLiteralExpr(true));
+        innerExpr.setOperator(BinaryExpr.Operator.AND);
+        for (BinaryExpr expr : expressions) {
+            innerExpr.setRight(expr);
+            innerExpr.setLeft(innerExpr.clone());
+            innerExpr.setOperator(BinaryExpr.Operator.AND);
+        }
+        innerExpr.setRight(new BooleanLiteralExpr(true));
+
+        // Set the new condition to the wrapping if statement.
+        // SAFETY: This cast will always work.
+        IfStmt wrapper = (IfStmt) wrappingIfStatement;
+        wrapper.setCondition(innerExpr);
+        System.err.println("Wrapping if statement condition: " + wrapper.getCondition().toString());
+   }
 
     private void instrumentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {
         // Collect variable names and values

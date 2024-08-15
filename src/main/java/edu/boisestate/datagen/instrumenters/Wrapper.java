@@ -7,8 +7,6 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.ast.Node;
 
 public class Wrapper extends VoidVisitorAdapter<Void> implements Instrumenter {
-    private CompilationUnit cu;
-
     @Override
     public void visit(IfStmt stmt, Void arg) {
         super.visit(stmt, arg);
@@ -25,15 +23,10 @@ public class Wrapper extends VoidVisitorAdapter<Void> implements Instrumenter {
         if (parentNode != null) {
             parentNode.replace(stmt, newIfStmt);
         }
-        
-        // Print compilation unit after replacing the node
-        System.out.println("After replacing node:");
-        System.out.println(cu.toString());
     }
 
     @Override
     public void instrument(CompilationUnit cu) {
-        this.cu = cu;
         cu.accept(this, null);
     }
 }
