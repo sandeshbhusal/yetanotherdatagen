@@ -3,7 +3,10 @@ package edu.boisestate.datagen.instrumenters;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.tinylog.Logger;
+
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.BlockStmt;
@@ -96,6 +99,18 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
     }
 
     private void augmentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {
+        // If the condition of the if statement begins with a "true", then we don't need to augment that
+        // statement. We will simply continue to traverse the children in the then and else branches, and
+        // try to augment this statement.
+        // This is basically how it works:
+        // TODO: add comments and example.
+
+        if (ifStatementNode.getCondition().toString().startsWith("true")) {
+            ifStatementNode.getThenStmt().accept(this, null);
+            ifStatementNode.getElseStmt().ifPresent(elseStmt -> elseStmt.accept(this, null));
+            return;
+        }
+
         // Get the variable names involved in the condition
         String[] variables = snc.getNames().toArray(String[]::new);
         String expression = ifStatementNode.getCondition().toString();
@@ -129,8 +144,33 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
             deduped.put(expr.toString(), expr);
         }
 
+        Logger.debug("Original variable values length: {} and deduped length: {}", expressions.size(), deduped.size());
+
         expressions.clear();
         expressions.addAll(deduped.values());
+
+        // Get the wrapping "if" statement for this if statement node.
+        Node wrappingIfStatement = ifStatementNode.getParentNode().orElse(null);
+        if (wrappingIfStatement == null) {
+            throw new RuntimeException("Wrapping if statement is null for if statement node: " + ifStatementNode);
+        }
+        
+        if (!(wrappingIfStatement instanceof IfStmt)
+                || !(((IfStmt) wrappingIfStatement).getCondition().toString().startsWith("true"))) {
+            
+            // Print out this statement.
+            System.err.println("------ Start of error ------");
+            System.out.println(ifStatementNode.toString());
+            // Print out the class of the wrapping if statement.
+            System.err.println("Expected IfStmt, got " + wrappingIfStatement.getClass().getName());
+
+            // Print out the compilation unit also.
+            System.err.println("------ End of error ------");
+
+            // We are doing something wrong here.
+            throw new RuntimeException(
+                    "Wrapping if statement is not an if statement, or is not wrapped with a 'true' expression.");
+        }
     }
 
     private void instrumentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {

@@ -20,6 +20,7 @@ import edu.boisestate.datagen.instrumenters.IfStatementInstrumenter;
 import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
 import edu.boisestate.datagen.instrumenters.InstrumentationMode;
 import edu.boisestate.datagen.instrumenters.TestCaseInstrumenter;
+import edu.boisestate.datagen.instrumenters.Wrapper;
 import edu.boisestate.datagen.rmi.DataPointServerImpl;
 import edu.boisestate.datagen.utils.Compiler;
 import edu.boisestate.datagen.utils.FileOps;
@@ -154,6 +155,7 @@ public class App {
             ImportInstrumenter importInstrumenter = new ImportInstrumenter();
             IfStatementInstrumenter ifInstrumenterInstrumentation = new IfStatementInstrumenter(
                     InstrumentationMode.INSTRUMENTATION);
+            Wrapper wrappingInstrumenter = new Wrapper();
 
             // Add imports and reporting code to the branches.
             File[] reportingFiles = (new File(reportingPath)).listFiles(file -> file.getName().endsWith(".java"));
@@ -186,6 +188,8 @@ public class App {
                 IfStatementInstrumenter ifStatementInstrumenterAugmentation = new IfStatementInstrumenter(
                         InstrumentationMode.AUGMENTATION);
 
+                // We need to wrap all our branches and loops with the wrapping instrumenter.
+                cu.findAll(CompilationUnit.class).stream().forEach(wrappingInstrumenter::instrument);
                 cu.findAll(CompilationUnit.class).stream().forEach(ifStatementInstrumenterAugmentation::instrument);
 
                 try {
