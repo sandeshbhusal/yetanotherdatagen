@@ -39,6 +39,7 @@ public class App {
     private static String checkpointPath;
     private static String evosuiteJarPath;
     private static String junitJarPath;
+    private static String daikonJarPath;
 
     private static int iteration;
 
@@ -75,6 +76,11 @@ public class App {
                 .required(false)
                 .type(String.class);
 
+        argParser.addArgument("-d", "--daikon")
+                .help("Daikon jar file path.")
+                .required(false)
+                .type(String.class);
+
         // Parse arguments.
         try {
             Namespace ns = argParser.parseArgs(args);
@@ -82,6 +88,7 @@ public class App {
             workdir = ns.getString("workdir");
             evosuiteJarPath = evosuitePresentInClassPath().orElse(ns.getString("evosuite"));
             junitJarPath = isJunitPresentInClassPath().orElse(ns.getString("junit"));
+            daikonJarPath = getJarFromClassPath("daikon").orElse(ns.getString("daikon"));
 
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
@@ -101,10 +108,16 @@ public class App {
         }
 
         // Check classpaths for evosuite and junit.
-        if (evosuiteJarPath == null || junitJarPath == null) {
-            System.err.println(
-                    "Evosuite or JUnit jar file not provided, and evosuite or junit is not present in the classpath.");
-            System.err.println("Use the -e and -j flags to provide the evosuite and junit jar paths respectively.");
+        if (evosuiteJarPath == null || junitJarPath == null || daikonJarPath == null) {
+            System.err.println("Evosuite, JUnit, or Daikon jar file not provided, and evosuite, junit, or daikon is not present in the classpath.");
+            // Print out the status of the jars.
+            if (!(evosuiteJarPath == null))
+            System.err.println("Evosuite jar: " + evosuiteJarPath);
+            if (!(junitJarPath == null))
+            System.err.println("JUnit jar: " + junitJarPath);
+            if (!(daikonJarPath == null))
+            System.err.println("Daikon jar: " + daikonJarPath);
+            System.err.println("Use the -e, -j, and -d flags to provide the evosuite, junit, and daikon jar paths respectively.");
             System.exit(1);
         }
 
@@ -359,7 +372,6 @@ public class App {
             // to the current one for stability and fixed point.
             // TODO: find numeric metrics to compare strings for equality.
 
-
             // Wipe out the augmented, reporting, and compiled folders.
             FileOps.recursivelyDeleteFolder(new File(augmentedPath));
             FileOps.recursivelyDeleteFolder(new File(reportingPath));
@@ -381,6 +393,22 @@ public class App {
         // Dummy implementation for now.
         // Always returns false.
         return false;
+    }
+
+    private static Optional<String> getJarFromClassPath(String jarName) {
+        // Checks if junit is present in the classpath. If present, returns the path to
+        // the jar.
+        String classpath = System.getProperty("java.class.path");
+        String[] classpathEntries = classpath.split(File.pathSeparator);
+
+        for (String classpathEntry : classpathEntries) {
+            if (classpathEntry.contains(jarName)) {
+                String classPathAbsolute = new File(classpathEntry).getAbsolutePath();
+                return Optional.of(classPathAbsolute);
+            }
+        }
+
+        return Optional.empty();
     }
 
     private static Optional<String> evosuitePresentInClassPath() {
@@ -406,7 +434,6 @@ public class App {
         for (String classpathEntry : classpathEntries) {
             if (classpathEntry.contains("junit")) {
                 String classPathAbsolute = new File(classpathEntry).getAbsolutePath();
-                System.out.println("JUnit jar found in classpath: " + classPathAbsolute);
                 return Optional.of(classPathAbsolute);
             }
         }
