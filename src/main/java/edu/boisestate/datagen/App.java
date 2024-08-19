@@ -9,10 +9,15 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+
+import javax.print.attribute.standard.MediaSize.JIS;
 
 import org.tinylog.Logger;
 
+import com.github.difflib.DiffUtils;
+import com.github.difflib.patch.Patch;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
@@ -109,15 +114,17 @@ public class App {
 
         // Check classpaths for evosuite and junit.
         if (evosuiteJarPath == null || junitJarPath == null || daikonJarPath == null) {
-            System.err.println("Evosuite, JUnit, or Daikon jar file not provided, and evosuite, junit, or daikon is not present in the classpath.");
+            System.err.println(
+                    "Evosuite, JUnit, or Daikon jar file not provided, and evosuite, junit, or daikon is not present in the classpath.");
             // Print out the status of the jars.
             if (!(evosuiteJarPath == null))
-            System.err.println("Evosuite jar: " + evosuiteJarPath);
+                System.err.println("Evosuite jar: " + evosuiteJarPath);
             if (!(junitJarPath == null))
-            System.err.println("JUnit jar: " + junitJarPath);
+                System.err.println("JUnit jar: " + junitJarPath);
             if (!(daikonJarPath == null))
-            System.err.println("Daikon jar: " + daikonJarPath);
-            System.err.println("Use the -e, -j, and -d flags to provide the evosuite, junit, and daikon jar paths respectively.");
+                System.err.println("Daikon jar: " + daikonJarPath);
+            System.err.println(
+                    "Use the -e, -j, and -d flags to provide the evosuite, junit, and daikon jar paths respectively.");
             System.exit(1);
         }
 
@@ -198,7 +205,7 @@ public class App {
                 File file = new File(augmentedFile.getAbsolutePath());
                 String contents = FileOps.readFile(file);
                 CompilationUnit cu = parser.parse(contents).getResult().orElseThrow();
-                System.err.println("Augmenting " + augmentedFile.getName()); 
+                System.err.println("Augmenting " + augmentedFile.getName());
                 IfStatementInstrumenter ifStatementInstrumenterAugmentation = new IfStatementInstrumenter(
                         InstrumentationMode.AUGMENTATION);
 
@@ -348,10 +355,11 @@ public class App {
                     System.out.println("# JUnit finished running on " + evosuiteTestFile.getName());
                     // Check the exit code of the process.
                     // if (p.exitValue() != 0) {
-                    //     System.err.println("JUnit exited with non-zero exit code. Exit code: " + p.exitValue());
-                    //     System.err.println("JUnit output:");
-                    //     System.err.println(sb.toString());
-                    //     System.exit(1);
+                    // System.err.println("JUnit exited with non-zero exit code. Exit code: " +
+                    // p.exitValue());
+                    // System.err.println("JUnit output:");
+                    // System.err.println(sb.toString());
+                    // System.exit(1);
                     // }
                 } catch (IOException | InterruptedException e) {
                     System.err.println("Could not run junit");
@@ -363,16 +371,123 @@ public class App {
             // Make a directory to store the code.
             String codefolder = checkpointFolder + File.separator + "code";
             FileOps.createDirectory(codefolder);
+
             // Generate code.
             Codegen.generateCode(codefolder);
 
-            // Compile the stuff in the checkpoint/code folder, along with 
-            // everything we have in the compiled folder, and run it on daikon to generate the output.
-            // Store the daikon output in the same folder as "code", and compare previous iterations
-            // to the current one for stability and fixed point.
-            // TODO: find numeric metrics to compare strings for equality.
+            // Run daikon on the generated code.
+            // The compilation directory should be cleared now. We do not need it anymore.
+            // Since we have trace files, we just need to compile them, and the original
+            // source code files into the compiled folder (it contains the
+            // instrumented+compiled source code).
+            // at this point.
+            FileOps.recursivelyDeleteFolder(new File(compiledPath));
 
-            // Wipe out the augmented, reporting, and compiled folders.
+            // Compile the files in the source directory into the compiled folder.
+            for (File javaFile : ((new File(source)).listFiles(file -> file.getName().endsWith(".java")))) {
+                File file = new File(javaFile.getAbsolutePath());
+                Compiler.compile(file.getAbsolutePath(), compiledPath, classpaths);
+            }
+
+            // Now finally, we can compile the trace files.
+            for (File file : (new File(codefolder)).listFiles(file -> file.getName().endsWith(".java"))) {
+                Compiler.compile(file.getAbsolutePath(), compiledPath, classpaths);
+            }
+
+            // NOW we can run daikon on the generated code.
+            // Go back to the compiled folder, and find all class files that start with
+            // DAIKONTEST_.
+            File[] daikonTestFiles = (new File(compiledPath))
+                    .listFiles(file -> file.getName().startsWith("DAIKONTEST_"));
+            for (File daikonTestFile : daikonTestFiles) {
+                String[] command_dyncomp = {
+                        "java",
+                        "-cp",
+                        String.join(File.pathSeparator, classpaths),
+                        "daikon.DynComp",
+                        daikonTestFile.getName().substring(0, daikonTestFile.getName().length() - 6),
+                };
+
+                ProcessBuilder pb = new ProcessBuilder(command_dyncomp);
+                pb.redirectErrorStream(true);
+                try {
+                    System.out.println("# Running Daikon tests from " + daikonTestFile.getName());
+                    Process p = pb.start();
+                    // print the output of the process
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    String line;
+                    StringBuilder sb = new StringBuilder();
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    p.waitFor();
+
+                    // Check the exit code of the process.
+                    if (p.exitValue() != 0) {
+                        System.err.println("Daikon exited with non-zero exit code. Exit code: " +
+                                p.exitValue());
+                        System.err.println("Daikon output:");
+                        System.err.println(sb.toString());
+                        System.exit(1);
+                    }
+                } catch (IOException | InterruptedException e) {
+                    System.err.println("Could not run Daikon");
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+
+                // Run daikon chicory on it next, capture the output and save it as an invariant
+                // file.
+                String[] command_chicory = {
+                        "java",
+                        "-cp",
+                        String.join(File.pathSeparator, classpaths),
+                        "daikon.Chicory",
+                        "--daikon",
+                        String.format("--comparability-file=%s.decls-DynComp",
+                                daikonTestFile.getName().substring(0, daikonTestFile.getName().length() - 6)),
+                        daikonTestFile.getName().substring(0, daikonTestFile.getName().length() - 6),
+                };
+
+                ProcessBuilder pb_chicory = new ProcessBuilder(command_chicory);
+                pb_chicory.redirectErrorStream(true);
+                try {
+                    System.out.println("# Running Daikon Chicory tests from " + daikonTestFile.getName());
+                    Process p_chicory = pb_chicory.start();
+                    // print the output of the process
+                    BufferedReader reader_chicory = new BufferedReader(
+                            new InputStreamReader(p_chicory.getInputStream()));
+                    String line_chicory;
+                    StringBuilder sb_chicory = new StringBuilder();
+                    while ((line_chicory = reader_chicory.readLine()) != null) {
+                        sb_chicory.append(line_chicory);
+                    }
+                    p_chicory.waitFor();
+
+                    // Check the exit code of the process.
+                    if (p_chicory.exitValue() != 0) {
+                        System.err.println("Daikon Chicory exited with non-zero exit code. Exit code: " +
+                                p_chicory.exitValue());
+                        System.err.println("Daikon Chicory output:");
+                        System.err.println(sb_chicory.toString());
+                        System.exit(1);
+                    }
+
+                    // Save the output of the chicory run as an invariant file in the code/
+                    // directory with
+                    // an exgtension of ".inv".
+                    File invariantFile = new File(codefolder + File.separator
+                            + daikonTestFile.getName().substring(0, daikonTestFile.getName().length() - 6) + ".inv");
+                    FileOps.writeFile(invariantFile, sb_chicory.toString());
+                } catch (IOException | InterruptedException e) {
+                    System.err.println("Could not run Daikon Chicory");
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+            }
+
+            // Wipe out the augmented, reporting, and compiled folders for the next
+            // iteration.
             FileOps.recursivelyDeleteFolder(new File(augmentedPath));
             FileOps.recursivelyDeleteFolder(new File(reportingPath));
             FileOps.recursivelyDeleteFolder(new File(compiledPath));
@@ -380,6 +495,62 @@ public class App {
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
             Logger.debug("Iteration " + iteration + " took " + elapsedTime + " milliseconds.");
+
+            if (iteration == 1)
+                continue;
+            else {
+                // Check the last iteration's output for determining the fixed point.
+                // First, find the last iteration's code folder.
+                File lastIterationCodeFolder = new File(
+                        checkpointPath + File.separator + (iteration - 1) + File.separator + "code");
+                
+                // List all invariant files (have the extension ".inv") in the last iteration's code folder.
+                File[] invariantFiles = lastIterationCodeFolder.listFiles(file -> file.getName().endsWith(".inv"));
+                
+                if (invariantFiles.length == 0) {
+                    Logger.error("No invariant files found in the last iteration's code folder.");
+                    continue;
+                }
+                
+                // Count the number of files for which we have reached a fixed point.
+                int fixedFiles = 0;
+                // For each invariant file, check if it is present in the current iteration's code folder.
+                for (File invariantFile : invariantFiles) {
+                    File currentIterationInvariantFile = new File(codefolder + File.separator + invariantFile.getName());
+                    if (!currentIterationInvariantFile.exists()) {
+                        Logger.error("Invariant file " + invariantFile.getName() + " not found in the current iteration's code folder.");
+                        continue;
+                    } else {
+                        // Compare the contents of the last invariant file with the current invariant file.
+                        // Read each file into a list of strings (lines).
+                        List<String> lastInvariantFileLines = FileOps.readFileLines(invariantFile);
+                        List<String> currentInvariantFileLines = FileOps.readFileLines(currentIterationInvariantFile);
+                        
+                        Patch<String> patch =DiffUtils.diff(lastInvariantFileLines, currentInvariantFileLines);
+                        
+                        if (patch.getDeltas().size() == 0) {
+                            Logger.info("Invariant file " + invariantFile.getName() + " is fixed.");
+                            fixedFiles++;
+                        }
+                    }
+                }
+
+                if (fixedFiles == invariantFiles.length) {
+                    Logger.info("All invariant files are fixed.");
+                    Logger.info("Reached fixed point. Terminating datagen.");
+
+                    // Dump the invariants we found in this iteration.
+                    for (File invariantFile : invariantFiles) {
+                        Logger.info("Invariants generated at the end of the " + (iteration - 1) + "th iteration:");
+                        Logger.info("----------------");
+                        Logger.info("For file " + invariantFile.getName());
+
+                        System.out.println(String.join("\n", FileOps.readFileLines(invariantFile)));
+                    }
+                    System.exit(0);
+                    break;
+                }
+            }
         } while (!fixedPointReached());
     }
 

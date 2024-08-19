@@ -3,7 +3,7 @@ package edu.boisestate.datagen.codegen;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import edu.boisestate.datagen.server.Cache;
 
@@ -15,17 +15,17 @@ public class Codegen {
             System.err.println("Generating code for " + pathKey);
             String fileName = sanitizeStringForFileSystem(pathKey);
             StringBuilder sb = new StringBuilder();
-            ArrayList<String> code = Cache.codeCache.get(pathKey);
+            HashSet<String> code = Cache.codeCache.get(pathKey);
             System.err.println("Generating code file with contents: " + code);
 
-            File destFile = new File(filePath + File.separator + fileName + ".java");
+            File destFile = new File(filePath + File.separator + "DAIKONTEST_" + fileName + ".java");
             try {
                 destFile.createNewFile();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            sb.append("public class " + sanitizeStringForFileSystem(fileName) + "{\n");
+            sb.append("public class DAIKONTEST_" + sanitizeStringForFileSystem(fileName) + "{\n");
             sb.append("public static void main(String[] args) {\n");
             for (String testcase : code) {
                 sb.append(testcase);

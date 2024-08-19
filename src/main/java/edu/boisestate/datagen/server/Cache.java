@@ -2,6 +2,7 @@ package edu.boisestate.datagen.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import edu.boisestate.datagen.reporting.Record;
 
@@ -11,7 +12,8 @@ public class Cache {
 
     // HashMap that stores the code for each path.
     // Maps from a path key to a list of code strings that executed that code path.
-    public static HashMap<String, ArrayList<String>> codeCache = new HashMap<String, ArrayList<String>>();
+    // Use a hashset instead of an arraylist to avoid duplicates.
+    public static HashMap<String, HashSet<String>> codeCache = new HashMap<String, HashSet<String>>();
 
     // HashMap that maps each execution path to a map of variables to the values those variables took.
     public static HashMap<String, ArrayList<Record>> dataCache = new HashMap<String, ArrayList<Record>>();
@@ -29,8 +31,8 @@ public class Cache {
     public void addDataPoint(String testcase, Record record) {
         // Add this testcase to the code cache.
         String key = record.genPathKey();
-        ArrayList<String> code = codeCache.getOrDefault(key, new ArrayList<>());
-        // TODO: Sanitize the testcase to delete all lines with "assert" in them.
+        HashSet<String> code = codeCache.getOrDefault(key, new HashSet<>());
+        testcase = testcase.replaceAll("assert.*;", "");
         code.add(testcase);
         codeCache.put(key, code);
 
@@ -42,7 +44,7 @@ public class Cache {
         dataCache.put(variableKeyString, data);
     }
 
-    public ArrayList<String> getCodeForPath(String className, String methodName, String condition, boolean pathTaken) {
+    public HashSet<String> getCodeForPath(String className, String methodName, String condition, boolean pathTaken) {
         // TODO: This is a horrible, horrible way to do this.
         // Refactor this later.
         Record tempRecord = new Record();
@@ -51,7 +53,7 @@ public class Cache {
         tempRecord.condition = condition;
         tempRecord.pathTaken = pathTaken;
         String key = tempRecord.genPathKey();
-        return codeCache.getOrDefault(key, new ArrayList<>());
+        return codeCache.getOrDefault(key, new HashSet<>());
     }
 
     public ArrayList<Record> getDataPointsForAVariable(

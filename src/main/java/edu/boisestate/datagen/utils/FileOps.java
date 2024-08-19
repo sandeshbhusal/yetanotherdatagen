@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileOps {
     public static void createDirectory(String path) {
@@ -74,5 +76,21 @@ public class FileOps {
         } else {
             folder.delete();
         }
+    }
+
+    public static List<String> readFileLines(File file) {
+        List<String> lines = new ArrayList<>();
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lines;
     }
 }
