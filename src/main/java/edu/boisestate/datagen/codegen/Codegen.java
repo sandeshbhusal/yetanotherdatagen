@@ -4,19 +4,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
+import org.tinylog.Logger;
 
 import edu.boisestate.datagen.server.Cache;
 
 public class Codegen {
     // Generate code file for a given path, and put it into the specified directory.
     public static void generateCode(String filePath) {
-        System.err.println("Generating code...");
         for (String pathKey : Cache.codeCache.keySet()) {
-            System.err.println("Generating code for " + pathKey);
+            Logger.debug("Generating code for " + pathKey);
             String fileName = sanitizeStringForFileSystem(pathKey);
             StringBuilder sb = new StringBuilder();
             HashSet<String> code = Cache.codeCache.get(pathKey);
-            System.err.println("Generating code file with contents: " + code);
 
             File destFile = new File(filePath + File.separator + "DAIKONTEST_" + fileName + ".java");
             try {

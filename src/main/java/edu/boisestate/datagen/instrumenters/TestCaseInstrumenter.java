@@ -15,8 +15,6 @@ public class TestCaseInstrumenter extends VoidVisitorAdapter<Void> implements In
         boolean isTestCase = md.getAnnotations().stream()
                 .anyMatch(annotation -> annotation.getName().getIdentifier().equals("Test"));
 
-        System.out.println("# Instrumenting found testcase: \'" + md.getNameAsString() + "\'");
-
         if (isTestCase) {
             // Continue to traverse this method, because it is a test case that might
             // trigger some data paths.

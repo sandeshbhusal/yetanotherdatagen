@@ -95,9 +95,7 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         // Now we are sure there are no returns in the if statement or the else
         // statement
         // or body. We can proceed with instrumentation / augmentation.
-        System.err.println("Instrumenting in mode: " + mode);
         if (mode == InstrumentationMode.AUGMENTATION) {
-            System.err.println("Augmenting if statement...");
             this.augmentIfStatement(ifStatementNode, snc);
         }
 
@@ -113,7 +111,6 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         // This is basically how it works:
         // TODO: add comments and example.
 
-        System.err.println("AUGGGGMETTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
 
         if (ifStatementNode.getCondition().toString().startsWith("true")) {
             Logger.debug("Found a wrapping if statement, traversing into children.");
@@ -212,7 +209,6 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         // SAFETY: This cast will always work.
         IfStmt wrapper = (IfStmt) wrappingIfStatement;
         wrapper.setCondition(innerExpr);
-        System.err.println("Wrapping if statement condition: " + wrapper.getCondition().toString());
    }
 
     private void instrumentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {

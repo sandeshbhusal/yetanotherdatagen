@@ -205,7 +205,6 @@ public class App {
                 File file = new File(augmentedFile.getAbsolutePath());
                 String contents = FileOps.readFile(file);
                 CompilationUnit cu = parser.parse(contents).getResult().orElseThrow();
-                System.err.println("Augmenting " + augmentedFile.getName());
                 IfStatementInstrumenter ifStatementInstrumenterAugmentation = new IfStatementInstrumenter(
                         InstrumentationMode.AUGMENTATION);
 
@@ -223,8 +222,8 @@ public class App {
                     System.exit(1);
                 }
             }
-
-            Logger.info("---------------- Iteration " + iteration++ + " ----------------");
+            System.out.println(); // Makes segments readable.
+            Logger.info("---------------- Iteration " + ++iteration + " ----------------");
             Logger.info("Creating checkpoint folder for iteration " + iteration);
 
             String checkpointFolder = (checkpointPath + File.separator + iteration);
@@ -241,13 +240,12 @@ public class App {
             File compiledFiles = new File(compiledPath);
             File[] javaFilesCompiled = compiledFiles.listFiles(file -> file.getName().endsWith(".class"));
 
+            // Time.
+            long startTimeEvosuite = System.currentTimeMillis();
             // Run evosuite on each compiled file.
             for (File javaFile : javaFilesCompiled) {
                 File file = new File(javaFile.getAbsolutePath());
-                System.out.println("File: " + file.getName());
-
                 String className = file.getName().substring(0, file.getName().length() - 6);
-                System.out.println("Class name: " + className);
 
                 // Build a prcess builder to run evosuite.
                 ProcessBuilder pb = new ProcessBuilder("java", "-jar", evosuiteJarPath, "-projectCP",
@@ -267,7 +265,7 @@ public class App {
                     }
                     p.waitFor();
 
-                    Logger.info("Evosuite finished running on " + className);
+                    Logger.debug("Evosuite finished running on " + className);
                     // Check the exit code of the process.
                     if (p.exitValue() != 0) {
                         Logger.error("Evosuite exited with non-zero exit code.");
@@ -280,8 +278,10 @@ public class App {
                     e.printStackTrace();
                     System.exit(1);
                 }
-                System.out.println("Finished running evosuite.");
             }
+            long endTimeEvosuite = System.currentTimeMillis();
+            long elapsedTimeEvosuite = endTimeEvosuite - startTimeEvosuite;
+            Logger.info("Evosuite finished running on " + javaFilesCompiled.length + " files in " + elapsedTimeEvosuite + " milliseconds.");
 
             // Now, instrument the evosuite testcases with method invocation
             // instrumentation. Evosuite tests are generated in the $PWD/evosuite-tests
@@ -342,7 +342,7 @@ public class App {
                 ProcessBuilder pb = new ProcessBuilder(command);
                 pb.redirectErrorStream(true);
                 try {
-                    System.out.println("# Running JUnit tests from " + evosuiteTestFile.getName());
+                    Logger.info("Running JUnit tests from " + evosuiteTestFile.getName());
                     Process p = pb.start();
                     // print the output of the process
                     BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -352,7 +352,6 @@ public class App {
                         sb.append(line);
                     }
                     p.waitFor();
-                    System.out.println("# JUnit finished running on " + evosuiteTestFile.getName());
                     // Check the exit code of the process.
                     // if (p.exitValue() != 0) {
                     // System.err.println("JUnit exited with non-zero exit code. Exit code: " +
@@ -411,7 +410,7 @@ public class App {
                 ProcessBuilder pb = new ProcessBuilder(command_dyncomp);
                 pb.redirectErrorStream(true);
                 try {
-                    System.out.println("# Running Daikon tests from " + daikonTestFile.getName());
+                    Logger.info("Running Daikon tests from " + daikonTestFile.getName());
                     Process p = pb.start();
                     // print the output of the process
                     BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -452,7 +451,6 @@ public class App {
                 ProcessBuilder pb_chicory = new ProcessBuilder(command_chicory);
                 pb_chicory.redirectErrorStream(true);
                 try {
-                    System.out.println("# Running Daikon Chicory tests from " + daikonTestFile.getName());
                     Process p_chicory = pb_chicory.start();
                     // print the output of the process
                     BufferedReader reader_chicory = new BufferedReader(
@@ -461,6 +459,7 @@ public class App {
                     StringBuilder sb_chicory = new StringBuilder();
                     while ((line_chicory = reader_chicory.readLine()) != null) {
                         sb_chicory.append(line_chicory);
+                        sb_chicory.append("\n");
                     }
                     p_chicory.waitFor();
 
@@ -538,6 +537,7 @@ public class App {
                 if (fixedFiles == invariantFiles.length) {
                     Logger.info("All invariant files are fixed.");
                     Logger.info("Reached fixed point. Terminating datagen.");
+                    System.out.println(); // Makes segments readable.
 
                     // Dump the invariants we found in this iteration.
                     for (File invariantFile : invariantFiles) {
@@ -545,7 +545,14 @@ public class App {
                         Logger.info("----------------");
                         Logger.info("For file " + invariantFile.getName());
 
-                        System.out.println(String.join("\n", FileOps.readFileLines(invariantFile)));
+                        // Read lines from the file, and insert newlines after each line.
+                        // Without using FileOps.
+                        StringBuilder sb = new StringBuilder();
+                        for (String line : FileOps.readFileLines(invariantFile)) {
+                            sb.append(line);
+                            sb.append("\n");
+                        }
+                        System.out.println(sb.toString()); 
                     }
                     System.exit(0);
                     break;

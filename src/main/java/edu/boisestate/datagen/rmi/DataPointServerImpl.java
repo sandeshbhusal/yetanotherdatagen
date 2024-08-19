@@ -20,7 +20,6 @@ public class DataPointServerImpl extends UnicastRemoteObject implements DataPoin
     @Override
     public void receiveDataPoint(String testcase, Record datapoint) throws RemoteException, NotBoundException {
         // Add the data point to the cache.
-        System.out.println("Received data point: " + datapoint.toString());
         Cache.getInstance().addDataPoint(testcase, datapoint);
     }
 
