@@ -12,8 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.print.attribute.standard.MediaSize.JIS;
-
 import org.tinylog.Logger;
 
 import com.github.difflib.DiffUtils;
@@ -30,7 +28,7 @@ import edu.boisestate.datagen.instrumenters.Wrapper;
 import edu.boisestate.datagen.rmi.DataPointServerImpl;
 import edu.boisestate.datagen.utils.Compiler;
 import edu.boisestate.datagen.utils.FileOps;
-import net.sourceforge.argparse4j.*;
+import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -281,7 +279,8 @@ public class App {
             }
             long endTimeEvosuite = System.currentTimeMillis();
             long elapsedTimeEvosuite = endTimeEvosuite - startTimeEvosuite;
-            Logger.info("Evosuite finished running on " + javaFilesCompiled.length + " files in " + elapsedTimeEvosuite + " milliseconds.");
+            Logger.info("Evosuite finished running on " + javaFilesCompiled.length + " files in " + elapsedTimeEvosuite
+                    + " milliseconds.");
 
             // Now, instrument the evosuite testcases with method invocation
             // instrumentation. Evosuite tests are generated in the $PWD/evosuite-tests
@@ -353,13 +352,13 @@ public class App {
                     }
                     p.waitFor();
                     // Check the exit code of the process.
-                    // if (p.exitValue() != 0) {
-                    // System.err.println("JUnit exited with non-zero exit code. Exit code: " +
-                    // p.exitValue());
-                    // System.err.println("JUnit output:");
-                    // System.err.println(sb.toString());
-                    // System.exit(1);
-                    // }
+                    if (p.exitValue() != 0) {
+                        System.err.println("JUnit exited with non-zero exit code. Exit code: " +
+                                p.exitValue());
+                        System.err.println("JUnit output:");
+                        System.err.println(sb.toString());
+                        System.exit(1);
+                    }
                 } catch (IOException | InterruptedException e) {
                     System.err.println("Could not run junit");
                     e.printStackTrace();
@@ -502,31 +501,36 @@ public class App {
                 // First, find the last iteration's code folder.
                 File lastIterationCodeFolder = new File(
                         checkpointPath + File.separator + (iteration - 1) + File.separator + "code");
-                
-                // List all invariant files (have the extension ".inv") in the last iteration's code folder.
+
+                // List all invariant files (have the extension ".inv") in the last iteration's
+                // code folder.
                 File[] invariantFiles = lastIterationCodeFolder.listFiles(file -> file.getName().endsWith(".inv"));
-                
+
                 if (invariantFiles.length == 0) {
                     Logger.error("No invariant files found in the last iteration's code folder.");
                     continue;
                 }
-                
+
                 // Count the number of files for which we have reached a fixed point.
                 int fixedFiles = 0;
-                // For each invariant file, check if it is present in the current iteration's code folder.
+                // For each invariant file, check if it is present in the current iteration's
+                // code folder.
                 for (File invariantFile : invariantFiles) {
-                    File currentIterationInvariantFile = new File(codefolder + File.separator + invariantFile.getName());
+                    File currentIterationInvariantFile = new File(
+                            codefolder + File.separator + invariantFile.getName());
                     if (!currentIterationInvariantFile.exists()) {
-                        Logger.error("Invariant file " + invariantFile.getName() + " not found in the current iteration's code folder.");
+                        Logger.error("Invariant file " + invariantFile.getName()
+                                + " not found in the current iteration's code folder.");
                         continue;
                     } else {
-                        // Compare the contents of the last invariant file with the current invariant file.
+                        // Compare the contents of the last invariant file with the current invariant
+                        // file.
                         // Read each file into a list of strings (lines).
                         List<String> lastInvariantFileLines = FileOps.readFileLines(invariantFile);
                         List<String> currentInvariantFileLines = FileOps.readFileLines(currentIterationInvariantFile);
-                        
-                        Patch<String> patch =DiffUtils.diff(lastInvariantFileLines, currentInvariantFileLines);
-                        
+
+                        Patch<String> patch = DiffUtils.diff(lastInvariantFileLines, currentInvariantFileLines);
+
                         if (patch.getDeltas().size() == 0) {
                             Logger.info("Invariant file " + invariantFile.getName() + " is fixed.");
                             fixedFiles++;
@@ -552,7 +556,7 @@ public class App {
                             sb.append(line);
                             sb.append("\n");
                         }
-                        System.out.println(sb.toString()); 
+                        System.out.println(sb.toString());
                     }
                     System.exit(0);
                     break;
