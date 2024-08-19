@@ -25,7 +25,9 @@ import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
 import edu.boisestate.datagen.instrumenters.InstrumentationMode;
 import edu.boisestate.datagen.instrumenters.TestCaseInstrumenter;
 import edu.boisestate.datagen.instrumenters.Wrapper;
+import edu.boisestate.datagen.reporting.Record;
 import edu.boisestate.datagen.rmi.DataPointServerImpl;
+import edu.boisestate.datagen.server.Cache;
 import edu.boisestate.datagen.utils.Compiler;
 import edu.boisestate.datagen.utils.FileOps;
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -493,6 +495,48 @@ public class App {
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
             Logger.debug("Iteration " + iteration + " took " + elapsedTime + " milliseconds.");
+
+            Logger.info("Dumping variable values for usage with DIG tool.");
+            // get the traces from the Cache, and dump them to a CSV file.
+            // True and false traces are dumped separately.
+            // Create a dump folder, like the code folder.
+            FileOps.createDirectory(checkpointPath + File.separator + iteration + File.separator + "vtracedump");
+            for (String pathKey : Cache.getInstance().dataCache.keySet()) {
+                // Get the data for this path key.
+                ArrayList<Record> data = Cache.getInstance().dataCache.get(pathKey);
+
+                // Data contains multiple data points. The structure to dump it is like this:
+                // vtrace{iteration}; I var1; I var2; I var3; ... <- This is the header that DIG
+                // expects.
+                // vtrace{iteration}; p1; p2; p3; ... <- This is the data that DIG expects, p1,
+                // p2, p3 are values of
+                // var1, var2, var3, respectively.
+                // We need to dump the data in the format that DIG expects.
+                StringBuilder sb = new StringBuilder();
+                sb.append("vtrace" + iteration + ";");
+
+                // Get variable names. and generate the header.
+                // All traces have the same variable names, so we should be safe.
+                for (String varname: data.get(0).trace.keySet()) {
+                    sb.append("I " + varname + ";");
+                }
+
+                sb.append("\n");
+
+                // now append the data.
+                for (Record record : data) {
+                    sb.append("vtrace" + iteration + ";");
+                    for (String varname: record.trace.keySet()) {
+                        sb.append(record.trace.get(varname) + ";");
+                    }
+                    sb.append("\n");
+                }
+
+                // Sanitize the path key for filesystem.
+                pathKey = pathKey.replaceAll("\\W", "_");
+                FileOps.writeFile(new File(checkpointPath + File.separator + iteration + File.separator + "vtracedump"
+                        + File.separator + pathKey + ".csv"), sb.toString());
+            }
 
             if (iteration == 1)
                 continue;

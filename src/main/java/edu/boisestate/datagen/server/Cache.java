@@ -65,29 +65,4 @@ public class Cache {
         String key = Record.generateKeyForMap(className, methodName, condition, pathTaken);
         return dataCache.getOrDefault(key, new ArrayList<>());
     }
-
-    public ArrayList<Record> getDataPointsForAVariable(
-            String className,
-            String methodName,
-            String condition,
-            boolean pathTaken,
-            String variableName) {
-        Record tempRecord = new Record();
-        tempRecord.className = className;
-        tempRecord.methodName = methodName;
-        tempRecord.condition = condition;
-        tempRecord.pathTaken = pathTaken;
-
-        tempRecord.pathTaken = true;
-        String trueKeyString = tempRecord.genPathKey();
-
-        tempRecord.pathTaken = false;
-        String falseKeyString = tempRecord.genPathKey();
-
-        ArrayList<Record> trueData = dataCache.getOrDefault(trueKeyString + variableName, new ArrayList<>());
-        ArrayList<Record> falseData = dataCache.getOrDefault(falseKeyString + variableName, new ArrayList<>());
-
-        trueData.addAll(falseData);
-        return trueData;
-    }
 }

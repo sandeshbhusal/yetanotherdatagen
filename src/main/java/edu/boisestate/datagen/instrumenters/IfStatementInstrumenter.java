@@ -1,6 +1,7 @@
 package edu.boisestate.datagen.instrumenters;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.tinylog.Logger;
 
@@ -149,7 +150,7 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         // through
         // DIG tool.
 
-        ArrayList<UnaryExpr> expressions = new ArrayList<>();
+        HashSet<UnaryExpr> expressions = new HashSet<>();
         for (Record trace : traces) {
             ArrayList<BinaryExpr> binaryExprs = new ArrayList<>();
 
@@ -192,7 +193,7 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
             innerExpr.setOperator(BinaryExpr.Operator.AND);
             innerExpr.setLeft(innerExpr.clone());
         }
-        
+
         innerExpr.setOperator(BinaryExpr.Operator.AND);
         innerExpr.setRight(new BooleanLiteralExpr(true));
         // Print the inner expression
