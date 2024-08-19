@@ -1,7 +1,6 @@
 package edu.boisestate.datagen.instrumenters;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.tinylog.Logger;
 
@@ -15,10 +14,12 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
+import com.github.javaparser.ast.expr.EnclosedExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import edu.boisestate.datagen.reporting.Record;
@@ -54,7 +55,8 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         SimpleNameCollector snc = new SimpleNameCollector();
         ifStatementNode.getCondition().accept(snc, null);
 
-        // if there are no variables, then we don't need to instrument if the condition does not start with "true"
+        // if there are no variables, then we don't need to instrument if the condition
+        // does not start with "true"
         if (snc.getNames().size() == 0 && !ifStatementNode.getCondition().toString().startsWith("true")) {
             Logger.debug("No variables found in condition of if statement. Skipping instrumentation.");
             return;
@@ -79,15 +81,17 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         Statement elseStmt = ifStatementNode.getElseStmt().orElse(null);
         if (elseStmt != null) {
             if (elseStmt instanceof ReturnStmt) {
-                Logger.debug("Found a return statement in the else branch of the if statement. Skipping instrumentation.");
+                Logger.debug(
+                        "Found a return statement in the else branch of the if statement. Skipping instrumentation.");
                 return;
             }
-            
+
             // If it's not a return statement, it could be a block or some other statement.
             // If block, it might contain a return statement.
             elseStmt.accept(cri, null);
             if (cri.containsReturn) {
-                Logger.debug("Found a return statement in the else branch of the if statement. Skipping instrumentation.");
+                Logger.debug(
+                        "Found a return statement in the else branch of the if statement. Skipping instrumentation.");
                 return;
             }
         }
@@ -96,7 +100,7 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         // statement
         // or body. We can proceed with instrumentation / augmentation.
         if (mode == InstrumentationMode.AUGMENTATION) {
-            this.augmentIfStatement(ifStatementNode, snc);
+            this.augmentIfStatement(ifStatementNode);
         }
 
         if (mode == InstrumentationMode.INSTRUMENTATION) {
@@ -104,13 +108,14 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         }
     }
 
-    private void augmentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {
-        // If the condition of the if statement begins with a "true", then we don't need to augment that
-        // statement. We will simply continue to traverse the children in the then and else branches, and
+    private void augmentIfStatement(IfStmt ifStatementNode) {
+        // If the condition of the if statement begins with a "true", then we don't need
+        // to augment that
+        // statement. We will simply continue to traverse the children in the then and
+        // else branches, and
         // try to augment this statement.
         // This is basically how it works:
         // TODO: add comments and example.
-
 
         if (ifStatementNode.getCondition().toString().startsWith("true")) {
             Logger.debug("Found a wrapping if statement, traversing into children.");
@@ -120,53 +125,88 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         }
 
         // Get the variable names involved in the condition
-        String[] variables = snc.getNames().toArray(String[]::new);
         String expression = ifStatementNode.getCondition().toString();
         Logger.debug("Found a candidate if statement with condition: " + expression);
 
         // Print out the cached values for each variable.
         Cache cache = Cache.getInstance();
-        ArrayList<BinaryExpr> expressions = new ArrayList<>();
-        for (String variable : variables) {
-            ArrayList<Record> trueValues = cache.getDataPointsForAVariable(currentClass, currentMethod, expression,
-                    true, variable);
-            ArrayList<Record> falseValues = cache.getDataPointsForAVariable(currentClass, currentMethod, expression,
-                    false, variable);
 
-            // Generate binary expressions for each value and this variable.
-            trueValues.addAll(falseValues);
+        // Get all traces that lead to this point.
+        ArrayList<Record> traces_true = cache.getDataPointsForPath(currentClass, currentMethod, expression, true);
+        ArrayList<Record> traces_false = cache.getDataPointsForPath(currentClass, currentMethod, expression, false);
+        ArrayList<Record> traces = new ArrayList<>();
+        traces.addAll(traces_true);
+        traces.addAll(traces_false);
 
-            for (Record record : trueValues) {
-                BinaryExpr expr = new BinaryExpr();
-                expr.setLeft(new NameExpr(variable));
-                Integer value = record.getValue(Integer.class).orElseThrow();
-                expr.setRight(new IntegerLiteralExpr(String.valueOf(value)));
+        // Traverse the traces list, and for each variable-value pair, generate an
+        // expression.
+        // for e.g. if we have class->method->a<b->{true, false} and the traces look
+        // like:
+        // {a->1, b->2}, {a->2, b->3}, {a->3, b->4}
+        // then we will generate the following expressions:
+        // !(a == 1 && b == 2) && !(a == 2 && b == 3) && !(a == 3 && b == 4)
+        // One more advantage of this approach is we can generate the csv files to run
+        // through
+        // DIG tool.
 
-                expr.setOperator(BinaryExpr.Operator.NOT_EQUALS);
-                expressions.add(expr);
+        ArrayList<UnaryExpr> expressions = new ArrayList<>();
+        for (Record trace : traces) {
+            ArrayList<BinaryExpr> binaryExprs = new ArrayList<>();
+
+            for (String variable : trace.getVariablesInTrace()) {
+                BinaryExpr binaryExpr = new BinaryExpr();
+                binaryExpr.setLeft(new NameExpr(variable));
+                binaryExpr.setRight(
+                        new IntegerLiteralExpr(String.valueOf(trace.getValue(variable, Integer.class).orElseThrow())));
+                binaryExpr.setOperator(BinaryExpr.Operator.EQUALS);
+                binaryExprs.add(binaryExpr);
             }
+
+            if (binaryExprs.size() == 0) {
+                // Nothing to do for this path.
+                return;
+            }
+
+            BinaryExpr combinedExpr = binaryExprs.get(0);
+            for (int i = 1; i < binaryExprs.size(); i++) {
+                combinedExpr = new BinaryExpr(combinedExpr, binaryExprs.get(i), BinaryExpr.Operator.AND);
+            }
+
+            // Enclose the combined expression in parentheses
+            EnclosedExpr enclosedExpr = new EnclosedExpr(combinedExpr);
+
+            // Negate the enclosed expression
+            UnaryExpr negatedExpr = new UnaryExpr(enclosedExpr, UnaryExpr.Operator.LOGICAL_COMPLEMENT);
+
+            // Add the negated expression to the expressions list
+            expressions.add(negatedExpr);
         }
 
-        // Dedup
-        HashMap<String, BinaryExpr> deduped = new HashMap<>();
-        for (BinaryExpr expr : expressions) {
-            deduped.put(expr.toString(), expr);
+        // Combine all unary expressions with AND, starting with "true"
+        BinaryExpr innerExpr = new BinaryExpr();
+        innerExpr.setLeft(new BooleanLiteralExpr(true));
+        innerExpr.setOperator(BinaryExpr.Operator.AND);
+
+        for (UnaryExpr expr : expressions) {
+            innerExpr.setRight(expr);
+            innerExpr.setOperator(BinaryExpr.Operator.AND);
+            innerExpr.setLeft(innerExpr.clone());
         }
-
-        Logger.debug("Original variable values length: {} and deduped length: {}", expressions.size(), deduped.size());
-
-        expressions.clear();
-        expressions.addAll(deduped.values());
+        
+        innerExpr.setOperator(BinaryExpr.Operator.AND);
+        innerExpr.setRight(new BooleanLiteralExpr(true));
+        // Print the inner expression
+        System.out.println("Inner expression: " + innerExpr);
 
         // Get the wrapping "if" statement for this if statement node.
         Node wrappingIfStatement = ifStatementNode.getParentNode().orElse(null);
         if (wrappingIfStatement == null) {
             throw new RuntimeException("Wrapping if statement is null for if statement node: " + ifStatementNode);
         }
-        
+
         if (!(wrappingIfStatement instanceof IfStmt)
                 || !(((IfStmt) wrappingIfStatement).getCondition().toString().startsWith("true"))) {
-            
+
             // Print out this statement.
             System.err.println("------ Start of error ------");
             System.out.println(ifStatementNode.toString());
@@ -181,35 +221,19 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
                     "Wrapping if statement is not an if statement, or is not wrapped with a 'true' expression.");
         }
 
-        // If there is no augmentation to be done (at the start, we don't have data points).
+        // If there is no augmentation to be done (at the start, we don't have data
+        // points).
         // We can just return.
         if (expressions.size() == 0) {
             Logger.debug("No data points found for augmentation. Skipping augmenting the branches.");
             return;
         }
 
-        // Now that the wrapping if statement is found, add all the binary expressions,
-        // starting with "true" as the starting of the expression in the wrapping if statement.
-        // E.g. for
-        // if (true) if (a < b)
-        // we will make it:
-        // if (true && a != 1 && b != 2) if (a < b)
-        
-        BinaryExpr innerExpr = new BinaryExpr();
-        innerExpr.setLeft(new BooleanLiteralExpr(true));
-        innerExpr.setOperator(BinaryExpr.Operator.AND);
-        for (BinaryExpr expr : expressions) {
-            innerExpr.setRight(expr);
-            innerExpr.setLeft(innerExpr.clone());
-            innerExpr.setOperator(BinaryExpr.Operator.AND);
-        }
-        innerExpr.setRight(new BooleanLiteralExpr(true));
-
         // Set the new condition to the wrapping if statement.
         // SAFETY: This cast will always work.
         IfStmt wrapper = (IfStmt) wrappingIfStatement;
         wrapper.setCondition(innerExpr);
-   }
+    }
 
     private void instrumentIfStatement(IfStmt ifStatementNode, SimpleNameCollector snc) {
         // Collect variable names and values

@@ -4,6 +4,7 @@ import edu.boisestate.datagen.rmi.DataPointServer;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.HashMap;
 
 public class Report {
 
@@ -23,34 +24,29 @@ public class Report {
         record.methodName = methodName;
         record.condition = condition;
         record.pathTaken = pathTaken;
+        record.trace = new HashMap<>();
 
-        int i = 0;
-        for (Object arg : args) {
-            if (i % 2 == 0) {
-                record.variableNames = String.valueOf(arg);
-            } else {
-                record.variableValues = arg;
+        for (int i = 0; i < args.length; i += 2) {
+            record.trace.put(String.valueOf(args[i]), args[i + 1]);
+        }
 
-                try {
-                    System.out.println("Attaching to server");
+        try {
+            System.out.println("Attaching to server");
 
-                    DataPointServer server = (DataPointServer) LocateRegistry.getRegistry()
-                            .lookup("DataPointServer");
-                    Registry registry = LocateRegistry.getRegistry();
-                    // Dump everything registered in the registry
-                    for (String name : registry.list()) {
-                        System.out.println("Registry entry: " + name);
-                    }
-
-                    server.receiveDataPoint(testCaseBody, record);
-                    System.out.println("Data point sent to server");
-                } catch (Exception e) {
-                    // Handle other exceptions that might occur
-                    System.err.println("Unexpected error during privileged action");
-                    e.printStackTrace();
-                }
+            DataPointServer server = (DataPointServer) LocateRegistry.getRegistry()
+                    .lookup("DataPointServer");
+            Registry registry = LocateRegistry.getRegistry();
+            // Dump everything registered in the registry
+            for (String name : registry.list()) {
+                System.out.println("Registry entry: " + name);
             }
-            i += 1;
+
+            server.receiveDataPoint(testCaseBody, record);
+            System.out.println("Data point sent to server");
+        } catch (Exception e) {
+            // Handle other exceptions that might occur
+            System.err.println("Unexpected error during privileged action");
+            e.printStackTrace();
         }
     }
 
