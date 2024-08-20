@@ -42,11 +42,13 @@ public class App {
     private static String augmentedPath;
     private static String reportingPath;
     private static String checkpointPath;
+    private static String codefolder;
     private static String evosuiteJarPath;
     private static String junitJarPath;
     private static String daikonJarPath;
 
     private static int iteration;
+    private static int numIterations = -1;
 
     public static void main(String[] args) {
         // Arguments:
@@ -86,6 +88,11 @@ public class App {
                 .required(false)
                 .type(String.class);
 
+        argParser.addArgument("-i", "--iterations")
+                .help("Number of iterations to run (overrides the fixed point check in daikon).")
+                .required(false)
+                .type(Integer.class);
+
         // Parse arguments.
         try {
             Namespace ns = argParser.parseArgs(args);
@@ -94,6 +101,7 @@ public class App {
             evosuiteJarPath = evosuitePresentInClassPath().orElse(ns.getString("evosuite"));
             junitJarPath = isJunitPresentInClassPath().orElse(ns.getString("junit"));
             daikonJarPath = getJarFromClassPath("daikon").orElse(ns.getString("daikon"));
+            numIterations = ns.getInt("iterations");
 
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
@@ -369,7 +377,7 @@ public class App {
             }
 
             // Make a directory to store the code.
-            String codefolder = checkpointFolder + File.separator + "code";
+            codefolder = checkpointFolder + File.separator + "code";
             FileOps.createDirectory(codefolder);
 
             // Generate code.
@@ -517,7 +525,7 @@ public class App {
 
                 // Get variable names. and generate the header.
                 // All traces have the same variable names, so we should be safe.
-                for (String varname: data.get(0).trace.keySet()) {
+                for (String varname : data.get(0).trace.keySet()) {
                     sb.append("I " + varname + ";");
                 }
 
@@ -526,7 +534,7 @@ public class App {
                 // now append the data.
                 for (Record record : data) {
                     sb.append("vtrace" + iteration + ";");
-                    for (String varname: record.trace.keySet()) {
+                    for (String varname : record.trace.keySet()) {
                         sb.append(record.trace.get(varname) + ";");
                     }
                     sb.append("\n");
@@ -538,8 +546,21 @@ public class App {
                         + File.separator + pathKey + ".csv"), sb.toString());
             }
 
+        } while (!fixedPointReached());
+    }
+
+    private static String[] getDatagenClassPath() {
+        String classpath = System.getProperty("java.class.path");
+        String[] classpathEntries = classpath.split(File.pathSeparator);
+        return classpathEntries;
+    }
+
+    private static boolean fixedPointReached() {
+        if (numIterations != -1 && iteration == numIterations)
+            return true;
+        else {
             if (iteration == 1)
-                continue;
+                return false;
             else {
                 // Check the last iteration's output for determining the fixed point.
                 // First, find the last iteration's code folder.
@@ -552,7 +573,7 @@ public class App {
 
                 if (invariantFiles.length == 0) {
                     Logger.error("No invariant files found in the last iteration's code folder.");
-                    continue;
+                    return false; 
                 }
 
                 // Count the number of files for which we have reached a fixed point.
@@ -602,22 +623,10 @@ public class App {
                         }
                         System.out.println(sb.toString());
                     }
-                    System.exit(0);
-                    break;
+                    return true; 
                 }
             }
-        } while (!fixedPointReached());
-    }
-
-    private static String[] getDatagenClassPath() {
-        String classpath = System.getProperty("java.class.path");
-        String[] classpathEntries = classpath.split(File.pathSeparator);
-        return classpathEntries;
-    }
-
-    private static boolean fixedPointReached() {
-        // Dummy implementation for now.
-        // Always returns false.
+        }
         return false;
     }
 

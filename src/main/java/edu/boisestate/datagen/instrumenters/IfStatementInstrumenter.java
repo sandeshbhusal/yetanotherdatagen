@@ -56,10 +56,26 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
         SimpleNameCollector snc = new SimpleNameCollector();
         ifStatementNode.getCondition().accept(snc, null);
 
-        // if there are no variables, then we don't need to instrument if the condition
-        // does not start with "true"
-        if (snc.getNames().size() == 0 && !ifStatementNode.getCondition().toString().startsWith("true")) {
-            Logger.debug("No variables found in condition of if statement. Skipping instrumentation.");
+        if (mode == InstrumentationMode.INSTRUMENTATION) {
+            this.instrumentIfStatement(ifStatementNode, snc);
+        }
+        
+        // // if there are no variables, then we don't need to instrument if the
+        // condition
+        // // does not start with "true"
+        // if (snc.getNames().size() == 0 &&
+        // !ifStatementNode.getCondition().toString().startsWith("true")) {
+        // Logger.debug("No variables found in condition of if statement. Skipping
+        // instrumentation.");
+        // return;
+        // }
+
+        // if the condition starts with a true, then we traverse into the children
+        // instead with this
+        // visitor.
+        if (ifStatementNode.getCondition().toString().startsWith("true")) {
+            ifStatementNode.getThenStmt().accept(this, null);
+            ifStatementNode.getElseStmt().ifPresent(elseStmt -> elseStmt.accept(this, null));
             return;
         }
 
@@ -104,9 +120,6 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
             this.augmentIfStatement(ifStatementNode);
         }
 
-        if (mode == InstrumentationMode.INSTRUMENTATION) {
-            this.instrumentIfStatement(ifStatementNode, snc);
-        }
     }
 
     private void augmentIfStatement(IfStmt ifStatementNode) {
@@ -270,6 +283,11 @@ public class IfStatementInstrumenter extends VoidVisitorAdapter<Void> implements
             }
             elseBlock = elseBlock.asBlockStmt().addStatement(0, elseMethodCall);
         }
+
+        // If there are children statements that may contain if statements also, they also need
+        // to be instrumented. For that, simply call the visit on the children.
+        ifStatementNode.getThenStmt().accept(this, null);
+        ifStatementNode.getElseStmt().ifPresent(elseStmt -> elseStmt.accept(this, null));
     }
 
     private MethodCallExpr createMethodCallExpr(String condition, boolean pathTaken, String[] variableNames) {
