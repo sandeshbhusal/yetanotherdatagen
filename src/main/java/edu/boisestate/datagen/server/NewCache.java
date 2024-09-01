@@ -7,7 +7,8 @@ import edu.boisestate.datagen.reporting.InstrumentationRecord;
 
 public class NewCache {
     private static NewCache instance = null;
-    private static HashMap<String, ArrayList<HashMap<String, Object>>> dataCache = new HashMap<>();
+    public HashMap<String, ArrayList<HashMap<String, Object>>> instrumentation_cache = new HashMap<>();
+    public HashMap<String, ArrayList<HashMap<String, Object>>> guard_cache = new HashMap<>();
 
     public static NewCache getInstance() {
         if (instance == null) {
@@ -16,13 +17,13 @@ public class NewCache {
         return instance;
     }
 
-    public void addDataPoint(InstrumentationRecord record) {
+    public void add_instrumentation_data(InstrumentationRecord record) {
         // Get key.
         String key = record.getRecordId();
 
         // Insert into cache.
-        ArrayList<HashMap<String, Object>> data = dataCache.getOrDefault(key, new ArrayList<>());
+        ArrayList<HashMap<String, Object>> data = instrumentation_cache.getOrDefault(key, new ArrayList<>());
         data.add(record.getValues());
-        dataCache.put(key, data);
+        instrumentation_cache.put(key, data);
     }
 }

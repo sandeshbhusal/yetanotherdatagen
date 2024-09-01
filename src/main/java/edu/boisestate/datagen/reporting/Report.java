@@ -20,6 +20,16 @@ public class Report {
         sendDataPoint(record);
     }
 
+    public static void datagen_guard_instrument(String Id, Object... args) {
+        HashMap<String, Object> trace = new HashMap<>();
+        for (int i = 0; i < args.length; i += 2) {
+            trace.put(String.valueOf(args[i]), args[i + 1]);
+        }
+
+        InstrumentationRecord record = new InstrumentationRecord(Id, trace);
+        sendDataPoint(record);
+    }
+
     public static void reportDataPoint(
             String className,
             String methodName,

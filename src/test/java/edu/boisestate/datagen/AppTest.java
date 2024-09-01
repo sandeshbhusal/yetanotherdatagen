@@ -6,6 +6,7 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
 import edu.boisestate.datagen.instrumenters.CommentChangingInstrumenter;
+import edu.boisestate.datagen.instrumenters.InstrumentationMode;
 /**
  * Unit test for simple App.
  */
@@ -30,13 +31,9 @@ public class AppTest {
                 "    }\n" +
                 "}";
 
-        System.out.println(code);
-        CommentChangingInstrumenter cc = new CommentChangingInstrumenter();
+        CommentChangingInstrumenter cc = new CommentChangingInstrumenter(InstrumentationMode.AUGMENTATION);
         JavaParser parser = new JavaParser();
         CompilationUnit cu = parser.parse(code).getResult().get();
         cc.instrument(cu);
-
-        System.out.println(cu.toString());
-
     } 
 }
