@@ -65,6 +65,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
                         Arrays.asList(StringUtils.chomp(comment).split(" ")));
 
                 MethodCallExpr methodCall = new MethodCallExpr();
+                methodCall.setScope(new NameExpr("Report"));
                 methodCall.setName(new SimpleName("datagen_instrument"));
 
                 Iterator<String> iter = commentContents.iterator();

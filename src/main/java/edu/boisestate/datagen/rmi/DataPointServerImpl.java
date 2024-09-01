@@ -7,6 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 
+import edu.boisestate.datagen.reporting.InstrumentationRecord;
 import edu.boisestate.datagen.reporting.Record;
 import edu.boisestate.datagen.server.Cache;
 
@@ -34,5 +35,10 @@ public class DataPointServerImpl extends UnicastRemoteObject implements DataPoin
             System.err.println("Failed to bind DataPointServer");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void receiveDataPoint(String id, InstrumentationRecord record) throws RemoteException, NotBoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

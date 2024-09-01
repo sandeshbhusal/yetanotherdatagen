@@ -10,6 +10,16 @@ public class Report {
 
     private static String testCaseBody = null;
 
+    public static void datagen_instrument(String Id, Object... args) {
+        HashMap<String, Object> trace = new HashMap<>();
+        for (int i = 0; i < args.length; i += 2) {
+            trace.put(String.valueOf(args[i]), args[i + 1]);
+        }
+
+        InstrumentationRecord record = new InstrumentationRecord(Id, trace);
+        sendDataPoint(record);
+    }
+
     public static void reportDataPoint(
             String className,
             String methodName,
@@ -30,6 +40,31 @@ public class Report {
             record.trace.put(String.valueOf(args[i]), args[i + 1]);
         }
 
+        sendDataPoint(record);
+    }
+
+    public static void sendDataPoint(Record record) {
+        try {
+            System.out.println("Attaching to server");
+
+            DataPointServer server = (DataPointServer) LocateRegistry.getRegistry()
+                    .lookup("DataPointServer");
+            Registry registry = LocateRegistry.getRegistry();
+            // Dump everything registered in the registry
+            for (String name : registry.list()) {
+                System.out.println("Registry entry: " + name);
+            }
+
+            server.receiveDataPoint(testCaseBody, record);
+            System.out.println("Data point sent to server");
+        } catch (Exception e) {
+            // Handle other exceptions that might occur
+            System.err.println("Unexpected error during privileged action");
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendDataPoint(InstrumentationRecord record) {
         try {
             System.out.println("Attaching to server");
 
