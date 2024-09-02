@@ -29,6 +29,5 @@ public class DataPointServerImpl extends UnicastRemoteObject implements DataPoin
     @Override
     public void receiveDataPoint(InstrumentationRecord record) throws RemoteException, NotBoundException {
         NewCache.getInstance().add_instrumentation_data(record);
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

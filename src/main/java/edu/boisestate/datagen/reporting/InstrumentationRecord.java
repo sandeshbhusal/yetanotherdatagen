@@ -39,6 +39,6 @@ public class InstrumentationRecord implements Serializable {
     // ToString impl.
     @Override
     public String toString() {
-        return "Record [RecordId=" + RecordId + ", values=" + values + "]";
+        return "Record [RecordId=" + RecordId + ", values=" + values + "]" + " (Type = " + type + ")";
     }
 }

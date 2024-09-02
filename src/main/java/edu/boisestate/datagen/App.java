@@ -5,15 +5,12 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import org.tinylog.Logger;
 
-import com.github.difflib.DiffUtils;
-import com.github.difflib.patch.Patch;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
@@ -34,13 +31,9 @@ public class App {
     private static String augmentedPath;
     private static String reportingPath;
     private static String checkpointPath;
-    private static String codefolder;
     private static String evosuiteJarPath;
     private static String junitJarPath;
     private static String daikonJarPath;
-
-    private static int iteration;
-    private static int numIterations = -1;
 
     public static void main(String[] args) {
         // Arguments:
@@ -94,7 +87,6 @@ public class App {
             evosuiteJarPath = getJarFromClassPath("evosuite").orElse(ns.getString("evosuite"));
             junitJarPath = getJarFromClassPath("junit").orElse(ns.getString("junit"));
             daikonJarPath = getJarFromClassPath("daikon").orElse(ns.getString("daikon"));
-            numIterations = ns.getInt("iterations");
 
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
@@ -285,13 +277,6 @@ public class App {
                 };
                 runProcess(junitcommand);
             }
-
-            // Sleep for 10s.
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         } while (true);
     }
 
@@ -304,9 +289,6 @@ public class App {
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (String.join(" ", command).contains("junit")) {
-                    System.out.println(line);
-                }
                 sb.append(line);
                 sb.append("\n");
             }
