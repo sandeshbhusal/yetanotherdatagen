@@ -5,6 +5,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,6 +19,7 @@ import edu.boisestate.datagen.instrumenters.CommentChangingInstrumenter;
 import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
 import edu.boisestate.datagen.instrumenters.InstrumentationMode;
 import edu.boisestate.datagen.rmi.DataPointServerImpl;
+import edu.boisestate.datagen.server.NewCache;
 import edu.boisestate.datagen.utils.FileOps;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -34,6 +36,7 @@ public class App {
     private static String evosuiteJarPath;
     private static String junitJarPath;
     private static String daikonJarPath;
+    private static String codePath;
 
     public static void main(String[] args) {
         // Arguments:
@@ -133,6 +136,7 @@ public class App {
         reportingPath = workdir + "/instrumented/reporting";
         compiledPath = workdir + "/compiled";
         checkpointPath = workdir + "/checkpoint";
+        codePath = workdir + "/code";
 
         FileOps.createDirectory(augmentedPath);
         FileOps.createDirectory(reportingPath);
@@ -278,7 +282,20 @@ public class App {
                 };
                 runProcess(junitcommand);
             }
-        } while (iterations < 3);
+
+            // Now that everything is done, we will dump the data to the "code" directory,
+            // Alongside generated evosuite tests, augmented code, and reporting code.
+            FileOps.recursivelyCopyFolder(new File(reportingPath), new File(codePath + "/reporting"));
+            FileOps.recursivelyCopyFolder(new File(augmentedPath), new File(codePath + "/augmented"));
+            FileOps.recursivelyCopyFolder(evosuiteTests, new File(codePath + "/evosuite-tests"));
+
+            // Generate our code.
+            Logger.info("Generating code.");
+            HashMap<String, String> traces = NewCache.getInstance().generate_daikon_dtraces();
+            for (String key : traces.keySet()) {
+                FileOps.writeFile(new File(codePath + "/" + key + ".dtrace"), traces.get(key));
+            }
+        } while (iterations < 1);
     }
 
     private static void runProcess(String[] command) {
