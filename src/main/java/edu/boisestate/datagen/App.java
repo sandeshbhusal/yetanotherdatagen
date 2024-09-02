@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import org.tinylog.Logger;
 
@@ -180,17 +182,6 @@ public class App {
             FileOps.recursivelyCopyFolder(sourceDir, new File(augmentedPath));
             FileOps.recursivelyCopyFolder(sourceDir, new File(reportingPath));
 
-            // Code in the augmented directory is augmented with data we have seen
-            // in new NewCache.
-            for (File file : new File(augmentedPath).listFiles()) {
-                if (file.getName().endsWith(".java")) {
-                    Logger.info("Augmenting file: " + file.getName());
-                    CompilationUnit cu = parseJavaFile(file).orElseThrow();
-                    augmenter.instrument(cu);
-                    FileOps.writeFile(file, cu.toString());
-                }
-            }
-
             // Code in the reporting directory is instrumented with reporting code.
             for (File file : new File(reportingPath).listFiles()) {
                 if (file.getName().endsWith(".java")) {
@@ -202,11 +193,137 @@ public class App {
                 }
             }
 
-            System.exit(0);
+            // Code in the augmented directory is augmented with data we have seen
+            // in new NewCache. Then, it is compiled and executed on evosuite.
+            for (File file : new File(augmentedPath).listFiles()) {
+                if (!file.getName().endsWith(".java")) {
+                    // Skip all non-java files.
+                    continue;
+                }
+                String className = file.getName().replace(".java", "");
 
-        } while (!fixedPointReached());
+                Logger.info("Augmenting input file " + file.getName());
+                if (file.getName().endsWith(".java")) {
+                    Logger.info("Augmenting file: " + file.getName());
+                    CompilationUnit cu = parseJavaFile(file).orElseThrow();
+                    augmenter.instrument(cu);
+                    FileOps.writeFile(file, cu.toString());
+                }
+
+                Logger.info("Compiling augmented file " + file.getName());
+                // Compile and execute the augmented file.
+                String[] command = { "javac", file.getAbsolutePath(), "-d", compiledPath };
+                runProcess(command);
+
+                Logger.info("Running evosuite on augmented file " + file.getName());
+                // Run evosuite on the file, but from the compiled directory.
+                String compiledFilePath = compiledPath;
+                String[] evoruncommand = {
+                        "java",
+                        "-cp",
+                        String.join(":", classpaths),
+                        "-jar",
+                        evosuiteJarPath,
+                        String.format("-projectCP=%s", compiledFilePath),
+                        String.format("-class=%s", className),
+                };
+
+                runProcess(evoruncommand);
+            }
+
+            // Now that evosuite run has finished, our tests are generated in
+            // $PWD/evosuite-tests. They need to be compiled alongside our reporting
+            // code, and run together.
+            for (File file : new File(reportingPath).listFiles()) {
+                if (!file.getName().endsWith(".java")) {
+                    // Skip all non-java files.
+                    continue;
+                }
+
+                Logger.info("Compiling reporting file " + file.getName());
+                String className = file.getName().replace(".java", "");
+                String[] compile_reportingfiles = { "javac", file.getAbsolutePath(), "-d", compiledPath };
+                runProcess(compile_reportingfiles);
+
+                // Also compile the respective evosuite test. The two files
+                // we need to compile in this case are:
+                // className_ESTest.java
+                // className_ESTest_scaffolding.java
+
+                Logger.info("Compiling evosuite test file for " + file.getName());
+                // Now compile all files in evosuite-tests folder.
+                File evosuiteTestFileName = new File(
+                        evosuiteTests.getAbsolutePath() + "/" + className + "_ESTest.java");
+                File scaffoldingFileName = new File(
+                        evosuiteTests.getAbsolutePath() + "/" + className + "_ESTest_scaffolding.java");
+
+                String[] compile_esfiles = {
+                        "javac",
+                        "-d", compiledPath,
+                        "-cp", String.join(":", classpaths),
+                        evosuiteTestFileName.getAbsolutePath()
+                };
+
+                runProcess(compile_esfiles);
+
+                String[] compile_scaffolding = {
+                        "javac",
+                        "-d", compiledPath,
+                        "-cp", String.join(":", classpaths),
+                        scaffoldingFileName.getAbsolutePath()
+                };
+                runProcess(compile_scaffolding);
+
+                Logger.info("Running JUnit tests generated for " + file.getName());
+                // Run the compiled junit tests on junit.
+                String[] junitcommand = {
+                        "java",
+                        "-cp",
+                        String.join(":", classpaths),
+                        "org.junit.runner.JUnitCore",
+                        className + "_ESTest"
+                };
+                runProcess(junitcommand);
+            }
+
+            // Sleep for 10s.
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } while (true);
     }
-    
+
+    private static void runProcess(String[] command) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            ProcessBuilder pb = new ProcessBuilder(command);
+            pb.redirectErrorStream(true);
+            Process p = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (String.join(" ", command).contains("junit")) {
+                    System.out.println(line);
+                }
+                sb.append(line);
+                sb.append("\n");
+            }
+
+            p.waitFor();
+            if (!(p.exitValue() == 0)) {
+                System.err.println("Error running command: ");
+                System.err.println(sb.toString());
+                System.exit(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e);
+            System.exit(1);
+        }
+    }
+
     private static Optional<CompilationUnit> parseJavaFile(File file) {
         JavaParser parser = new JavaParser();
         try {
@@ -221,81 +338,6 @@ public class App {
         String classpath = System.getProperty("java.class.path");
         String[] classpathEntries = classpath.split(File.pathSeparator);
         return classpathEntries;
-    }
-
-    private static boolean fixedPointReached() {
-        if (numIterations != -1 && iteration == numIterations)
-            return true;
-        else {
-            if (iteration == 1)
-                return false;
-            else {
-                // Check the last iteration's output for determining the fixed point.
-                // First, find the last iteration's code folder.
-                File lastIterationCodeFolder = new File(
-                        checkpointPath + File.separator + (iteration - 1) + File.separator + "code");
-
-                // List all invariant files (have the extension ".inv") in the last iteration's
-                // code folder.
-                File[] invariantFiles = lastIterationCodeFolder.listFiles(file -> file.getName().endsWith(".inv"));
-
-                if (invariantFiles.length == 0) {
-                    Logger.error("No invariant files found in the last iteration's code folder.");
-                    return false;
-                }
-
-                // Count the number of files for which we have reached a fixed point.
-                int fixedFiles = 0;
-                // For each invariant file, check if it is present in the current iteration's
-                // code folder.
-                for (File invariantFile : invariantFiles) {
-                    File currentIterationInvariantFile = new File(
-                            codefolder + File.separator + invariantFile.getName());
-                    if (!currentIterationInvariantFile.exists()) {
-                        Logger.error("Invariant file " + invariantFile.getName()
-                                + " not found in the current iteration's code folder.");
-                        continue;
-                    } else {
-                        // Compare the contents of the last invariant file with the current invariant
-                        // file.
-                        // Read each file into a list of strings (lines).
-                        List<String> lastInvariantFileLines = FileOps.readFileLines(invariantFile);
-                        List<String> currentInvariantFileLines = FileOps.readFileLines(currentIterationInvariantFile);
-
-                        Patch<String> patch = DiffUtils.diff(lastInvariantFileLines, currentInvariantFileLines);
-
-                        if (patch.getDeltas().size() == 0) {
-                            Logger.info("Invariant file " + invariantFile.getName() + " is fixed.");
-                            fixedFiles++;
-                        }
-                    }
-                }
-
-                if (fixedFiles == invariantFiles.length) {
-                    Logger.info("All invariant files are fixed.");
-                    Logger.info("Reached fixed point. Terminating datagen.");
-                    System.out.println(); // Makes segments readable.
-
-                    // Dump the invariants we found in this iteration.
-                    for (File invariantFile : invariantFiles) {
-                        Logger.info("Invariants generated at the end of the " + (iteration - 1) + "th iteration:");
-                        Logger.info("----------------");
-                        Logger.info("For file " + invariantFile.getName());
-
-                        // Read lines from the file, and insert newlines after each line.
-                        // Without using FileOps.
-                        StringBuilder sb = new StringBuilder();
-                        for (String line : FileOps.readFileLines(invariantFile)) {
-                            sb.append(line);
-                            sb.append("\n");
-                        }
-                        System.out.println(sb.toString());
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private static Optional<String> getJarFromClassPath(String jarName) {

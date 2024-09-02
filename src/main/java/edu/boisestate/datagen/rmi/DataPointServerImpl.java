@@ -5,23 +5,12 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-
 import edu.boisestate.datagen.reporting.InstrumentationRecord;
-import edu.boisestate.datagen.reporting.Record;
-import edu.boisestate.datagen.server.Cache;
+import edu.boisestate.datagen.server.NewCache;
 
 public class DataPointServerImpl extends UnicastRemoteObject implements DataPointServer {
-    HashMap<String, Record> dataPoints = new HashMap<String, Record>();
-
     public DataPointServerImpl() throws RemoteException {
         super();
-    }
-
-    @Override
-    public void receiveDataPoint(String testcase, Record datapoint) throws RemoteException, NotBoundException {
-        // Add the data point to the cache.
-        Cache.getInstance().addDataPoint(testcase, datapoint);
     }
 
     public void start() throws AlreadyBoundException {
@@ -38,7 +27,8 @@ public class DataPointServerImpl extends UnicastRemoteObject implements DataPoin
     }
 
     @Override
-    public void receiveDataPoint(String id, InstrumentationRecord record) throws RemoteException, NotBoundException {
+    public void receiveDataPoint(InstrumentationRecord record) throws RemoteException, NotBoundException {
+        NewCache.getInstance().add_instrumentation_data(record);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
