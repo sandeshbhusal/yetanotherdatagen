@@ -1,15 +1,15 @@
 package edu.boisestate.datagen.reporting;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-// import org.tinylog.Logger;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Cache {
     private static Cache instance = null;
-    public HashMap<String, ArrayList<HashMap<String, Object>>> instrumentation_cache = new HashMap<>();
-    public HashMap<String, ArrayList<HashMap<String, Object>>> guard_cache = new HashMap<>();
+    public HashMap<String, HashSet<HashMap<String, Object>>> instrumentation_cache = new HashMap<>();
+    public HashMap<String, HashSet<HashMap<String, Object>>> guard_cache = new HashMap<>();
 
     public static Cache getInstance() {
         if (instance == null) {
@@ -25,12 +25,12 @@ public class Cache {
         // Logger.debug("Adding data point to cache " + record.toString());
         if (record.getRecordType() == InstrumentationRecord.RecordType.INSTRUMENTATION) {
             // Insert into instrumentation cache.
-            ArrayList<HashMap<String, Object>> data = instrumentation_cache.getOrDefault(key, new ArrayList<>());
+            HashSet<HashMap<String, Object>> data = instrumentation_cache.getOrDefault(key, new HashSet<>());
             data.add(record.getValues());
             instrumentation_cache.put(key, data);
         } else {
             // Insert into guard cache.
-            ArrayList<HashMap<String, Object>> data = guard_cache.getOrDefault(key, new ArrayList<>());
+            HashSet<HashMap<String, Object>> data = guard_cache.getOrDefault(key, new HashSet<>());
             data.add(record.getValues());
             guard_cache.put(key, data);
         }
@@ -40,7 +40,12 @@ public class Cache {
     // returning methods.
     // so that we can split the same path in multiple ways.
     public List<HashMap<String, Object>> get_seen_guard_data(String guardId) {
-        return this.guard_cache.get(guardId);
+        // Return deduplicated data.
+        return this.guard_cache
+                .get(guardId)
+                .stream()
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     public HashMap<String, String> generate_daikon_dtraces() {
@@ -53,11 +58,11 @@ public class Cache {
         return traceFilesInstru;
     }
 
-    public HashMap<String, String> getTraceFilesForCache(HashMap<String, ArrayList<HashMap<String, Object>>> cache) {
+    public HashMap<String, String> getTraceFilesForCache(HashMap<String, HashSet<HashMap<String, Object>>> cache) {
         HashMap<String, String> traceFiles = new HashMap<>();
         for (String key : instrumentation_cache.keySet()) {
             // Get the data for the key.
-            ArrayList<HashMap<String, Object>> data = instrumentation_cache.get(key);
+            HashSet<HashMap<String, Object>> data = instrumentation_cache.get(key);
 
             // Check empty.
             if (data.isEmpty()) {
@@ -65,7 +70,7 @@ public class Cache {
             }
 
             // Get the variable names.
-            Set<String> variableNames = data.get(0).keySet();
+            Set<String> variableNames = data.iterator().next().keySet();
 
             StringBuilder sb = new StringBuilder();
             sb.append("decl-version 2.0\n");

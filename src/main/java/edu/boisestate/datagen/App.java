@@ -177,6 +177,7 @@ public class App {
 
         // Main loop.
         do {
+            long startTime = System.currentTimeMillis();
             System.out.println();
             Logger.info("---------------------- Starting iteration " + ++iterations + "--------------------");
             // Make a checkpoint directory.
@@ -312,6 +313,9 @@ public class App {
             for (String key : traces.keySet()) {
                 FileOps.writeFile(new File(codePath + "/" + key + ".dtrace"), traces.get(key));
             }
+
+            long endTime = System.currentTimeMillis();
+            System.out.println("Iteration " + iterations + " took " + (endTime - startTime) + " ms.");
         } while (iterations < requiredIterations);
     }
 

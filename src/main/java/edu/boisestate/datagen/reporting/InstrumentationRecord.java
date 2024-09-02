@@ -14,7 +14,7 @@ public class InstrumentationRecord implements Serializable {
     private HashMap<String, Object> values;
     private RecordType recordType;
 
-    public enum RecordType {
+    public static enum RecordType {
         INSTRUMENTATION,
         GUARD
     }
@@ -43,5 +43,31 @@ public class InstrumentationRecord implements Serializable {
         return "Record [RecordId=" + RecordId +
                 ", values=" + values + "]" +
                 " (Type = " + (recordType == RecordType.INSTRUMENTATION ? "INSTRUMENTATION" : "GUARD") + ")";
+    }
+
+    // Equality impl.
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass())
+            return false;
+        InstrumentationRecord that = (InstrumentationRecord) o;
+        if (recordType != that.recordType)
+            return false;
+        if (!RecordId.equals(that.RecordId))
+            return false;
+
+        // If everything matches, compare the variables' set.
+        if (!(values.keySet().equals(that.values.keySet())))
+            return false;
+
+        // If even the keyset matches, compare the actual values.
+        for (String key : values.keySet()) {
+            if (!values.get(key).equals(that.values.get(key)))
+                return false;
+        }
+
+        // Well, everything matches at this point.
+        // These records are identical.
+        return true;
     }
 }
