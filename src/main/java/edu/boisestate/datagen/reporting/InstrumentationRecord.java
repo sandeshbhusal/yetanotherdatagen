@@ -12,14 +12,15 @@ public class InstrumentationRecord implements Serializable {
 
     private final String RecordId;
     private HashMap<String, Object> values;
-    private RecordType type;
+    private RecordType recordType;
 
-    public static enum RecordType {
+    public enum RecordType {
         INSTRUMENTATION,
         GUARD
     }
 
-    public InstrumentationRecord(RecordType type,String RecordId, HashMap<String, Object> values) {
+    public InstrumentationRecord(RecordType type, String RecordId, HashMap<String, Object> values) {
+        this.recordType = type;
         this.RecordId = RecordId;
         this.values = values;
     }
@@ -32,13 +33,15 @@ public class InstrumentationRecord implements Serializable {
         return values;
     }
 
-    public RecordType getType() {
-        return type;
+    public RecordType getRecordType() {
+        return recordType;
     }
 
     // ToString impl.
     @Override
     public String toString() {
-        return "Record [RecordId=" + RecordId + ", values=" + values + "]" + " (Type = " + type + ")";
+        return "Record [RecordId=" + RecordId +
+                ", values=" + values + "]" +
+                " (Type = " + (recordType == RecordType.INSTRUMENTATION ? "INSTRUMENTATION" : "GUARD") + ")";
     }
 }

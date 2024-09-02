@@ -278,7 +278,7 @@ public class App {
                 };
                 runProcess(junitcommand);
             }
-        } while (true);
+        } while (iterations < 3);
     }
 
     private static void runProcess(String[] command) {

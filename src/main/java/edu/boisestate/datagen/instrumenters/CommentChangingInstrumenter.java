@@ -14,6 +14,7 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.EnclosedExpr;
+import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
@@ -88,8 +89,6 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
 
                 // This is the start of a guard block.
                 String guardId = iter.next();
-
-                System.out.println("Found guard statement with ID: " + guardId);
 
                 // Replace that statement with a reporting call.
                 MethodCallExpr guardInstrumentationMethodCall = createMethodCallExpr(guardId,
@@ -173,8 +172,6 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
                 // This is the start of a guard block.
                 String guardId = iter.next();
 
-                System.out.println("Found guard statement with ID: " + guardId);
-
                 // Collect all statements inside this guard block.
                 NodeList<Statement> intermediate = new NodeList<>();
                 i++; // Move to the statement after the guard start.
@@ -184,7 +181,6 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
 
                     if (innerStatement.getComment().isPresent() &&
                             innerStatement.getComment().get().toString().contains("datagen_guard_end " + guardId)) {
-                        System.out.println("Found closing guard for guard " + guardId);
                         break; // Exit the loop when the closing guard is found.
                     } else {
                         intermediate.add(innerStatement);
@@ -202,60 +198,9 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
                 wrappingIfStatement.setThenStmt(guardedThen);
 
                 // Default expression when we don't have any data points.
-                wrappingIfStatement.setCondition(new BooleanLiteralExpr(true));
-
-                List<HashMap<String, Object>> data = NewCache.getInstance().get_seen_guard_data(guardId);
-                if (data != null) {
-                    HashSet<UnaryExpr> datapoints_negated = new HashSet<>();
-                    // Generate a bunch of Not_equals expressions for each variable,
-                    // and values.
-                    for (HashMap<String, Object> trace : data) {
-                        ArrayList<BinaryExpr> binaryExprs = new ArrayList<>();
-
-                        for (String variable : trace.keySet()) {
-                            BinaryExpr binaryExpr = new BinaryExpr();
-                            binaryExpr.setLeft(new NameExpr(variable));
-                            // TODO: IntegerLiteralExpr only supported for now.
-                            binaryExpr.setRight(
-                                    new IntegerLiteralExpr(String.valueOf(trace.get(variable))));
-                            binaryExpr.setOperator(BinaryExpr.Operator.EQUALS);
-                            binaryExprs.add(binaryExpr);
-                        }
-
-                        // Join the binary expressions with "AND"
-                        BinaryExpr combinedExpr = binaryExprs.get(0);
-                        for (int j = 1; j < binaryExprs.size(); j++) {
-                            combinedExpr = new BinaryExpr(
-                                    combinedExpr.clone(),
-                                    binaryExprs.get(j),
-                                    BinaryExpr.Operator.AND);
-                        }
-
-                        EnclosedExpr enclosedExpr = new EnclosedExpr(combinedExpr);
-
-                        // Negate the expression
-                        UnaryExpr negatedExpr = new UnaryExpr(enclosedExpr, UnaryExpr.Operator.LOGICAL_COMPLEMENT);
-                        datapoints_negated.add(negatedExpr);
-                    }
-
-                    // Join all negated exprs with "AND"
-                    BinaryExpr replacementExpression = new BinaryExpr();
-                    replacementExpression.setLeft(new BooleanLiteralExpr(true));
-                    replacementExpression.setOperator(BinaryExpr.Operator.AND);
-
-                    for (UnaryExpr expr : datapoints_negated) {
-                        replacementExpression.setRight(expr);
-                        replacementExpression.setOperator(BinaryExpr.Operator.AND);
-                        replacementExpression.setLeft(replacementExpression.clone());
-                    }
-
-                    // Set the new condition to the wrapping if statement.
-                    wrappingIfStatement.setCondition(replacementExpression);
-                    rval.add(wrappingIfStatement);
-
-                } else {
-                    System.err.println("No data points for guard" + guardId);
-                }
+                wrappingIfStatement.setCondition(generateAugmentedExpression(guardId));
+                rval.add(wrappingIfStatement);
+            
             } else {
                 // If not a guard start, add the statement as is.
                 rval.add(statement);
@@ -265,6 +210,66 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
         }
 
         return rval;
+    }
+
+    public Expression generateAugmentedExpression(String guardId) {
+        List<HashMap<String, Object>> data = NewCache.getInstance().get_seen_guard_data(guardId);
+        if (data != null) {
+            HashSet<UnaryExpr> datapoints_negated = new HashSet<>();
+            HashSet<String> dedupset = new HashSet<>(); // For some reason,
+                                                        // the same expression is not deduped by hashset.
+
+            // Generate a bunch of Not_equals expressions for each variable,
+            // and values.
+            for (HashMap<String, Object> trace : data) {
+                ArrayList<BinaryExpr> binaryExprs = new ArrayList<>();
+
+                for (String variable : trace.keySet()) {
+                    BinaryExpr binaryExpr = new BinaryExpr();
+                    binaryExpr.setLeft(new NameExpr(variable));
+                    // TODO: IntegerLiteralExpr only supported for now.
+                    binaryExpr.setRight(
+                            new IntegerLiteralExpr(String.valueOf(trace.get(variable))));
+                    binaryExpr.setOperator(BinaryExpr.Operator.EQUALS);
+                    binaryExprs.add(binaryExpr);
+                }
+
+                // Join the binary expressions with "AND"
+                BinaryExpr combinedExpr = binaryExprs.get(0);
+                for (int j = 1; j < binaryExprs.size(); j++) {
+                    combinedExpr = new BinaryExpr(
+                            combinedExpr.clone(),
+                            binaryExprs.get(j),
+                            BinaryExpr.Operator.AND);
+                }
+
+                EnclosedExpr enclosedExpr = new EnclosedExpr(combinedExpr);
+
+                // Negate the expression
+                UnaryExpr negatedExpr = new UnaryExpr(enclosedExpr, UnaryExpr.Operator.LOGICAL_COMPLEMENT);
+                if (!dedupset.contains(negatedExpr.toString())) {
+                    dedupset.add(negatedExpr.toString());
+                    datapoints_negated.add(negatedExpr);
+                }
+            }
+
+            // Join all negated exprs with "AND"
+            BinaryExpr replacementExpression = new BinaryExpr();
+            replacementExpression.setLeft(new BooleanLiteralExpr(true));
+            replacementExpression.setOperator(BinaryExpr.Operator.AND);
+
+            for (UnaryExpr expr : datapoints_negated) {
+                replacementExpression.setRight(expr);
+                replacementExpression.setOperator(BinaryExpr.Operator.AND);
+                replacementExpression.setLeft(replacementExpression.clone());
+            }
+
+            return replacementExpression;
+        
+        } else {
+            // return a "true" expression.
+            return new BooleanLiteralExpr(true);
+        }
     }
 
     public MethodCallExpr createMethodCallExpr(String guardId, Iterator<String> args) {

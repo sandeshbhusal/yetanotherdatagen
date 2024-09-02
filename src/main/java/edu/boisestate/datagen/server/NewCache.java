@@ -3,7 +3,7 @@ package edu.boisestate.datagen.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.tinylog.Logger;
+// import org.tinylog.Logger;
 
 import edu.boisestate.datagen.reporting.InstrumentationRecord;
 
@@ -23,8 +23,8 @@ public class NewCache {
         // Get key.
         String key = record.getRecordId();
 
-        Logger.debug("Adding data point to cache " + record.toString());
-        if (record.getType() == InstrumentationRecord.RecordType.INSTRUMENTATION) {
+        // Logger.debug("Adding data point to cache " + record.toString());
+        if (record.getRecordType() == InstrumentationRecord.RecordType.INSTRUMENTATION) {
             // Insert into instrumentation cache.
             ArrayList<HashMap<String, Object>> data = instrumentation_cache.getOrDefault(key, new ArrayList<>());
             data.add(record.getValues());
@@ -37,7 +37,8 @@ public class NewCache {
         }
     }
 
-    // TODO: This method needs to be updated with TABU, and Round-Robin data returning methods.
+    // TODO: This method needs to be updated with TABU, and Round-Robin data
+    // returning methods.
     // so that we can split the same path in multiple ways.
     public List<HashMap<String, Object>> get_seen_guard_data(String guardId) {
         return this.guard_cache.get(guardId);
