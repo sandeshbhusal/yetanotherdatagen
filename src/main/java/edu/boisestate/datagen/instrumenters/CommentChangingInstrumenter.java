@@ -28,10 +28,11 @@ import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
-import edu.boisestate.datagen.server.NewCache;
+import edu.boisestate.datagen.reporting.Cache;
 
 public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
     private InstrumentationMode mode;
+    private boolean skipAugmentation;
 
     @Override
     public void visit(BlockStmt block, Void arg) {
@@ -57,8 +58,14 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
     }
 
     public CommentChangingInstrumenter(InstrumentationMode mode) {
-        this.mode = mode;
+        this(mode, false);
     }
+
+    public CommentChangingInstrumenter(InstrumentationMode mode, boolean skipAugmentation) {
+        this.mode = mode;
+        this.skipAugmentation = skipAugmentation;
+    }
+
 
     // Drop all the empty marker statements at the end.
     public NodeList<Statement> dropAllEmptyStatements(NodeList<Statement> statements) {
@@ -213,7 +220,12 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
     }
 
     public Expression generateAugmentedExpression(String guardId) {
-        List<HashMap<String, Object>> data = NewCache.getInstance().get_seen_guard_data(guardId);
+        // If we are skipping augmentation, return a true expression.
+        if (this.skipAugmentation) {
+            return new BooleanLiteralExpr(true);
+        }
+
+        List<HashMap<String, Object>> data = Cache.getInstance().get_seen_guard_data(guardId);
         if (data != null) {
             HashSet<UnaryExpr> datapoints_negated = new HashSet<>();
             HashSet<String> dedupset = new HashSet<>(); // For some reason,

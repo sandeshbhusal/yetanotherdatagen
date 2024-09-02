@@ -18,8 +18,8 @@ import com.github.javaparser.ast.CompilationUnit;
 import edu.boisestate.datagen.instrumenters.CommentChangingInstrumenter;
 import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
 import edu.boisestate.datagen.instrumenters.InstrumentationMode;
+import edu.boisestate.datagen.reporting.Cache;
 import edu.boisestate.datagen.rmi.DataPointServerImpl;
-import edu.boisestate.datagen.server.NewCache;
 import edu.boisestate.datagen.utils.FileOps;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -36,7 +36,6 @@ public class App {
     private static String evosuiteJarPath;
     private static String junitJarPath;
     private static String daikonJarPath;
-    private static String codePath;
 
     public static void main(String[] args) {
         // Arguments:
@@ -76,12 +75,21 @@ public class App {
                 .required(false)
                 .type(String.class);
 
+        argParser.addArgument("-k", "--skip_augmentation")
+                .help("Skip augmentation. This means we will run the tests on code without augmenting the branches.")
+                .required(false)
+                .setDefault(false)
+                .type(Boolean.class);
+
         // TODO: This is not working ATM.
         argParser.addArgument("-i", "--iterations")
                 .help("Number of iterations to run (overrides the fixed point check in daikon).")
-                .required(false)
+                .required(true)
                 .type(Integer.class);
 
+        boolean skipAugmentation = false;
+        int requiredIterations = 0;
+        
         // Parse arguments.
         try {
             Namespace ns = argParser.parseArgs(args);
@@ -90,6 +98,8 @@ public class App {
             evosuiteJarPath = getJarFromClassPath("evosuite").orElse(ns.getString("evosuite"));
             junitJarPath = getJarFromClassPath("junit").orElse(ns.getString("junit"));
             daikonJarPath = getJarFromClassPath("daikon").orElse(ns.getString("daikon"));
+            skipAugmentation = ns.getBoolean("skip_augmentation");
+            requiredIterations = ns.getInt("iterations");
 
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
@@ -136,7 +146,6 @@ public class App {
         reportingPath = workdir + "/instrumented/reporting";
         compiledPath = workdir + "/compiled";
         checkpointPath = workdir + "/checkpoint";
-        codePath = workdir + "/code";
 
         FileOps.createDirectory(augmentedPath);
         FileOps.createDirectory(reportingPath);
@@ -161,15 +170,21 @@ public class App {
 
         int iterations = 0;
         CommentChangingInstrumenter augmenter = new CommentChangingInstrumenter(
-                InstrumentationMode.AUGMENTATION);
+                InstrumentationMode.AUGMENTATION, skipAugmentation);
         CommentChangingInstrumenter reporter = new CommentChangingInstrumenter(
-                InstrumentationMode.INSTRUMENTATION);
+                InstrumentationMode.INSTRUMENTATION, skipAugmentation);
         ImportInstrumenter importer = new ImportInstrumenter();
 
         // Main loop.
         do {
             System.out.println();
             Logger.info("---------------------- Starting iteration " + ++iterations + "--------------------");
+            // Make a checkpoint directory.
+            File checkpointDir = new File(checkpointPath + "/" + iterations);
+            FileOps.createDirectory(checkpointDir.getAbsolutePath());
+
+            File codePath = new File(checkpointDir.getAbsolutePath() + "/code");
+            FileOps.createDirectory(codePath.getAbsolutePath());
 
             // Clear out the augmented and reporting directories.
             FileOps.recursivelyDeleteFolder(new File(augmentedPath));
@@ -285,17 +300,19 @@ public class App {
 
             // Now that everything is done, we will dump the data to the "code" directory,
             // Alongside generated evosuite tests, augmented code, and reporting code.
-            FileOps.recursivelyCopyFolder(new File(reportingPath), new File(codePath + "/reporting"));
-            FileOps.recursivelyCopyFolder(new File(augmentedPath), new File(codePath + "/augmented"));
-            FileOps.recursivelyCopyFolder(evosuiteTests, new File(codePath + "/evosuite-tests"));
-
+            FileOps.recursivelyCopyFolder(new File(reportingPath),
+                    new File(checkpointDir.getAbsolutePath() + "/reporting"));
+            FileOps.recursivelyCopyFolder(new File(augmentedPath),
+                    new File(checkpointDir.getAbsolutePath() + "/augmented"));
+            FileOps.recursivelyCopyFolder(evosuiteTests, new File(checkpointDir.getAbsolutePath() + "/evosuite-tests"));
+            
             // Generate our code.
             Logger.info("Generating code.");
-            HashMap<String, String> traces = NewCache.getInstance().generate_daikon_dtraces();
+            HashMap<String, String> traces = Cache.getInstance().generate_daikon_dtraces();
             for (String key : traces.keySet()) {
                 FileOps.writeFile(new File(codePath + "/" + key + ".dtrace"), traces.get(key));
             }
-        } while (iterations < 1);
+        } while (iterations < requiredIterations);
     }
 
     private static void runProcess(String[] command) {

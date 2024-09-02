@@ -1,4 +1,4 @@
-package edu.boisestate.datagen.server;
+package edu.boisestate.datagen.reporting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,16 +6,14 @@ import java.util.List;
 // import org.tinylog.Logger;
 import java.util.Set;
 
-import edu.boisestate.datagen.reporting.InstrumentationRecord;
-
-public class NewCache {
-    private static NewCache instance = null;
+public class Cache {
+    private static Cache instance = null;
     public HashMap<String, ArrayList<HashMap<String, Object>>> instrumentation_cache = new HashMap<>();
     public HashMap<String, ArrayList<HashMap<String, Object>>> guard_cache = new HashMap<>();
 
-    public static NewCache getInstance() {
+    public static Cache getInstance() {
         if (instance == null) {
-            instance = new NewCache();
+            instance = new Cache();
         }
         return instance;
     }

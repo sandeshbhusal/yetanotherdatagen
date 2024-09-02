@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import edu.boisestate.datagen.reporting.InstrumentationRecord;
-import edu.boisestate.datagen.server.NewCache;
+import edu.boisestate.datagen.reporting.Cache;
 
 public class DataPointServerImpl extends UnicastRemoteObject implements DataPointServer {
     public DataPointServerImpl() throws RemoteException {
@@ -28,6 +28,6 @@ public class DataPointServerImpl extends UnicastRemoteObject implements DataPoin
 
     @Override
     public void receiveDataPoint(InstrumentationRecord record) throws RemoteException, NotBoundException {
-        NewCache.getInstance().add_instrumentation_data(record);
+        Cache.getInstance().add_instrumentation_data(record);
     }
 }
