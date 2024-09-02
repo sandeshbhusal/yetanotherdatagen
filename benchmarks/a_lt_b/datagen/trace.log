@@ -1,0 +1,134 @@
+cd target/classes; java -cp '../../libs/*:.' edu.boisestate.datagen.App -s /tmp/sources/ -w /tmp/check_small_noaug_5it -i 10
+Starting DataPointServer
+DataPointServer bound
+23:38:19.721 INFO: Starting datagen.
+
+23:38:19.729 INFO: ---------------------- Starting iteration 1--------------------
+23:38:19.735 INFO: Instrumenting file: Input.java
+23:38:19.827 INFO: Augmenting input file Input.java
+23:38:19.827 INFO: Augmenting file: Input.java
+23:38:19.831 INFO: Compiling augmented file Input.java
+23:38:20.055 INFO: Running evosuite on augmented file Input.java
+23:38:29.818 DEBUG: Evosuite run took 10086 ms.
+23:38:29.819 INFO: Compiling reporting file Input.java
+23:38:30.043 INFO: Compiling evosuite test file for Input.java
+23:38:30.821 INFO: Running JUnit tests generated for Input.java
+23:38:32.466 INFO: Generating code.
+23:38:32.480 DEBUG: Iteration 1 took 12747 ms.
+
+23:38:32.480 INFO: ---------------------- Starting iteration 2--------------------
+23:38:32.494 INFO: Instrumenting file: Input.java
+23:38:32.502 INFO: Augmenting input file Input.java
+23:38:32.502 INFO: Augmenting file: Input.java
+23:38:32.511 INFO: Compiling augmented file Input.java
+23:38:32.716 INFO: Running evosuite on augmented file Input.java
+23:39:37.304 DEBUG: Evosuite run took 64824 ms.
+23:39:37.305 INFO: Compiling reporting file Input.java
+23:39:37.521 INFO: Compiling evosuite test file for Input.java
+23:39:38.370 INFO: Running JUnit tests generated for Input.java
+23:39:39.944 INFO: Generating code.
+23:39:39.945 DEBUG: Iteration 2 took 67465 ms.
+
+23:39:39.945 INFO: ---------------------- Starting iteration 3--------------------
+23:39:39.953 INFO: Instrumenting file: Input.java
+23:39:39.961 INFO: Augmenting input file Input.java
+23:39:39.961 INFO: Augmenting file: Input.java
+23:39:39.973 INFO: Compiling augmented file Input.java
+23:39:40.208 INFO: Running evosuite on augmented file Input.java
+23:40:45.855 DEBUG: Evosuite run took 65909 ms.
+23:40:45.855 INFO: Compiling reporting file Input.java
+23:40:46.089 INFO: Compiling evosuite test file for Input.java
+23:40:46.877 INFO: Running JUnit tests generated for Input.java
+23:40:48.447 INFO: Generating code.
+23:40:48.450 DEBUG: Iteration 3 took 68505 ms.
+
+23:40:48.450 INFO: ---------------------- Starting iteration 4--------------------
+23:40:48.463 INFO: Instrumenting file: Input.java
+23:40:48.476 INFO: Augmenting input file Input.java
+23:40:48.476 INFO: Augmenting file: Input.java
+23:40:48.486 INFO: Compiling augmented file Input.java
+23:40:48.708 INFO: Running evosuite on augmented file Input.java
+23:41:55.973 DEBUG: Evosuite run took 67523 ms.
+23:41:55.974 INFO: Compiling reporting file Input.java
+23:41:56.194 INFO: Compiling evosuite test file for Input.java
+23:41:56.976 INFO: Running JUnit tests generated for Input.java
+23:41:58.549 INFO: Generating code.
+23:41:58.551 DEBUG: Iteration 4 took 70101 ms.
+
+23:41:58.551 INFO: ---------------------- Starting iteration 5--------------------
+23:41:58.557 INFO: Instrumenting file: Input.java
+23:41:58.570 INFO: Augmenting input file Input.java
+23:41:58.571 INFO: Augmenting file: Input.java
+23:41:58.584 INFO: Compiling augmented file Input.java
+23:41:58.816 INFO: Running evosuite on augmented file Input.java
+23:43:06.116 DEBUG: Evosuite run took 67565 ms.
+23:43:06.117 INFO: Compiling reporting file Input.java
+23:43:06.339 INFO: Compiling evosuite test file for Input.java
+23:43:07.135 INFO: Running JUnit tests generated for Input.java
+23:43:08.738 INFO: Generating code.
+23:43:08.739 DEBUG: Iteration 5 took 70188 ms.
+
+23:43:08.739 INFO: ---------------------- Starting iteration 6--------------------
+23:43:08.751 INFO: Instrumenting file: Input.java
+23:43:08.761 INFO: Augmenting input file Input.java
+23:43:08.761 INFO: Augmenting file: Input.java
+23:43:08.772 INFO: Compiling augmented file Input.java
+23:43:08.990 INFO: Running evosuite on augmented file Input.java
+23:44:17.763 DEBUG: Evosuite run took 69024 ms.
+23:44:17.764 INFO: Compiling reporting file Input.java
+23:44:17.979 INFO: Compiling evosuite test file for Input.java
+23:44:18.780 INFO: Running JUnit tests generated for Input.java
+23:44:20.393 INFO: Generating code.
+23:44:20.396 DEBUG: Iteration 6 took 71657 ms.
+
+23:44:20.396 INFO: ---------------------- Starting iteration 7--------------------
+23:44:20.403 INFO: Instrumenting file: Input.java
+23:44:20.411 INFO: Augmenting input file Input.java
+23:44:20.411 INFO: Augmenting file: Input.java
+23:44:20.421 INFO: Compiling augmented file Input.java
+23:44:20.663 INFO: Running evosuite on augmented file Input.java
+23:45:30.837 DEBUG: Evosuite run took 70440 ms.
+23:45:30.837 INFO: Compiling reporting file Input.java
+23:45:31.058 INFO: Compiling evosuite test file for Input.java
+23:45:31.853 INFO: Running JUnit tests generated for Input.java
+23:45:33.434 INFO: Generating code.
+23:45:33.435 DEBUG: Iteration 7 took 73039 ms.
+
+23:45:33.435 INFO: ---------------------- Starting iteration 8--------------------
+23:45:33.452 INFO: Instrumenting file: Input.java
+23:45:33.457 INFO: Augmenting input file Input.java
+23:45:33.457 INFO: Augmenting file: Input.java
+23:45:33.465 INFO: Compiling augmented file Input.java
+23:45:33.700 INFO: Running evosuite on augmented file Input.java
+23:46:44.842 DEBUG: Evosuite run took 71406 ms.
+23:46:44.842 INFO: Compiling reporting file Input.java
+23:46:45.079 INFO: Compiling evosuite test file for Input.java
+23:46:45.876 INFO: Running JUnit tests generated for Input.java
+23:46:47.438 INFO: Generating code.
+23:46:47.440 DEBUG: Iteration 8 took 74005 ms.
+
+23:46:47.441 INFO: ---------------------- Starting iteration 9--------------------
+23:46:47.451 INFO: Instrumenting file: Input.java
+23:46:47.457 INFO: Augmenting input file Input.java
+23:46:47.457 INFO: Augmenting file: Input.java
+23:46:47.467 INFO: Compiling augmented file Input.java
+23:46:47.704 INFO: Running evosuite on augmented file Input.java
+23:48:00.464 DEBUG: Evosuite run took 73023 ms.
+23:48:00.465 INFO: Compiling reporting file Input.java
+23:48:00.699 INFO: Compiling evosuite test file for Input.java
+23:48:01.526 INFO: Running JUnit tests generated for Input.java
+23:48:03.387 INFO: Generating code.
+23:48:03.389 DEBUG: Iteration 9 took 75948 ms.
+
+23:48:03.389 INFO: ---------------------- Starting iteration 10--------------------
+23:48:03.403 INFO: Instrumenting file: Input.java
+23:48:03.409 INFO: Augmenting input file Input.java
+23:48:03.410 INFO: Augmenting file: Input.java
+23:48:03.425 INFO: Compiling augmented file Input.java
+23:48:03.659 INFO: Running evosuite on augmented file Input.java
+23:49:17.570 DEBUG: Evosuite run took 74180 ms.
+23:49:17.571 INFO: Compiling reporting file Input.java
+23:49:17.797 INFO: Compiling evosuite test file for Input.java
+23:49:18.622 INFO: Running JUnit tests generated for Input.java
+23:49:20.220 INFO: Generating code.
+23:49:20.223 DEBUG: Iteration 10 took 76834 ms.

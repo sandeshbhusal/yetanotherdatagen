@@ -243,6 +243,8 @@ public class App {
 
                 runProcess(evoruncommand);
             }
+            long endEvoTime = System.currentTimeMillis();
+            Logger.debug("Evosuite run took " + (endEvoTime - startTime) + " ms.");
 
             // Now that evosuite run has finished, our tests are generated in
             // $PWD/evosuite-tests. They need to be compiled alongside our reporting
@@ -315,7 +317,7 @@ public class App {
             }
 
             long endTime = System.currentTimeMillis();
-            System.out.println("Iteration " + iterations + " took " + (endTime - startTime) + " ms.");
+            Logger.debug("Iteration " + iterations + " took " + (endTime - startTime) + " ms.");
         } while (iterations < requiredIterations);
     }
 

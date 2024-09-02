@@ -3,6 +3,7 @@ package edu.boisestate.datagen.reporting;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,12 +41,11 @@ public class Cache {
     // returning methods.
     // so that we can split the same path in multiple ways.
     public List<HashMap<String, Object>> get_seen_guard_data(String guardId) {
-        // Return deduplicated data.
-        return this.guard_cache
-                .get(guardId)
-                .stream()
-                .distinct()
-                .collect(Collectors.toList());
+        return Optional.ofNullable(this.guard_cache.get(guardId))
+                .map(guardData -> guardData.stream()
+                        .distinct()
+                        .collect(Collectors.toList()))
+                .orElse(null);
     }
 
     public HashMap<String, String> generate_daikon_dtraces() {
