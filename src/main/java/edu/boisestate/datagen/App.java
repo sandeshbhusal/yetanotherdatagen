@@ -164,7 +164,8 @@ public class App {
 
         // Main loop.
         do {
-            Logger.info("---------------------- Starting iteration " + iterations);
+            System.out.println();
+            Logger.info("---------------------- Starting iteration " + ++iterations + "--------------------");
 
             // Clear out the augmented and reporting directories.
             FileOps.recursivelyDeleteFolder(new File(augmentedPath));

@@ -1,18 +1,25 @@
 package edu.boisestate.datagen.instrumenters;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
+import com.github.javaparser.ast.expr.EnclosedExpr;
+import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
-import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.EmptyStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
@@ -20,18 +27,20 @@ import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
+import edu.boisestate.datagen.server.NewCache;
+
 public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
     private InstrumentationMode mode;
 
     @Override
     public void visit(BlockStmt block, Void arg) {
         NodeList<Statement> statements = new NodeList<>();
-    
+
         for (Statement stmt : block.getStatements()) {
-            stmt.accept(this, null); 
+            stmt.accept(this, null);
             statements.add(stmt);
         }
-    
+
         NodeList<Statement> modifiedStatements;
         if (this.mode == InstrumentationMode.INSTRUMENTATION) {
             modifiedStatements = convertInstrumentationStatements(statements);
@@ -39,9 +48,9 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
         } else {
             modifiedStatements = recursivelyGenerateGuards(statements);
         }
-    
+
         modifiedStatements = dropAllEmptyStatements(modifiedStatements);
-        
+
         // Set modified statements back to the block
         block.setStatements(modifiedStatements);
     }
@@ -50,6 +59,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
         this.mode = mode;
     }
 
+    // Drop all the empty marker statements at the end.
     public NodeList<Statement> dropAllEmptyStatements(NodeList<Statement> statements) {
         NodeList<Statement> rval = new NodeList<>();
         for (Statement statement : statements) {
@@ -190,9 +200,62 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
                 BlockStmt guardedThen = new BlockStmt();
                 guardedThen.setStatements(guardedStatements);
                 wrappingIfStatement.setThenStmt(guardedThen);
+
+                // Default expression when we don't have any data points.
                 wrappingIfStatement.setCondition(new BooleanLiteralExpr(true));
 
-                rval.add(wrappingIfStatement);
+                List<HashMap<String, Object>> data = NewCache.getInstance().get_seen_guard_data(guardId);
+                if (data != null) {
+                    HashSet<UnaryExpr> datapoints_negated = new HashSet<>();
+                    // Generate a bunch of Not_equals expressions for each variable,
+                    // and values.
+                    for (HashMap<String, Object> trace : data) {
+                        ArrayList<BinaryExpr> binaryExprs = new ArrayList<>();
+
+                        for (String variable : trace.keySet()) {
+                            BinaryExpr binaryExpr = new BinaryExpr();
+                            binaryExpr.setLeft(new NameExpr(variable));
+                            // TODO: IntegerLiteralExpr only supported for now.
+                            binaryExpr.setRight(
+                                    new IntegerLiteralExpr(String.valueOf(trace.get(variable))));
+                            binaryExpr.setOperator(BinaryExpr.Operator.EQUALS);
+                            binaryExprs.add(binaryExpr);
+                        }
+
+                        // Join the binary expressions with "AND"
+                        BinaryExpr combinedExpr = binaryExprs.get(0);
+                        for (int j = 1; j < binaryExprs.size(); j++) {
+                            combinedExpr = new BinaryExpr(
+                                    combinedExpr.clone(),
+                                    binaryExprs.get(j),
+                                    BinaryExpr.Operator.AND);
+                        }
+
+                        EnclosedExpr enclosedExpr = new EnclosedExpr(combinedExpr);
+
+                        // Negate the expression
+                        UnaryExpr negatedExpr = new UnaryExpr(enclosedExpr, UnaryExpr.Operator.LOGICAL_COMPLEMENT);
+                        datapoints_negated.add(negatedExpr);
+                    }
+
+                    // Join all negated exprs with "AND"
+                    BinaryExpr replacementExpression = new BinaryExpr();
+                    replacementExpression.setLeft(new BooleanLiteralExpr(true));
+                    replacementExpression.setOperator(BinaryExpr.Operator.AND);
+
+                    for (UnaryExpr expr : datapoints_negated) {
+                        replacementExpression.setRight(expr);
+                        replacementExpression.setOperator(BinaryExpr.Operator.AND);
+                        replacementExpression.setLeft(replacementExpression.clone());
+                    }
+
+                    // Set the new condition to the wrapping if statement.
+                    wrappingIfStatement.setCondition(replacementExpression);
+                    rval.add(wrappingIfStatement);
+
+                } else {
+                    System.err.println("No data points for guard" + guardId);
+                }
             } else {
                 // If not a guard start, add the statement as is.
                 rval.add(statement);
