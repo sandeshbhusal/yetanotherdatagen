@@ -58,6 +58,52 @@ public class Cache {
         return traceFilesInstru;
     }
 
+    public HashMap<String, String> generate_dig_traces() {
+        // Start with every key, in the instrumentation cache hashmap.
+        HashMap<String, String> traceFiles = generate_dig_files(this.instrumentation_cache);
+        HashMap<String, String> traceFilesGuard = generate_dig_files(this.guard_cache);
+
+        // Return both, combined.
+        traceFiles.putAll(traceFilesGuard);
+        return traceFiles;
+    }
+
+    public HashMap<String, String> generate_dig_files(HashMap<String, HashSet<HashMap<String, Object>>> cache) {
+        HashMap<String, String> traceFiles = new HashMap<>();
+        for (String key : cache.keySet()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("vtrace1");
+
+            // Get the variable names.
+            Set<String> variableNames = cache.get(key).iterator().next().keySet();
+
+            for (String variableName : variableNames) {
+                sb.append("; I " + variableName);
+            }
+            sb.append("\n");
+
+            // Get the data for the key.
+            HashSet<HashMap<String, Object>> data = cache.get(key);
+
+            // Check empty.
+            if (data.isEmpty()) {
+                continue;
+            }
+
+            for (HashMap<String, Object> dat : data) {
+                sb.append("vtrace1");
+                for (String variableName : variableNames) {
+                    sb.append("; " + dat.get(variableName));
+                }
+                sb.append("\n");
+            }
+
+            traceFiles.put(key, sb.toString());
+        }
+
+        return traceFiles;
+    }
+
     public HashMap<String, String> getTraceFilesForCache(HashMap<String, HashSet<HashMap<String, Object>>> cache) {
         HashMap<String, String> traceFiles = new HashMap<>();
         for (String key : instrumentation_cache.keySet()) {

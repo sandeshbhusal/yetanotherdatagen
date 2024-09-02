@@ -316,6 +316,11 @@ public class App {
                 FileOps.writeFile(new File(codePath + "/" + key + ".dtrace"), traces.get(key));
             }
 
+            HashMap<String, String> dig_traces = Cache.getInstance().generate_dig_traces();
+            for (String key : dig_traces.keySet()) {
+                FileOps.writeFile(new File(codePath + "/" + key + ".csv"), dig_traces.get(key));
+            }
+
             long endTime = System.currentTimeMillis();
             Logger.debug("Iteration " + iterations + " took " + (endTime - startTime) + " ms.");
         } while (iterations < requiredIterations);
