@@ -1,0 +1,134 @@
+cd target/classes; java -cp '../../libs/*:.' edu.boisestate.datagen.App -s /tmp/sources/ -w /tmp/check_small_noaug_5it -i 10
+Starting DataPointServer
+DataPointServer bound
+14:00:50.287 INFO: Starting datagen.
+
+14:00:50.296 INFO: ---------------------- Starting iteration 1--------------------
+14:00:50.302 INFO: Instrumenting file: Triangle.java
+14:00:50.395 INFO: Augmenting input file Triangle.java
+14:00:50.395 INFO: Augmenting file: Triangle.java
+14:00:50.401 INFO: Compiling augmented file Triangle.java
+14:00:50.639 INFO: Running evosuite on augmented file Triangle.java
+14:00:54.947 DEBUG: Evosuite run took 4649 ms.
+14:00:54.950 INFO: Compiling reporting file Triangle.java
+14:00:55.176 INFO: Compiling evosuite test file for Triangle.java
+14:00:55.941 INFO: Running JUnit tests generated for Triangle.java
+14:00:57.496 INFO: Generating code.
+14:00:58.755 DEBUG: Iteration 1 took 8458 ms.
+
+14:00:58.755 INFO: ---------------------- Starting iteration 2--------------------
+14:00:58.759 INFO: Instrumenting file: Triangle.java
+14:00:58.764 INFO: Augmenting input file Triangle.java
+14:00:58.764 INFO: Augmenting file: Triangle.java
+14:00:58.772 INFO: Compiling augmented file Triangle.java
+14:00:58.992 INFO: Running evosuite on augmented file Triangle.java
+14:02:05.524 DEBUG: Evosuite run took 66768 ms.
+14:02:05.524 INFO: Compiling reporting file Triangle.java
+14:02:05.749 INFO: Compiling evosuite test file for Triangle.java
+14:02:06.563 INFO: Running JUnit tests generated for Triangle.java
+14:02:08.338 INFO: Generating code.
+14:02:09.544 DEBUG: Iteration 2 took 70789 ms.
+
+14:02:09.544 INFO: ---------------------- Starting iteration 3--------------------
+14:02:09.553 INFO: Instrumenting file: Triangle.java
+14:02:09.558 INFO: Augmenting input file Triangle.java
+14:02:09.558 INFO: Augmenting file: Triangle.java
+14:02:09.569 INFO: Compiling augmented file Triangle.java
+14:02:09.787 INFO: Running evosuite on augmented file Triangle.java
+14:03:19.569 DEBUG: Evosuite run took 70025 ms.
+14:03:19.569 INFO: Compiling reporting file Triangle.java
+14:03:19.816 INFO: Compiling evosuite test file for Triangle.java
+14:03:20.620 INFO: Running JUnit tests generated for Triangle.java
+14:03:22.162 INFO: Generating code.
+14:03:23.426 DEBUG: Iteration 3 took 73882 ms.
+
+14:03:23.426 INFO: ---------------------- Starting iteration 4--------------------
+14:03:23.439 INFO: Instrumenting file: Triangle.java
+14:03:23.446 INFO: Augmenting input file Triangle.java
+14:03:23.446 INFO: Augmenting file: Triangle.java
+14:03:23.461 INFO: Compiling augmented file Triangle.java
+14:03:23.702 INFO: Running evosuite on augmented file Triangle.java
+14:04:35.682 DEBUG: Evosuite run took 72256 ms.
+14:04:35.683 INFO: Compiling reporting file Triangle.java
+14:04:35.911 INFO: Compiling evosuite test file for Triangle.java
+14:04:36.727 INFO: Running JUnit tests generated for Triangle.java
+14:04:38.323 INFO: Generating code.
+14:04:39.545 DEBUG: Iteration 4 took 76119 ms.
+
+14:04:39.546 INFO: ---------------------- Starting iteration 5--------------------
+14:04:39.558 INFO: Instrumenting file: Triangle.java
+14:04:39.563 INFO: Augmenting input file Triangle.java
+14:04:39.563 INFO: Augmenting file: Triangle.java
+14:04:39.576 INFO: Compiling augmented file Triangle.java
+14:04:39.813 INFO: Running evosuite on augmented file Triangle.java
+14:05:53.404 DEBUG: Evosuite run took 73858 ms.
+14:05:53.405 INFO: Compiling reporting file Triangle.java
+14:05:53.633 INFO: Compiling evosuite test file for Triangle.java
+14:05:54.461 INFO: Running JUnit tests generated for Triangle.java
+14:05:56.021 INFO: Generating code.
+14:05:57.295 DEBUG: Iteration 5 took 77749 ms.
+
+14:05:57.295 INFO: ---------------------- Starting iteration 6--------------------
+14:05:57.306 INFO: Instrumenting file: Triangle.java
+14:05:57.312 INFO: Augmenting input file Triangle.java
+14:05:57.312 INFO: Augmenting file: Triangle.java
+14:05:57.330 INFO: Compiling augmented file Triangle.java
+14:05:57.570 INFO: Running evosuite on augmented file Triangle.java
+14:07:12.672 DEBUG: Evosuite run took 75377 ms.
+14:07:12.673 INFO: Compiling reporting file Triangle.java
+14:07:12.894 INFO: Compiling evosuite test file for Triangle.java
+14:07:13.759 INFO: Running JUnit tests generated for Triangle.java
+14:07:15.319 INFO: Generating code.
+14:07:16.618 DEBUG: Iteration 6 took 79323 ms.
+
+14:07:16.618 INFO: ---------------------- Starting iteration 7--------------------
+14:07:16.627 INFO: Instrumenting file: Triangle.java
+14:07:16.633 INFO: Augmenting input file Triangle.java
+14:07:16.633 INFO: Augmenting file: Triangle.java
+14:07:16.653 INFO: Compiling augmented file Triangle.java
+14:07:16.893 INFO: Running evosuite on augmented file Triangle.java
+14:08:33.030 DEBUG: Evosuite run took 76412 ms.
+14:08:33.031 INFO: Compiling reporting file Triangle.java
+14:08:33.263 INFO: Compiling evosuite test file for Triangle.java
+14:08:34.110 INFO: Running JUnit tests generated for Triangle.java
+14:08:35.682 INFO: Generating code.
+14:08:36.977 DEBUG: Iteration 7 took 80359 ms.
+
+14:08:36.977 INFO: ---------------------- Starting iteration 8--------------------
+14:08:36.991 INFO: Instrumenting file: Triangle.java
+14:08:36.995 INFO: Augmenting input file Triangle.java
+14:08:36.995 INFO: Augmenting file: Triangle.java
+14:08:37.021 INFO: Compiling augmented file Triangle.java
+14:08:37.270 INFO: Running evosuite on augmented file Triangle.java
+14:09:53.457 DEBUG: Evosuite run took 76480 ms.
+14:09:53.458 INFO: Compiling reporting file Triangle.java
+14:09:53.697 INFO: Compiling evosuite test file for Triangle.java
+14:09:54.647 INFO: Running JUnit tests generated for Triangle.java
+14:09:56.236 INFO: Generating code.
+14:09:57.719 DEBUG: Iteration 8 took 80742 ms.
+
+14:09:57.719 INFO: ---------------------- Starting iteration 9--------------------
+14:09:57.730 INFO: Instrumenting file: Triangle.java
+14:09:57.737 INFO: Augmenting input file Triangle.java
+14:09:57.737 INFO: Augmenting file: Triangle.java
+14:09:57.774 INFO: Compiling augmented file Triangle.java
+14:09:58.073 INFO: Running evosuite on augmented file Triangle.java
+14:11:20.790 DEBUG: Evosuite run took 83071 ms.
+14:11:20.795 INFO: Compiling reporting file Triangle.java
+14:11:21.033 INFO: Compiling evosuite test file for Triangle.java
+14:11:21.864 INFO: Running JUnit tests generated for Triangle.java
+14:11:24.048 INFO: Generating code.
+14:11:25.323 DEBUG: Iteration 9 took 87604 ms.
+
+14:11:25.323 INFO: ---------------------- Starting iteration 10--------------------
+14:11:25.328 INFO: Instrumenting file: Triangle.java
+14:11:25.331 INFO: Augmenting input file Triangle.java
+14:11:25.331 INFO: Augmenting file: Triangle.java
+14:11:25.365 INFO: Compiling augmented file Triangle.java
+14:11:25.621 INFO: Running evosuite on augmented file Triangle.java
+14:12:42.658 DEBUG: Evosuite run took 77335 ms.
+14:12:42.659 INFO: Compiling reporting file Triangle.java
+14:12:42.873 INFO: Compiling evosuite test file for Triangle.java
+14:12:43.668 INFO: Running JUnit tests generated for Triangle.java
+14:12:45.268 INFO: Generating code.
+14:12:46.536 DEBUG: Iteration 10 took 81213 ms.

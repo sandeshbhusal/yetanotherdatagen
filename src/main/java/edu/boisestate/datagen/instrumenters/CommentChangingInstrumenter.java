@@ -66,7 +66,6 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
         this.skipAugmentation = skipAugmentation;
     }
 
-
     // Drop all the empty marker statements at the end.
     public NodeList<Statement> dropAllEmptyStatements(NodeList<Statement> statements) {
         NodeList<Statement> rval = new NodeList<>();
@@ -119,7 +118,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
                 continue;
             }
 
-            String comment = statement.getComment().get().toString();
+            String comment = StringUtils.chomp(statement.getComment().get().toString());
 
             if (comment.contains("datagen_instrument")) {
                 ArrayList<String> commentContents = new ArrayList<>(
@@ -131,6 +130,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
 
                 Iterator<String> iter = commentContents.iterator();
                 // Skip the first key, it's datagen_instrument.
+                iter.next();
                 iter.next();
 
                 // Get the instrumentation ID.
@@ -171,11 +171,12 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
             if (statement.getComment().isPresent()
                     && statement.getComment().get().toString().contains("datagen_guard_start")) {
                 ArrayList<String> commentContents = new ArrayList<>(
-                        Arrays.asList(StringUtils.chomp(statement.getComment().get().asString()).split(" ")));
+                        Arrays.asList(StringUtils.chomp(statement.getComment().get().toString()).split(" ")));
 
                 Iterator<String> iter = commentContents.iterator();
                 iter.next();
                 iter.next();
+
                 // This is the start of a guard block.
                 String guardId = iter.next();
 
@@ -207,7 +208,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
                 // Default expression when we don't have any data points.
                 wrappingIfStatement.setCondition(generateAugmentedExpression(guardId));
                 rval.add(wrappingIfStatement);
-            
+
             } else {
                 // If not a guard start, add the statement as is.
                 rval.add(statement);
@@ -277,7 +278,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
             }
 
             return replacementExpression;
-        
+
         } else {
             // return a "true" expression.
             return new BooleanLiteralExpr(true);

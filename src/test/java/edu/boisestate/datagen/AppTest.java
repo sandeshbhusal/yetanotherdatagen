@@ -29,19 +29,19 @@ public class AppTest {
                 "    public static boolean intdiv(int a, int b) {\n" +
                 "        boolean rval = false;\n" +
                 "\n" +
-                "        //datagen_instrument entermethod a b\n" +
+                "        // datagen_instrument entermethod a b\n" +
                 "        ;\n" +
                 "    \n" +
                 "        // datagen_guard_start outerguard a b\n" +
                 "        ;\n" +
                 "\n" +
                 "        if(a < b) {\n" +
-                "            //datagen_instrument a_lt_b_true a b\n" +
+                "            // datagen_instrument a_lt_b_true a b\n" +
                 "            ;\n" +
                 "\n" +
                 "            rval = true;\n" +
                 "        } else {\n" +
-                "            //datagen_instrument a_lt_b_false a b\n" +
+                "            // datagen_instrument a_lt_b_false a b\n" +
                 "            ;\n" +
                 "\n" +
                 "            rval = false;\n" +
@@ -53,12 +53,11 @@ public class AppTest {
                 "        return rval;\n" +
                 "    }\n" +
                 "}";
-
-        CommentChangingInstrumenter cc = new CommentChangingInstrumenter(InstrumentationMode.AUGMENTATION);
+        CommentChangingInstrumenter cc = new CommentChangingInstrumenter(InstrumentationMode.INSTRUMENTATION);
         JavaParser parser = new JavaParser();
         CompilationUnit cu = parser.parse(code).getResult().get();
-        // cc.instrument(cu);
-        System.err.println(cc);
+        cc.instrument(cu);
+        System.out.println(cu.toString());
     }
 
     @Test

@@ -314,6 +314,17 @@ public class App {
             HashMap<String, String> traces = Cache.getInstance().generate_daikon_dtraces();
             for (String key : traces.keySet()) {
                 FileOps.writeFile(new File(codePath + "/" + key + ".dtrace"), traces.get(key));
+
+                // Run daikon on the dtrace file.
+                String[] daikonCommand = {
+                        "java",
+                        "-cp",
+                        String.join(":", classpaths),
+                        "daikon.Daikon",
+                        codePath + "/" + key + ".dtrace",
+                };
+
+                runProcess(daikonCommand);
             }
 
             HashMap<String, String> dig_traces = Cache.getInstance().generate_dig_traces();
