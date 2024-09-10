@@ -87,7 +87,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
             if (statement.getComment().isPresent()
                     && statement.getComment().get().toString().contains("datagen_guard_start")) {
                 ArrayList<String> commentContents = new ArrayList<>(
-                        Arrays.asList(StringUtils.chomp(statement.getComment().get().asString()).split(" ")));
+                        Arrays.asList(StringUtils.chomp(statement.getComment().get().toString()).split(" ")));
 
                 Iterator<String> iter = commentContents.iterator();
                 iter.next(); // Skip the datagen_guard_start.

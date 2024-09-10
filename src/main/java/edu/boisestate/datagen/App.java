@@ -321,6 +321,7 @@ public class App {
                 // Store the file in the code path with daikonoutput extension.
                 FileOps.writeFile(new File(codePath + "/" + key + ".daikonoutput"), daikonOutput);
             }
+            Logger.info("Finished executing daikon and generating invariants.");
 
             HashMap<String, String> dig_traces = Cache.getInstance().generate_dig_traces();
             for (String key : dig_traces.keySet()) {
@@ -339,9 +340,28 @@ public class App {
                     String.format("/root/miniconda3/bin/python -O dig.py /sources/%s.csv", key)
                 };
 
+                /* Here is the issue with this - unlike Daikon, dig prints out the file names
+                 * in the output, and also prints the minimization count, trace count, etc. So the
+                 * output of DIG will ALWAYS change between iterations, and fixed point will never be
+                 * reached in the output string. So we strip all metadata from dig output, and just
+                 * store the line starting at vtrace ({count} invs):, and following invariants.
+                 */
+
                 String digOutput = runProcess(digCommand);
+                StringBuilder sb = new StringBuilder();
+                String[] digOutputLines = digOutput.split(System.lineSeparator());
+                boolean vtraceLineFound = false;
+                for (String line: digOutputLines) {
+                    if (line.startsWith("vtrace")) vtraceLineFound = true;
+                    if (vtraceLineFound) {
+                        sb.append(line);
+                        sb.append("\n");
+                    }
+                }
+                String toSaveString = sb.toString();
+
                 // Store the dig invariants generated with digoutput extension.
-                FileOps.writeFile(new File(codePath + "/" + key + ".digoutput"), digOutput);
+                FileOps.writeFile(new File(codePath + "/" + key + ".digoutput"), toSaveString);
             }
 
             // Check if all of the files have stabilized. For this, we need to recursively descend into the
@@ -357,18 +377,28 @@ public class App {
                 int changedInvariantsCount = 0;
                 File checkpointDirOld = new File(String.format("%s/%d", checkpointPath, iterations - 1));
                 File codePathOld = new File(checkpointDirOld + "/code");
+                
+                ArrayList<String> stabilized = new ArrayList<>();
                 for (String key: cacheKeys) {
                     // Generate two file names each, for daikon and DIG.
                     // Then check if contents have changed from previous iteration.
                     File oldDaikonFile = new File(codePathOld + "/" + key + ".daikonoutput");
-                    File currentDaikonFile = new File(codePath + "/" + key + ".digoutput");
+                    File currentDaikonFile = new File(codePath + "/" + key + ".daikonoutput");
                     
-                    File oldDIGFile = new File(codePathOld + "/" + key + ".daikonoutput");
+                    File oldDIGFile = new File(codePathOld + "/" + key + ".digoutput");
                     File currentDIGFile = new File(codePath + "/" + key + ".digoutput");
 
-                    if (hasFileChanged(oldDaikonFile, currentDaikonFile) || hasFileChanged(oldDIGFile, currentDIGFile)){
+                    if (hasFileChanged(oldDaikonFile, currentDaikonFile)) {
+                        Logger.debug(String.format("%s has changed for daikon between %d and %d", key, iterations, iterations-1));
                         changedInvariantsCount += 1;
+                    } else if (hasFileChanged(oldDIGFile, currentDIGFile)) {
+                        Logger.debug(String.format("%s has changed for DIG between %d and %d", key, iterations, iterations-1));
+                        changedInvariantsCount += 1;
+                    } else {
+                        Logger.debug("Invariants have stabilized for key: " + key);
                     }
+
+
                 }
 
                 if (changedInvariantsCount == 0) {

@@ -7,18 +7,18 @@ public class Input {
             int q = 0;
             int r = a;
 
-            //datagen_instrument entermethod a b
+            // datagen_instrument entermethod a b
             ;
 
             while (r >= b) {
-                //datagen_instrument loopcondition a b q r
+                // datagen_instrument loopcondition a b q r
                 ;
 
                 r -= b;
                 q += 1;
             }
 
-            //datagen_instrument div a b q r
+            // datagen_instrument div a b q r
             ;
 
 
