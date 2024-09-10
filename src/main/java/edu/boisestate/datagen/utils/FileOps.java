@@ -3,7 +3,8 @@ package edu.boisestate.datagen.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -42,13 +43,30 @@ public class FileOps {
     }
 
     public static void writeFile(File file, String content) {
+        FileOutputStream fos = null;
+        OutputStreamWriter osw = null;
         try {
-            FileWriter fw = new FileWriter(file);
-            fw.write(content);
-            fw.close();
+            fos = new FileOutputStream(file);
+            osw = new OutputStreamWriter(fos);
+            osw.write(content);
+            osw.flush(); // Ensure data is written to the buffer
+
+            // Force synchronization with the file system.
+            fos.getFD().sync();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
+        } finally {
+            try {
+                if (osw != null) {
+                    osw.close();
+                }
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

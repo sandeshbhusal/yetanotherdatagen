@@ -5,6 +5,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Optional;
 import java.io.BufferedReader;
@@ -81,14 +82,7 @@ public class App {
                 .setDefault(false)
                 .type(Boolean.class);
 
-        // TODO: This is not working ATM.
-        argParser.addArgument("-i", "--iterations")
-                .help("Number of iterations to run (overrides the fixed point check in daikon).")
-                .required(true)
-                .type(Integer.class);
-
         boolean skipAugmentation = false;
-        int requiredIterations = 0;
         
         // Parse arguments.
         try {
@@ -99,7 +93,6 @@ public class App {
             junitJarPath = getJarFromClassPath("junit").orElse(ns.getString("junit"));
             daikonJarPath = getJarFromClassPath("daikon").orElse(ns.getString("daikon"));
             skipAugmentation = ns.getBoolean("skip_augmentation");
-            requiredIterations = ns.getInt("iterations");
 
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
@@ -324,20 +317,74 @@ public class App {
                         codePath + "/" + key + ".dtrace",
                 };
 
-                runProcess(daikonCommand);
+                String daikonOutput = runProcess(daikonCommand);
+                // Store the file in the code path with daikonoutput extension.
+                FileOps.writeFile(new File(codePath + "/" + key + ".daikonoutput"), daikonOutput);
             }
 
             HashMap<String, String> dig_traces = Cache.getInstance().generate_dig_traces();
             for (String key : dig_traces.keySet()) {
                 FileOps.writeFile(new File(codePath + "/" + key + ".csv"), dig_traces.get(key));
+
+                // Run Dig on the trace csv file.
+                String[] digCommand = {
+                    "docker",
+                    "run",
+                    "--rm",
+                    "--platform", "linux/amd64",
+                    "-v", String.format("%s/:/sources", codePath.getAbsolutePath()),
+                    "dig",
+                    "/bin/bash",
+                    "-c",
+                    String.format("/root/miniconda3/bin/python -O dig.py /sources/%s.csv", key)
+                };
+
+                String digOutput = runProcess(digCommand);
+                // Store the dig invariants generated with digoutput extension.
+                FileOps.writeFile(new File(codePath + "/" + key + ".digoutput"), digOutput);
+            }
+
+            // Check if all of the files have stabilized. For this, we need to recursively descend into the
+            // checkpoint folder, list all files from previous iteration inside the 'code' folder, and check
+            // if the file content has changed.
+            if (iterations == 1) {
+                Logger.info("Finished first iteration. No stabilization checks will be done"); 
+            } else {
+                Logger.debug("Checking if all invariants have become stable or not.");
+
+                // Get all keys from cache we can compare.
+                List<String> cacheKeys = Cache.getInstance().getInstrumentationCacheKeys();
+                int changedInvariantsCount = 0;
+                File checkpointDirOld = new File(String.format("%s/%d", checkpointPath, iterations - 1));
+                File codePathOld = new File(checkpointDirOld + "/code");
+                for (String key: cacheKeys) {
+                    // Generate two file names each, for daikon and DIG.
+                    // Then check if contents have changed from previous iteration.
+                    File oldDaikonFile = new File(codePathOld + "/" + key + ".daikonoutput");
+                    File currentDaikonFile = new File(codePath + "/" + key + ".digoutput");
+                    
+                    File oldDIGFile = new File(codePathOld + "/" + key + ".daikonoutput");
+                    File currentDIGFile = new File(codePath + "/" + key + ".digoutput");
+
+                    if (hasFileChanged(oldDaikonFile, currentDaikonFile) || hasFileChanged(oldDIGFile, currentDIGFile)){
+                        changedInvariantsCount += 1;
+                    }
+                }
+
+                if (changedInvariantsCount == 0) {
+                    Logger.info("All invariants have stabilized at iteration " + iterations);
+                    Logger.info("Shutting down datagen.");
+                    System.exit(0);
+                }
             }
 
             long endTime = System.currentTimeMillis();
             Logger.debug("Iteration " + iterations + " took " + (endTime - startTime) + " ms.");
-        } while (iterations < requiredIterations);
+        } while (true);
     }
 
-    private static void runProcess(String[] command) {
+    // Run a process and return the stdout+stderr of that process.
+    private static String runProcess(String[] command) {
         StringBuilder sb = new StringBuilder();
         try {
             ProcessBuilder pb = new ProcessBuilder(command);
@@ -356,11 +403,23 @@ public class App {
                 System.err.println(sb.toString());
                 System.exit(1);
             }
+
+            return sb.toString();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e);
             System.exit(1);
         }
+    
+        // This should be an unreachable path.
+        throw new IllegalArgumentException("Should not be reachable.");
+    }
+    
+    // Check and return if there are differences between a file.
+    private static boolean hasFileChanged(File file1, File file2) {
+        String content1 = FileOps.readFile(file1);
+        String content2 = FileOps.readFile(file2);
+        return !content1.equals(content2);
     }
 
     private static Optional<CompilationUnit> parseJavaFile(File file) {

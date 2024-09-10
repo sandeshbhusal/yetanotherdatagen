@@ -21,6 +21,12 @@ public class Cache {
         return instance;
     }
 
+    public List<String> getInstrumentationCacheKeys() {
+        ArrayList<String> rval = new ArrayList<>();
+        rval.addAll(this.instrumentation_cache.keySet());
+        return rval;
+    }
+
     public void add_instrumentation_data(InstrumentationRecord record) {
         // Get key.
         String key = record.getRecordId();
