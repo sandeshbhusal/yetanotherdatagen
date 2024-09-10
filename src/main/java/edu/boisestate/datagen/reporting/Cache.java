@@ -1,16 +1,18 @@
 package edu.boisestate.datagen.reporting;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Random;
 
 public class Cache {
     private static Cache instance = null;
     public HashMap<String, HashSet<HashMap<String, Object>>> instrumentation_cache = new HashMap<>();
     public HashMap<String, HashSet<HashMap<String, Object>>> guard_cache = new HashMap<>();
+    public HashMap<String, HashMap<String, Object>> seen_sent = new HashMap<>();
 
     public static Cache getInstance() {
         if (instance == null) {
@@ -37,15 +39,88 @@ public class Cache {
         }
     }
 
-    // TODO: This method needs to be updated with TABU, and Round-Robin data
-    // returning methods.
     // so that we can split the same path in multiple ways.
     public List<HashMap<String, Object>> get_seen_guard_data(String guardId) {
-        return Optional.ofNullable(this.guard_cache.get(guardId))
-                .map(guardData -> guardData.stream()
-                        .distinct()
-                        .collect(Collectors.toList()))
-                .orElse(null);
+        // With some probability, return a random sample of the data.
+        // The data points may not have the same number of variables.
+        HashSet<HashMap<String, Object>> data = guard_cache.get(guardId);
+        if (data == null) {
+            return null;
+        }
+
+        // Since all variables will be the same, we can convert the hashset, to
+        // a hashmap of hashsets.
+        HashMap<String, HashSet<Object>> observations = new HashMap<>();
+        for (HashMap<String, Object> datum : data) {
+            for (String variable : datum.keySet()) {
+                HashSet<Object> observation = observations.getOrDefault(variable, new HashSet<>());
+                observation.add(datum.get(variable));
+                observations.put(variable, observation);
+            }
+        }
+
+        // At this point, we have the values recorded for each variable.
+        // We now calculate the value that has the least standard deviation
+        // Asssuming all values are integers.
+        Float minsdValue = Float.MAX_VALUE;
+        String minsdVariable = null;
+        for (String variable : observations.keySet()) {
+            HashSet<Object> observation = observations.get(variable);
+            Float sd = calculateStandardDeviation(observation);
+            if (sd < minsdValue) {
+                minsdValue = sd;
+                minsdVariable = variable;
+            }
+        }
+
+        // We have the variable with the least SD. Now we return a random sample of
+        // that variable, including half the datapoinnts we saw previously. If the 
+        // dataset size is too small, we return the entire dataset, when n <= 4. (Heuristics later)
+        int n = observations.get(minsdVariable).size();
+        ArrayList<HashMap<String, Object>> sampled = new ArrayList<>();
+        Iterator<Object> it = observations.get(minsdVariable).iterator();
+        if (n <= 4) {
+            // Put everything from the iterator into a list.
+            while (it.hasNext()) {
+                HashMap<String, Object> datum = new HashMap<>();
+                datum.put(minsdVariable, it.next());
+                sampled.add(datum);
+            }
+            return sampled;
+
+        } else {
+            // Sample datapoints with 50% probability and return them
+            for (int i = 0; i < n; i++) {
+                Float select = (new Random()).nextFloat();
+                if (select < 0.5f) {
+                    HashMap<String, Object> datum = new HashMap<>();
+                    datum.put(minsdVariable, it.next());
+                    sampled.add(datum);
+                }
+            }
+            return sampled;
+        }
+    }
+
+    public Float calculateStandardDeviation(HashSet<Object> observation) {
+        // Calculate the mean.
+        Integer sum = 0;
+        for (Object o : observation) {
+            // WARN: Only works with Ints for now.
+            sum += (Integer) o;
+        }
+
+        Float mean = (float) sum / observation.size();
+
+        // Calculate the variance.
+        Float variance = 0.0f;
+        for (Object o : observation) {
+            Float diff = ((Integer) o).floatValue() - mean;
+            variance += diff * diff;
+        }
+        variance /= observation.size();
+
+        return (float) Math.sqrt(variance);
     }
 
     public HashMap<String, String> generate_daikon_dtraces() {

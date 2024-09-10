@@ -277,6 +277,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
                 replacementExpression.setLeft(replacementExpression.clone());
             }
 
+            // TODO: Might also need to fix that the variable values cannot be equal to each other.
             return replacementExpression;
 
         } else {
