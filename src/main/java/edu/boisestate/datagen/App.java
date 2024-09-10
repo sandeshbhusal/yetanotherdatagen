@@ -168,6 +168,14 @@ public class App {
                 InstrumentationMode.INSTRUMENTATION, skipAugmentation);
         ImportInstrumenter importer = new ImportInstrumenter();
 
+        /* We do not check a instrumentation key, once it has stabilized between two
+         * runs, because there's always a probability in later future, where a new data
+         * point can cause it to change. So the threshold for now is 2 consecutive iterations.
+         * If between two iterations the invariants generated for a ppt do not change for both
+         * dig and daikon, then we consider that ppt invariant generated to be stable.
+         */
+        HashMap<String, Integer> stableKeys = new HashMap<>();
+
         // Main loop.
         do {
             long startTime = System.currentTimeMillis();
@@ -380,6 +388,11 @@ public class App {
                 
                 ArrayList<String> stabilized = new ArrayList<>();
                 for (String key: cacheKeys) {
+                    if (stableKeys.containsKey(key)) {
+                        // We do not care what dig produced at this point, we will skip it.
+                        continue;
+                    }
+
                     // Generate two file names each, for daikon and DIG.
                     // Then check if contents have changed from previous iteration.
                     File oldDaikonFile = new File(codePathOld + "/" + key + ".daikonoutput");
@@ -396,6 +409,7 @@ public class App {
                         changedInvariantsCount += 1;
                     } else {
                         Logger.debug("Invariants have stabilized for key: " + key);
+                        stableKeys.put(key, iterations);
                     }
 
 
@@ -403,6 +417,12 @@ public class App {
 
                 if (changedInvariantsCount == 0) {
                     Logger.info("All invariants have stabilized at iteration " + iterations);
+                    System.out.println("----------------------------------------------------------");
+                    System.out.println("The following iterations caused each key's stabilization:");
+                    for (String key: stableKeys.keySet()){
+                        System.out.println(String.format("Key: %s, iteration: %d", key, stableKeys.get(key)));
+                    }
+                    System.out.println("----------------------------------------------------------");
                     Logger.info("Shutting down datagen.");
                     System.exit(0);
                 }
