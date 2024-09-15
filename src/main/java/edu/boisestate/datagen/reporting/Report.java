@@ -2,7 +2,6 @@ package edu.boisestate.datagen.reporting;
 
 import edu.boisestate.datagen.reporting.InstrumentationRecord.RecordType;
 import edu.boisestate.datagen.rmi.DataPointServer;
-import edu.boisestate.datagen.rmi.DataPointServerImpl;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -34,17 +33,17 @@ public class Report {
     }
 
     public static void sendDataPoint(InstrumentationRecord record) {
-        int port = datagen_remote_port;
+        int datagen_instance_id = datagen_remote_port;
         try {
-            if (port == 0) {
+            if (datagen_instance_id == 0) {
                 System.err.println("Something is severely wrong. Port is 0.");
                 System.exit(1);
             }
             // print datapoint server name.
-            System.out.println(String.format("DataPointServer_" + port));
+            System.out.println(String.format("DataPointServer_" + datagen_instance_id));
 
             DataPointServer server = (DataPointServer) LocateRegistry.getRegistry()
-                    .lookup(String.format("DataPointServer_%d", port));
+                    .lookup(String.format("DataPointServer_%d", datagen_instance_id));
 
             Registry registry = LocateRegistry.getRegistry();
             // Dump everything registered in the registry

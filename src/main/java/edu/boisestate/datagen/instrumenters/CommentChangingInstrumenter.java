@@ -138,7 +138,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
 
                 // The RMI ID goes first.
 
-                methodCall.addArgument(new IntegerLiteralExpr(DataPointServerImpl.getDatagenport()));
+                methodCall.addArgument(new IntegerLiteralExpr(DataPointServerImpl.getDatagenInstanceId()));
                 // Get the instrumentation ID.
                 if (iter.hasNext()) {
                     String instrumentationId = iter.next();
@@ -299,7 +299,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
         methodCallExpr.setScope(new NameExpr("Report"));
         methodCallExpr.setName(new SimpleName("datagen_guard_instrument"));
         // DatagenPointServer id.
-        methodCallExpr.addArgument(new IntegerLiteralExpr(DataPointServerImpl.getDatagenport()));
+        methodCallExpr.addArgument(new IntegerLiteralExpr(DataPointServerImpl.getDatagenInstanceId()));
         methodCallExpr.addArgument(new StringLiteralExpr(guardId));
 
         if (args != null) {

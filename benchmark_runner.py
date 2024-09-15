@@ -114,7 +114,7 @@ def benchmark_runner(benchmark):
     ]
     
     print(' '.join(command))
-    
+    checkpointdir = f"{mypath}/{benchmark_folder}/outputs/{benchmark}/checkpoint_nodatagen" 
     with open(f"{mypath}/{benchmark_folder}/outputs/{benchmark}/trace_nodatagen.log", "w") as f:
         process = subprocess.Popen(
             command,
@@ -130,16 +130,21 @@ def benchmark_runner(benchmark):
 
         for stderr_line in process.stderr:
             print(stderr_line, end="")
-
+            f.write(stderr_line)
+            f.flush()
+            
+        process.wait()
+        
+    print("Finished running benchmarks for ", benchmark)
 
 threads = []
 # Run all benchmarks in parallel.
-# for benchmark in benchmarks:
+for benchmark in benchmarks:
     # run benchmark.
     # Run a thread for each benchmark.
-thread = threading.Thread(target=benchmark_runner, args=("A_LT_B",))
-thread.start()
-threads.append(thread)
+    thread = threading.Thread(target=benchmark_runner, args=(benchmark,))
+    thread.start()
+    threads.append(thread)
 
 # join all threads.
 for thread in threads:

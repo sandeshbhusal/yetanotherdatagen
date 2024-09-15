@@ -243,6 +243,7 @@ public class App {
                         evosuiteJarPath,
                         String.format("-projectCP=%s", compiledFilePath),
                         String.format("-class=%s", className),
+                        String.format("-Dassertions=false"),
                 };
 
                 runProcess(evoruncommand);
@@ -397,7 +398,6 @@ public class App {
                 File checkpointDirOld = new File(String.format("%s/%d", checkpointPath, iterations - 1));
                 File codePathOld = new File(checkpointDirOld + "/code");
 
-                ArrayList<String> stabilized = new ArrayList<>();
                 for (String key : cacheKeys) {
                     if (stableKeys.containsKey(key)) {
                         // We do not care what dig produced at this point, we will skip it.
@@ -435,8 +435,8 @@ public class App {
                         System.out.println(String.format("Key: %s, iteration: %d", key, stableKeys.get(key)));
                     }
                     System.out.println("----------------------------------------------------------");
-                    Logger.info("Shutting down datagen.");
-                    System.exit(0);
+
+                    Logger.info("Process completed. Not quitting because I might have the RMI registry running.");
                 }
             }
 
