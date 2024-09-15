@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.tinylog.Logger;
+
 import java.util.Random;
 
 public class Cache {
@@ -136,6 +139,7 @@ public class Cache {
 
         // Return both, combined.
         traceFilesInstru.putAll(traceFilesGuard);
+        Logger.info("Generated " + traceFilesInstru.size() + " Daikon trace files for instrumentation data.");
         return traceFilesInstru;
     }
 
@@ -146,6 +150,7 @@ public class Cache {
 
         // Return both, combined.
         traceFiles.putAll(traceFilesGuard);
+        Logger.info("Generated " + traceFiles.size() + " DiG trace files for instrumentation data.");
         return traceFiles;
     }
 

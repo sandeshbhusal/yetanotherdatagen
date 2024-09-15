@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.crypto.Data;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.javaparser.ast.CompilationUnit;
@@ -29,6 +31,7 @@ import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import edu.boisestate.datagen.reporting.Cache;
+import edu.boisestate.datagen.rmi.DataPointServerImpl;
 
 public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
     private InstrumentationMode mode;
@@ -133,10 +136,14 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
                 iter.next();
                 iter.next();
 
+                // The RMI ID goes first.
+
+                methodCall.addArgument(new IntegerLiteralExpr(DataPointServerImpl.getDatagenport()));
                 // Get the instrumentation ID.
                 if (iter.hasNext()) {
                     String instrumentationId = iter.next();
                     methodCall.addArgument(new StringLiteralExpr(instrumentationId));
+                    // Add port.
 
                     while (iter.hasNext()) {
                         String variableName = iter.next();
@@ -291,7 +298,8 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
 
         methodCallExpr.setScope(new NameExpr("Report"));
         methodCallExpr.setName(new SimpleName("datagen_guard_instrument"));
-
+        // DatagenPointServer id.
+        methodCallExpr.addArgument(new IntegerLiteralExpr(DataPointServerImpl.getDatagenport()));
         methodCallExpr.addArgument(new StringLiteralExpr(guardId));
 
         if (args != null) {

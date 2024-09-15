@@ -130,7 +130,7 @@ public class App {
         // Ensure the source path is a directory, and it exists.
         File sourceDir = new File(source);
         if (!sourceDir.exists() || !sourceDir.isDirectory()) {
-            Logger.error("Source path does not exist or is not a directory.");
+            Logger.error("Source path " + sourceDir.getAbsolutePath() + " does not exist or is not a directory.");
             System.exit(1);
         }
 
@@ -168,10 +168,13 @@ public class App {
                 InstrumentationMode.INSTRUMENTATION, skipAugmentation);
         ImportInstrumenter importer = new ImportInstrumenter();
 
-        /* We do not check a instrumentation key, once it has stabilized between two
+        /*
+         * We do not check a instrumentation key, once it has stabilized between two
          * runs, because there's always a probability in later future, where a new data
-         * point can cause it to change. So the threshold for now is 2 consecutive iterations.
-         * If between two iterations the invariants generated for a ppt do not change for both
+         * point can cause it to change. So the threshold for now is 2 consecutive
+         * iterations.
+         * If between two iterations the invariants generated for a ppt do not change
+         * for both
          * dig and daikon, then we consider that ppt invariant generated to be stable.
          */
         HashMap<String, Integer> stableKeys = new HashMap<>();
@@ -258,7 +261,8 @@ public class App {
 
                 Logger.info("Compiling reporting file " + file.getName());
                 String className = file.getName().replace(".java", "");
-                String[] compile_reportingfiles = { "javac", file.getAbsolutePath(), "-d", compiledPath };
+                String[] compile_reportingfiles = { "javac", "-cp", String.join(":", classpaths),
+                        file.getAbsolutePath(), "-d", compiledPath };
                 runProcess(compile_reportingfiles);
 
                 // Also compile the respective evosuite test. The two files
@@ -309,7 +313,7 @@ public class App {
             FileOps.recursivelyCopyFolder(new File(augmentedPath),
                     new File(checkpointDir.getAbsolutePath() + "/augmented"));
             FileOps.recursivelyCopyFolder(evosuiteTests, new File(checkpointDir.getAbsolutePath() + "/evosuite-tests"));
-            
+
             // Generate our code.
             Logger.info("Generating code.");
             HashMap<String, String> traces = Cache.getInstance().generate_daikon_dtraces();
@@ -337,21 +341,25 @@ public class App {
 
                 // Run Dig on the trace csv file.
                 String[] digCommand = {
-                    "docker",
-                    "run",
-                    "--rm",
-                    "--platform", "linux/amd64",
-                    "-v", String.format("%s/:/sources", codePath.getAbsolutePath()),
-                    "dig",
-                    "/bin/bash",
-                    "-c",
-                    String.format("/root/miniconda3/bin/python -O dig.py /sources/%s.csv", key)
+                        "docker",
+                        "run",
+                        "--rm",
+                        "--platform", "linux/amd64",
+                        "-v", String.format("%s/:/sources", codePath.getAbsolutePath()),
+                        "dig",
+                        "/bin/bash",
+                        "-c",
+                        String.format("/root/miniconda3/bin/python -O dig.py /sources/%s.csv", key)
                 };
 
-                /* Here is the issue with this - unlike Daikon, dig prints out the file names
-                 * in the output, and also prints the minimization count, trace count, etc. So the
-                 * output of DIG will ALWAYS change between iterations, and fixed point will never be
-                 * reached in the output string. So we strip all metadata from dig output, and just
+                /*
+                 * Here is the issue with this - unlike Daikon, dig prints out the file names
+                 * in the output, and also prints the minimization count, trace count, etc. So
+                 * the
+                 * output of DIG will ALWAYS change between iterations, and fixed point will
+                 * never be
+                 * reached in the output string. So we strip all metadata from dig output, and
+                 * just
                  * store the line starting at vtrace ({count} invs):, and following invariants.
                  */
 
@@ -359,8 +367,9 @@ public class App {
                 StringBuilder sb = new StringBuilder();
                 String[] digOutputLines = digOutput.split(System.lineSeparator());
                 boolean vtraceLineFound = false;
-                for (String line: digOutputLines) {
-                    if (line.startsWith("vtrace")) vtraceLineFound = true;
+                for (String line : digOutputLines) {
+                    if (line.startsWith("vtrace"))
+                        vtraceLineFound = true;
                     if (vtraceLineFound) {
                         sb.append(line);
                         sb.append("\n");
@@ -372,11 +381,13 @@ public class App {
                 FileOps.writeFile(new File(codePath + "/" + key + ".digoutput"), toSaveString);
             }
 
-            // Check if all of the files have stabilized. For this, we need to recursively descend into the
-            // checkpoint folder, list all files from previous iteration inside the 'code' folder, and check
+            // Check if all of the files have stabilized. For this, we need to recursively
+            // descend into the
+            // checkpoint folder, list all files from previous iteration inside the 'code'
+            // folder, and check
             // if the file content has changed.
             if (iterations == 1) {
-                Logger.info("Finished first iteration. No stabilization checks will be done"); 
+                Logger.info("Finished first iteration. No stabilization checks will be done");
             } else {
                 Logger.debug("Checking if all invariants have become stable or not.");
 
@@ -385,9 +396,9 @@ public class App {
                 int changedInvariantsCount = 0;
                 File checkpointDirOld = new File(String.format("%s/%d", checkpointPath, iterations - 1));
                 File codePathOld = new File(checkpointDirOld + "/code");
-                
+
                 ArrayList<String> stabilized = new ArrayList<>();
-                for (String key: cacheKeys) {
+                for (String key : cacheKeys) {
                     if (stableKeys.containsKey(key)) {
                         // We do not care what dig produced at this point, we will skip it.
                         continue;
@@ -397,21 +408,22 @@ public class App {
                     // Then check if contents have changed from previous iteration.
                     File oldDaikonFile = new File(codePathOld + "/" + key + ".daikonoutput");
                     File currentDaikonFile = new File(codePath + "/" + key + ".daikonoutput");
-                    
+
                     File oldDIGFile = new File(codePathOld + "/" + key + ".digoutput");
                     File currentDIGFile = new File(codePath + "/" + key + ".digoutput");
 
                     if (hasFileChanged(oldDaikonFile, currentDaikonFile)) {
-                        Logger.debug(String.format("%s has changed for daikon between %d and %d", key, iterations, iterations-1));
+                        Logger.debug(String.format("%s has changed for daikon between %d and %d", key, iterations,
+                                iterations - 1));
                         changedInvariantsCount += 1;
                     } else if (hasFileChanged(oldDIGFile, currentDIGFile)) {
-                        Logger.debug(String.format("%s has changed for DIG between %d and %d", key, iterations, iterations-1));
+                        Logger.debug(String.format("%s has changed for DIG between %d and %d", key, iterations,
+                                iterations - 1));
                         changedInvariantsCount += 1;
                     } else {
                         Logger.debug("Invariants have stabilized for key: " + key);
                         stableKeys.put(key, iterations);
                     }
-
 
                 }
 
@@ -419,7 +431,7 @@ public class App {
                     Logger.info("All invariants have stabilized at iteration " + iterations);
                     System.out.println("----------------------------------------------------------");
                     System.out.println("The following iterations caused each key's stabilization:");
-                    for (String key: stableKeys.keySet()){
+                    for (String key : stableKeys.keySet()) {
                         System.out.println(String.format("Key: %s, iteration: %d", key, stableKeys.get(key)));
                     }
                     System.out.println("----------------------------------------------------------");
@@ -438,6 +450,8 @@ public class App {
         StringBuilder sb = new StringBuilder();
         try {
             ProcessBuilder pb = new ProcessBuilder(command);
+            // Set pb to cwd.
+            pb.directory(new File(System.getProperty("user.dir")));
             pb.redirectErrorStream(true);
             Process p = pb.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -460,11 +474,11 @@ public class App {
             System.err.println(e);
             System.exit(1);
         }
-    
+
         // This should be an unreachable path.
         throw new IllegalArgumentException("Should not be reachable.");
     }
-    
+
     // Check and return if there are differences between a file.
     private static boolean hasFileChanged(File file1, File file2) {
         String content1 = FileOps.readFile(file1);
