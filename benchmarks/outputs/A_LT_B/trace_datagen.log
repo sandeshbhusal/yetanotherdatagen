@@ -1,0 +1,27 @@
+Starting DataPointServer on port 15256
+DataPointServer bound on port 15256 as DataPointServer_15256
+16:56:10.321 INFO: Starting datagen.
+
+16:56:10.346 INFO: ---------------------- Starting iteration 1--------------------
+16:56:10.463 INFO: Instrumenting file: A_LT_B.java
+16:56:10.660 INFO: Augmenting input file A_LT_B.java
+16:56:10.660 INFO: Augmenting file: A_LT_B.java
+16:56:10.684 INFO: Compiling augmented file A_LT_B.java
+16:56:11.172 INFO: Running evosuite on augmented file A_LT_B.java
+16:56:26.515 DEBUG: Evosuite run took 16166 ms.
+16:56:26.519 INFO: Compiling reporting file A_LT_B.java
+16:56:27.359 INFO: Compiling evosuite test file for A_LT_B.java
+16:56:29.286 INFO: Running JUnit tests generated for A_LT_B.java
+16:56:32.674 INFO: Generating code.
+16:56:32.674 INFO: Generated 3 Daikon trace files for instrumentation data.
+16:56:34.336 INFO: Finished executing daikon and generating invariants.
+16:56:34.336 INFO: Generated 4 DiG trace files for instrumentation data.
+16:56:49.399 INFO: Finished first iteration. No stabilization checks will be done
+16:56:49.403 DEBUG: Iteration 1 took 39053 ms.
+
+16:56:49.403 INFO: ---------------------- Starting iteration 2--------------------
+16:56:49.411 INFO: Instrumenting file: A_LT_B.java
+16:56:49.424 INFO: Augmenting input file A_LT_B.java
+16:56:49.424 INFO: Augmenting file: A_LT_B.java
+16:56:49.438 INFO: Compiling augmented file A_LT_B.java
+16:56:49.758 INFO: Running evosuite on augmented file A_LT_B.java

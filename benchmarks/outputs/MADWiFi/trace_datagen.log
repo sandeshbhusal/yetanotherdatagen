@@ -1,0 +1,10 @@
+Starting DataPointServer on port 13249
+DataPointServer bound on port 13249 as DataPointServer_13249
+16:56:10.332 INFO: Starting datagen.
+
+16:56:10.357 INFO: ---------------------- Starting iteration 1--------------------
+16:56:10.379 INFO: Instrumenting file: MADWiFi.java
+16:56:10.681 INFO: Augmenting input file MADWiFi.java
+16:56:10.681 INFO: Augmenting file: MADWiFi.java
+16:56:10.702 INFO: Compiling augmented file MADWiFi.java
+16:56:11.190 INFO: Running evosuite on augmented file MADWiFi.java

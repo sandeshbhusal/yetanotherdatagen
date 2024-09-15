@@ -66,42 +66,42 @@ def benchmark_runner(benchmark):
     
     checkpointdir = f"{mypath}/{benchmark_folder}/outputs/{benchmark}/checkpoint_datagen"
 
-    # datagen
-    command = [
-        "java",
-        "-cp",
-        f"/Users/sandesh/Workspace/thesis/javaparser/my-app/target/classes:benchmarks/inputs/A_LT_B:{classpaths}:benchmarks/outputs/{benchmark}/checkpoint_datagen",
-        "edu.boisestate.datagen.App",
-        "-s",
-        f"{mypath}/{benchmark_folder}/inputs/{benchmark}/",
-        "-w",
-        checkpointdir
-    ]
+    # # datagen
+    # command = [
+    #     "java",
+    #     "-cp",
+    #     f"/Users/sandesh/Workspace/thesis/javaparser/my-app/target/classes:benchmarks/inputs/A_LT_B:{classpaths}:benchmarks/outputs/{benchmark}/checkpoint_datagen",
+    #     "edu.boisestate.datagen.App",
+    #     "-s",
+    #     f"{mypath}/{benchmark_folder}/inputs/{benchmark}/",
+    #     "-w",
+    #     checkpointdir
+    # ]
 
-    with open(f"{mypath}/{benchmark_folder}/outputs/{benchmark}/trace_datagen.log", "w") as f:
-        process = subprocess.Popen(
-            command,
-            cwd=checkpointdir,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-        for line in process.stdout:
-            if "Process complete" in line:
-                print("******* Finished running benchmarks for *******", benchmark)
-                with open("status.txt", "a") as statfile:
-                    statfile.write(f"Finished running benchmarks for {benchmark}\n")
-            print(line, end="")
-            f.write(line)
-            f.flush()
+    # with open(f"{mypath}/{benchmark_folder}/outputs/{benchmark}/trace_datagen.log", "w") as f:
+    #     process = subprocess.Popen(
+    #         command,
+    #         cwd=checkpointdir,
+    #         stdout=subprocess.PIPE,
+    #         stderr=subprocess.PIPE,
+    #         text=True,
+    #     )
+    #     for line in process.stdout:
+    #         if "Process complete" in line:
+    #             print("******* Finished running benchmarks for *******", benchmark)
+    #             with open("status.txt", "a") as statfile:
+    #                 statfile.write(f"Finished running datagen benchmarks for {benchmark}\n")
+    #                 break
+                
+    #         print(line, end="")
+    #         f.write(line)
+    #         f.flush()
 
-        for stderr_line in process.stderr:
-            print(stderr_line, end="")  # Print stderr to console
-            f.write(stderr_line)  # Write stderr to file
-            f.flush()  # Flush to file
+    #     for stderr_line in process.stderr:
+    #         print(stderr_line, end="")  # Print stderr to console
+    #         f.write(stderr_line)  # Write stderr to file
+    #         f.flush()  # Flush to file
 
-        process.wait()
-        
     # no datagen.
     print("Running NODATAGEN benchmark:", benchmark)
     command = [
@@ -131,7 +131,7 @@ def benchmark_runner(benchmark):
             if "Process complete" in line:
                 print("Finished running benchmarks for ", benchmark)
                 with open("status.txt", "a") as statfile:
-                    statfile.write(f"Finished running benchmarks for {benchmark}\n")
+                    statfile.write(f"Finished running nodatagen benchmarks for {benchmark}\n")
             print(line, end="")
             f.write(line)
             f.flush()
@@ -140,8 +140,6 @@ def benchmark_runner(benchmark):
             print(stderr_line, end="")
             f.write(stderr_line)
             f.flush()
-        
-        process.wait()
         
     print("Finished running benchmarks for ", benchmark)
 

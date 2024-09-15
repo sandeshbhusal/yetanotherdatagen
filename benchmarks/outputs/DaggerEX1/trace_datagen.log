@@ -1,0 +1,27 @@
+Starting DataPointServer on port 14821
+DataPointServer bound on port 14821 as DataPointServer_14821
+16:56:10.318 INFO: Starting datagen.
+
+16:56:10.349 INFO: ---------------------- Starting iteration 1--------------------
+16:56:10.379 INFO: Instrumenting file: DaggerEX1.java
+16:56:10.637 INFO: Augmenting input file DaggerEX1.java
+16:56:10.638 INFO: Augmenting file: DaggerEX1.java
+16:56:10.666 INFO: Compiling augmented file DaggerEX1.java
+16:56:11.160 INFO: Running evosuite on augmented file DaggerEX1.java
+16:56:26.616 DEBUG: Evosuite run took 16264 ms.
+16:56:26.647 INFO: Compiling reporting file DaggerEX1.java
+16:56:27.604 INFO: Compiling evosuite test file for DaggerEX1.java
+16:56:29.368 INFO: Running JUnit tests generated for DaggerEX1.java
+16:56:32.677 INFO: Generating code.
+16:56:32.678 INFO: Generated 1 Daikon trace files for instrumentation data.
+16:56:33.495 INFO: Finished executing daikon and generating invariants.
+16:56:33.495 INFO: Generated 2 DiG trace files for instrumentation data.
+16:56:43.230 INFO: Finished first iteration. No stabilization checks will be done
+16:56:43.235 DEBUG: Iteration 1 took 32882 ms.
+
+16:56:43.235 INFO: ---------------------- Starting iteration 2--------------------
+16:56:43.245 INFO: Instrumenting file: DaggerEX1.java
+16:56:43.261 INFO: Augmenting input file DaggerEX1.java
+16:56:43.261 INFO: Augmenting file: DaggerEX1.java
+16:56:43.269 INFO: Compiling augmented file DaggerEX1.java
+16:56:43.582 INFO: Running evosuite on augmented file DaggerEX1.java
