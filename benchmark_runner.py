@@ -87,6 +87,10 @@ def benchmark_runner(benchmark):
             text=True,
         )
         for line in process.stdout:
+            if "Process complete" in line:
+                print("******* Finished running benchmarks for *******", benchmark)
+                with open("status.txt", "a") as statfile:
+                    statfile.write(f"Finished running benchmarks for {benchmark}\n")
             print(line, end="")
             f.write(line)
             f.flush()
@@ -124,6 +128,10 @@ def benchmark_runner(benchmark):
             text=True,
         )
         for line in process.stdout:
+            if "Process complete" in line:
+                print("Finished running benchmarks for ", benchmark)
+                with open("status.txt", "a") as statfile:
+                    statfile.write(f"Finished running benchmarks for {benchmark}\n")
             print(line, end="")
             f.write(line)
             f.flush()
@@ -132,7 +140,7 @@ def benchmark_runner(benchmark):
             print(stderr_line, end="")
             f.write(stderr_line)
             f.flush()
-            
+        
         process.wait()
         
     print("Finished running benchmarks for ", benchmark)

@@ -437,6 +437,9 @@ public class App {
                     System.out.println("----------------------------------------------------------");
 
                     Logger.info("Process completed. Not quitting because I might have the RMI registry running.");
+                    Logger.info("Processed " + iterations + " iterations.");
+                    // However, I can break out of the loop.
+                    break;
                 }
             }
 
