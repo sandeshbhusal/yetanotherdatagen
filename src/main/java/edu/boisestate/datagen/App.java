@@ -4,6 +4,8 @@ import java.io.File;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
@@ -435,11 +437,8 @@ public class App {
                         System.out.println(String.format("Key: %s, iteration: %d", key, stableKeys.get(key)));
                     }
                     System.out.println("----------------------------------------------------------");
-
-                    Logger.info("Process completed. Not quitting because I might have the RMI registry running.");
                     Logger.info("Processed " + iterations + " iterations.");
-                    // However, I can break out of the loop.
-                    break;
+                    System.exit(0);
                 }
             }
 
@@ -486,8 +485,34 @@ public class App {
     private static boolean hasFileChanged(File file1, File file2) {
         String content1 = FileOps.readFile(file1);
         String content2 = FileOps.readFile(file2);
-        return !content1.equals(content2);
+    
+        // Quick check: if the contents are exactly the same, return false
+        if (content1.equals(content2)) {
+            return false;
+        }
+    
+        // Split the contents into lines
+        Set<String> lines1 = new HashSet<>(Arrays.asList(content1.split("\n")));
+        Set<String> lines2 = new HashSet<>(Arrays.asList(content2.split("\n")));
+    
+        // Check for lines in file1 that are not in file2
+        for (String line : lines1) {
+            if (!lines2.contains(line)) {
+                return true;
+            }
+        }
+    
+        // Check for lines in file2 that are not in file1
+        for (String line : lines2) {
+            if (!lines1.contains(line)) {
+                return true;
+            }
+        }
+    
+        // If we've made it this far, the files have the same content (possibly in a different order)
+        return false;
     }
+    
 
     private static Optional<CompilationUnit> parseJavaFile(File file) {
         JavaParser parser = new JavaParser();

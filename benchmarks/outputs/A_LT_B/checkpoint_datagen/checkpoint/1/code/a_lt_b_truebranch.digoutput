@@ -1,8 +1,4 @@
-vtrace1 (7 invs):
+vtrace1 (3 invs):
 1. a == 0
-2. b - 1 == 0
-3. a <= 0
-4. min(b, 0) - a == 0
-5. a + 1 - max(b, 0) <= 0
-6. min(a, 0) - b - 1 == 0
-7. max(a, 0) - b - 1 == 0
+2. -a <= 0
+3. a - min(b, 0) == 0

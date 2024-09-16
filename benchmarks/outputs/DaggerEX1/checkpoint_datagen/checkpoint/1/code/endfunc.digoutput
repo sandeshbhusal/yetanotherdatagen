@@ -1,4 +1,0 @@
-vtrace1 (3 invs):
-1. xa - ya <= 2
-2. xa + ya <= 4
-3. min(xa, 0) - ya <= 0
