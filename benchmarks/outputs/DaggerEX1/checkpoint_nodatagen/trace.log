@@ -1,0 +1,79 @@
+Starting DataPointServer on port 17431
+DataPointServer bound on port 17431 as DataPointServer_17431
+00:21:06.869 INFO: Starting datagen.
+
+00:21:06.891 INFO: ---------------------- Starting iteration 1--------------------
+00:21:06.901 INFO: Instrumenting file: DaggerEX1.java
+00:21:07.131 INFO: Augmenting input file DaggerEX1.java
+00:21:07.131 INFO: Augmenting file: DaggerEX1.java
+00:21:07.149 INFO: Compiling augmented file DaggerEX1.java
+00:21:07.580 INFO: Running evosuite on augmented file DaggerEX1.java
+00:21:21.864 DEBUG: Evosuite run took 14971 ms.
+00:21:21.865 INFO: Compiling reporting file DaggerEX1.java
+00:21:22.615 INFO: Compiling evosuite test file for DaggerEX1.java
+00:21:24.221 INFO: Running JUnit tests generated for DaggerEX1.java
+00:21:24.963 INFO: Generating code.
+00:21:24.963 INFO: Generated 1 Daikon trace files for instrumentation data.
+00:21:25.555 INFO: Finished executing daikon and generating invariants.
+00:21:25.556 INFO: Generated 2 DiG trace files for instrumentation data.
+00:21:32.406 INFO: Finished first iteration. No stabilization checks will be done
+00:21:32.412 DEBUG: Iteration 1 took 25518 ms.
+
+00:21:32.413 INFO: ---------------------- Starting iteration 2--------------------
+00:21:32.413 INFO: Instrumenting file: DaggerEX1.java
+00:21:32.425 INFO: Augmenting input file DaggerEX1.java
+00:21:32.425 INFO: Augmenting file: DaggerEX1.java
+00:21:32.435 INFO: Compiling augmented file DaggerEX1.java
+00:21:32.829 INFO: Running evosuite on augmented file DaggerEX1.java
+00:21:46.831 DEBUG: Evosuite run took 14418 ms.
+00:21:46.831 INFO: Compiling reporting file DaggerEX1.java
+00:21:47.612 INFO: Compiling evosuite test file for DaggerEX1.java
+00:21:49.256 INFO: Running JUnit tests generated for DaggerEX1.java
+00:21:50.040 INFO: Generating code.
+00:21:50.040 INFO: Generated 1 Daikon trace files for instrumentation data.
+00:21:50.585 INFO: Finished executing daikon and generating invariants.
+00:21:50.586 INFO: Generated 2 DiG trace files for instrumentation data.
+00:21:57.715 DEBUG: Checking if all invariants have become stable or not.
+00:21:57.716 DEBUG: endfunc has changed for daikon between 2 and 1
+00:21:57.716 DEBUG: Iteration 2 took 25303 ms.
+
+00:21:57.717 INFO: ---------------------- Starting iteration 3--------------------
+00:21:57.717 INFO: Instrumenting file: DaggerEX1.java
+00:21:57.729 INFO: Augmenting input file DaggerEX1.java
+00:21:57.729 INFO: Augmenting file: DaggerEX1.java
+00:21:57.740 INFO: Compiling augmented file DaggerEX1.java
+00:21:58.139 INFO: Running evosuite on augmented file DaggerEX1.java
+00:22:12.668 DEBUG: Evosuite run took 14952 ms.
+00:22:12.668 INFO: Compiling reporting file DaggerEX1.java
+00:22:13.452 INFO: Compiling evosuite test file for DaggerEX1.java
+00:22:15.159 INFO: Running JUnit tests generated for DaggerEX1.java
+00:22:15.904 INFO: Generating code.
+00:22:15.904 INFO: Generated 1 Daikon trace files for instrumentation data.
+00:22:16.501 INFO: Finished executing daikon and generating invariants.
+00:22:16.502 INFO: Generated 2 DiG trace files for instrumentation data.
+00:22:23.901 DEBUG: Checking if all invariants have become stable or not.
+00:22:23.901 DEBUG: endfunc has changed for DIG between 3 and 2
+00:22:23.901 DEBUG: Iteration 3 took 26185 ms.
+
+00:22:23.901 INFO: ---------------------- Starting iteration 4--------------------
+00:22:23.902 INFO: Instrumenting file: DaggerEX1.java
+00:22:23.912 INFO: Augmenting input file DaggerEX1.java
+00:22:23.912 INFO: Augmenting file: DaggerEX1.java
+00:22:23.921 INFO: Compiling augmented file DaggerEX1.java
+00:22:24.322 INFO: Running evosuite on augmented file DaggerEX1.java
+00:22:39.159 DEBUG: Evosuite run took 15258 ms.
+00:22:39.159 INFO: Compiling reporting file DaggerEX1.java
+00:22:39.973 INFO: Compiling evosuite test file for DaggerEX1.java
+00:22:41.593 INFO: Running JUnit tests generated for DaggerEX1.java
+00:22:42.374 INFO: Generating code.
+00:22:42.374 INFO: Generated 1 Daikon trace files for instrumentation data.
+00:22:42.957 INFO: Finished executing daikon and generating invariants.
+00:22:42.957 INFO: Generated 2 DiG trace files for instrumentation data.
+00:22:50.255 DEBUG: Checking if all invariants have become stable or not.
+00:22:50.255 DEBUG: Invariants have stabilized for key: endfunc
+00:22:50.256 INFO: All invariants have stabilized at iteration 4
+----------------------------------------------------------
+The following iterations caused each key's stabilization:
+Key: endfunc, iteration: 4
+----------------------------------------------------------
+00:22:50.256 INFO: Processed 4 iterations.

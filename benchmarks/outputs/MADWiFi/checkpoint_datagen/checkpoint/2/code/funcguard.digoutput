@@ -1,0 +1,7 @@
+vtrace1 (6 invs):
+1. bufsize*leader_len**2 - 2*bufsize*leader_len - leader_len**3 + 2*leader_len**2 == 0
+2. -ielen <= 0
+3. -leader_len <= 0
+4. -bufsize - ielen <= -2
+5. -ielen - leader_len <= -1
+6. -bufsize + leader_len <= 0

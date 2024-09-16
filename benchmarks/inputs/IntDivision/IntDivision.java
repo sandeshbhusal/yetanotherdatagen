@@ -1,26 +1,29 @@
 public class IntDivision {
-    public void divide(int dividend, int divisor) {
-        // datagen_guard_start divide_guard dividend divisor
+    public void dividie(int a, int b) {
+
+        // datagen_guard_start outerguard a b
         ;
-
-        if (dividend > divisor) {
+        if (a >= b) {
             int q = 0;
-            int r = dividend;
-            
+            int r = a;
 
-            while (r >= divisor) {
-                r = r - divisor;
-                q = q + 1;
+            // datagen_instrument entermethod a b
+            ;
 
-                // datagen_instrument loopinvariant dividend divisor q r
+            while (r >= b) {
+                // datagen_instrument loopcondition a b q r
                 ;
+
+                r -= b;
+                q += 1;
             }
 
-            // datagen_instrument exitmethod dividend divisor q r
+            // datagen_instrument div_end a b q r
             ;
-        }
 
-        // datagen_guard_end divide_guard
-        ;
-    }    
+
+        }
+        // datagen_guard_end outerguard
+	;
+    } 
 }

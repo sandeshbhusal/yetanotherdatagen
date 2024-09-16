@@ -1,0 +1,10 @@
+vtrace1; I leader_len; I bufsize; I ielen
+vtrace1; 0; 2; 1
+vtrace1; 2; 2; 0
+vtrace1; 0; 0; 0
+vtrace1; 192; 1540; 340
+vtrace1; 0; 0; 2
+vtrace1; 66; 194; 31
+vtrace1; 1; 1; 1
+vtrace1; 1; 1489; 3080
+vtrace1; 144; 638; 158
