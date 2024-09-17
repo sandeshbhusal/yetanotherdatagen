@@ -64,5 +64,7 @@ run_all() {
 #run_all "BindExpandsVars2"
 #run_all "DaggerEX1"
 #run_all "IntDivision"
-
+run_all "Cars"
+run_all "Fig2"
+run_all "Ex1"
 
