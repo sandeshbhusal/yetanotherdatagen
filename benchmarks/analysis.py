@@ -1,105 +1,127 @@
 # Analyze our benchmarks.
 
 import os
+import re
 import glob
+import sympy
+from typing import List, Dict
 from sympy import sympify, Eq, Le, Ge, Gt, Lt
 
+def generate_sympy_scaffold(invariant: str):
+    # Map string operators to SymPy operators
+    operator_map = {
+        "==": sympy.core.relational.Equality,
+        "<=": sympy.core.relational.LessThan,
+        ">=": sympy.core.relational.GreaterThan,
+        "<": sympy.core.relational.StrictLessThan,
+        ">": sympy.core.relational.StrictGreaterThan,
+    }
+    
+    # Try matching the invariant with the correct operator
+    for op_str, sympy_op in operator_map.items():
+        if op_str in invariant:
+            # Split the invariant using regular expression to handle spacing
+            left, right = re.split(f"\\s*{re.escape(op_str)}\\s*", invariant)
+            left = left.strip()  # Strip leading/trailing spaces from left-hand side
+            right = right.strip()  # Strip leading/trailing spaces from right-hand side
+            
+            # Return the sympy operator, left, and right
+            return (sympy_op, left, right)
+
+    return None
+
+def get_data_from_csv_file(file: str) -> List[Dict[str, int]]:
+    rval = []
+    with open(file) as infile:
+        count = 0
+        vars = []
+        for line in infile:
+            if count == 0:
+                header = line
+                header = header.split(';') 
+                header = header[1:] #exclude the 'vtrace1' column.
+                for var in header:
+                    var = var.strip()
+                    vars.append(var.strip().split()[1].strip())
+            else:
+                data = line.split(';')
+                data = data[1:]
+                combined = (dict(zip(vars, [int(x) for x in data])))
+                rval.append(combined)
+            count += 1
+    return rval
+ 
 class Info:
     def __init__(self):
         self.datagen_timetaken = 0
         self.totaliterations = 0
         self.datagen_stableiterations = {}
-        self.invariants = {}
+        self.dig_invariants = {}
+        self.daikon_invariants = {}
+        self.data_files = {}
+        
+    def __str__(self):
+        return f"Time taken: {self.datagen_timetaken}\nTotal iterations: {self.totaliterations}\nStable iterations: {self.datagen_stableiterations}\nDig invariants: {self.dig_invariants}\nDaikon invariants: {self.daikon_invariants}\nData files: {self.data_files}"
 
 def processdir(dir):
-    print("####################################### Processing %s" % dir)
     datagen_tracefile = os.path.join(dir, 'trace.log')
     datagen_iterationcount = 0
     datagen_timetaken = 0
     datagen_stableiterations = {}
 
-    datagen_dig_generated = set()
-    datagen_daikon_generated = set()
-
-    print("Trace points:")
+    datagen_dig_generated = {}
+    datagen_daikon_generated = {}
+    data_files = {}
+    
     with open(datagen_tracefile, 'r') as f:
         for line in f:
             if 'Key' in line:
                 # match the key.
                 key = line.split()[1].strip(',')
-                print(key)
-                datagen_stableiterations[key] = datagen_iterationcount
+                datagen_stableiterations[key] = line.split()[-1].strip()
             if 'Iteration' in line and 'took' in line:
                 datagen_iterationcount += 1
                 datagen_timetaken += int(line.split()[-2].strip())
 
-    print("Total time taken for datagen: %d seconds" % datagen_timetaken)
-    print("Iterations taken for datagen: %d" % datagen_iterationcount)
-    for key in datagen_stableiterations:
-        print("Iterations taken for %s: %d" % (key, datagen_stableiterations[key]))
-    
     # Print generated invariants.
     for key in datagen_stableiterations.keys():
-        print("For point %s:" % key)
+        datagen_daikon_generated[key] = []
+        datagen_dig_generated[key] = []
+       
+    print(datagen_stableiterations) 
+    for key in datagen_stableiterations.keys():
         # find file.
-        daikon_invariants_file = os.path.join(dir, 'checkpoint', str(datagen_stableiterations[key]), 'code', f"{key}.daikonoutput")
-        dig_invariants_file = os.path.join(dir, 'checkpoint', str(datagen_stableiterations[key]), 'code', f"{key}.digoutput")
+        daikon_invariants_file = os.path.join(dir, 'checkpoint', (datagen_stableiterations[key]), 'code', f"{key}.daikonoutput")
+        dig_invariants_file = os.path.join(dir, 'checkpoint', (datagen_stableiterations[key]), 'code', f"{key}.digoutput")
+        
+        key_data_file = os.path.join(dir, 'checkpoint', (datagen_stableiterations[key]), 'code', f"{key}.csv")
+        data_files[key] = key_data_file
 
-        print("Generated DAIKON invariants:")
         with open(daikon_invariants_file, 'r') as f:
             for line in f:
-                if ('=' in line or '!=' in line or '>' in line or '<' in line) and '=====' not in line:
-                    datagen_daikon_generated.add(line.strip())
-        print(datagen_daikon_generated)
+                if ('=' in line or '!=' in line or '>' in line or '<' in line) and '===' not in line:
+                    try:
+                        datagen_daikon_generated[key].append(line.strip())
+                    except KeyError:
+                        datagen_daikon_generated[key] = [line.strip()]
 
-        print("Generated DIG invariants:")
         with open(dig_invariants_file, 'r') as f:
             for line in f:
-                if ('=' in line or '!=' in line or '>' in line or '<' in line) and '=====' not in line:
+                if ('=' in line or '!=' in line or '>' in line or '<' in line) and '===' not in line:
                     line = ' '.join(line.split()[1:]) # Dig generates invariants like 1. a + b > c, so need to remove the numbering
-                    datagen_dig_generated.add(line.strip())
-        print(datagen_dig_generated)
+                    try:
+                        datagen_dig_generated[key].append(line.strip())
+                    except KeyError:
+                        datagen_dig_generated[key] = [line.strip()]
 
-    datagen_valid_dig_invariants = set()
-    datagen_valid_daikon_invariants = set()
-
-    def generate_sympy_scaffold(invariant: str):
-        left = right = op = None
-        if "==" in invariant:
-            op = Eq
-            left, right = invariant.split("==")
-        elif "<=" in invariant:
-            op = Le
-            left, right = invariant.split("<=")
-        elif ">=" in invariant:
-            op = Ge
-            left, right = invariant.split(">=")
-        elif "<" in invariant:
-            op = Lt
-            left, right = invariant.split("<")
-        elif ">" in invariant:
-            op = Gt
-            left, right = invariant.split(">")
-        return (op, left.strip(), right.strip())    
-
-
-    for invariant in datagen_daikon_generated:
-        datagen_valid_daikon_invariants.add(generate_sympy_scaffold(invariant))
-
-    for invariant in datagen_dig_generated:
-        datagen_valid_dig_invariants.add(generate_sympy_scaffold(invariant))
-    
-    # TODO: This is producing weird keys ??
-    print(datagen_valid_dig_invariants)
-
-    #---------------------- Repeat the same process for nodatagen -----------------------
-
-
-
-
-            
-
-
+    information = Info()
+    information.datagen_timetaken = datagen_timetaken
+    information.totaliterations = datagen_iterationcount
+    information.datagen_stableiterations = datagen_stableiterations
+    information.dig_invariants = datagen_dig_generated
+    information.daikon_invariants = datagen_daikon_generated
+    information.data_files = data_files
+    return information
 
 for dirs in glob.glob('outputs/*'):
     benchname = (dirs.split('/')[-1])
@@ -111,5 +133,14 @@ for dirs in glob.glob('outputs/*'):
     datagendir = os.path.join(dirs, 'checkpoint_datagen')
     nodatagendir = os.path.join(dirs, 'checkpoint_nodatagen')
 
-    processdir (datagendir)
+    info = processdir (datagendir)
+    print(info)
+    print("-" * 80)
+    info = processdir (nodatagendir)
+    print(info)
+    
+    # try to get vars from info, and print them for one check.
+    for ppt in info.data_files.keys():
+        data = get_data_from_csv_file(info.data_files[ppt])
+        print(data)
     break
