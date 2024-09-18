@@ -1,0 +1,123 @@
+Starting DataPointServer on port 17426
+DataPointServer bound on port 17426 as DataPointServer_17426
+13:11:38.605 INFO: Starting datagen.
+
+13:11:38.622 INFO: ---------------------- Starting iteration 1--------------------
+13:11:38.629 INFO: Instrumenting file: Cars.java
+13:11:38.852 INFO: Augmenting input file Cars.java
+13:11:38.852 INFO: Augmenting file: Cars.java
+13:11:38.874 INFO: Compiling augmented file Cars.java
+13:11:39.283 INFO: Running evosuite on augmented file Cars.java
+13:12:45.823 DEBUG: Evosuite run took 67199 ms.
+13:12:45.823 INFO: Compiling reporting file Cars.java
+13:12:46.809 INFO: Compiling evosuite test file for Cars.java
+13:12:48.616 INFO: Running JUnit tests generated for Cars.java
+13:12:49.506 INFO: Generating code.
+13:12:49.507 INFO: Generated 4 Daikon trace files for instrumentation data.
+13:12:52.411 INFO: Finished executing daikon and generating invariants.
+13:12:52.412 INFO: Generated 5 DiG trace files for instrumentation data.
+13:13:13.992 INFO: Finished first iteration. No stabilization checks will be done
+13:13:13.999 DEBUG: Iteration 1 took 95372 ms.
+
+13:13:14.000 INFO: ---------------------- Starting iteration 2--------------------
+13:13:14.000 INFO: Instrumenting file: Cars.java
+13:13:14.025 INFO: Augmenting input file Cars.java
+13:13:14.026 INFO: Augmenting file: Cars.java
+13:13:14.052 INFO: Compiling augmented file Cars.java
+13:13:14.551 INFO: Running evosuite on augmented file Cars.java
+13:14:20.810 DEBUG: Evosuite run took 66810 ms.
+13:14:20.810 INFO: Compiling reporting file Cars.java
+13:14:21.577 INFO: Compiling evosuite test file for Cars.java
+13:14:23.421 INFO: Running JUnit tests generated for Cars.java
+13:14:24.181 INFO: Generating code.
+13:14:24.182 INFO: Generated 4 Daikon trace files for instrumentation data.
+13:14:26.572 INFO: Finished executing daikon and generating invariants.
+13:14:26.573 INFO: Generated 5 DiG trace files for instrumentation data.
+13:14:50.717 DEBUG: Checking if all invariants have become stable or not.
+13:14:50.718 DEBUG: loopinvtrue has changed for daikon between 2 and 1
+13:14:50.719 DEBUG: loopinvfalse has changed for daikon between 2 and 1
+13:14:50.719 DEBUG: exitloop has changed for daikon between 2 and 1
+13:14:50.719 DEBUG: Invariants have stabilized for key: loopinv
+13:14:50.719 DEBUG: Iteration 2 took 96719 ms.
+
+13:14:50.719 INFO: ---------------------- Starting iteration 3--------------------
+13:14:50.720 INFO: Instrumenting file: Cars.java
+13:14:50.737 INFO: Augmenting input file Cars.java
+13:14:50.737 INFO: Augmenting file: Cars.java
+13:14:50.757 INFO: Compiling augmented file Cars.java
+13:14:51.237 INFO: Running evosuite on augmented file Cars.java
+13:15:57.508 DEBUG: Evosuite run took 66789 ms.
+13:15:57.508 INFO: Compiling reporting file Cars.java
+13:15:58.392 INFO: Compiling evosuite test file for Cars.java
+13:16:00.086 INFO: Running JUnit tests generated for Cars.java
+13:16:00.864 INFO: Generating code.
+13:16:00.865 INFO: Generated 4 Daikon trace files for instrumentation data.
+13:16:03.268 INFO: Finished executing daikon and generating invariants.
+13:16:03.269 INFO: Generated 5 DiG trace files for instrumentation data.
+13:16:35.879 DEBUG: Checking if all invariants have become stable or not.
+13:16:35.880 DEBUG: Invariants have stabilized for key: loopinvtrue
+13:16:35.880 DEBUG: Invariants have stabilized for key: loopinvfalse
+13:16:35.880 DEBUG: exitloop has changed for DIG between 3 and 2
+13:16:35.880 DEBUG: Iteration 3 took 105161 ms.
+
+13:16:35.880 INFO: ---------------------- Starting iteration 4--------------------
+13:16:35.881 INFO: Instrumenting file: Cars.java
+13:16:35.901 INFO: Augmenting input file Cars.java
+13:16:35.901 INFO: Augmenting file: Cars.java
+13:16:35.920 INFO: Compiling augmented file Cars.java
+13:16:36.373 INFO: Running evosuite on augmented file Cars.java
+13:17:43.145 DEBUG: Evosuite run took 67265 ms.
+13:17:43.145 INFO: Compiling reporting file Cars.java
+13:17:43.927 INFO: Compiling evosuite test file for Cars.java
+13:17:45.828 INFO: Running JUnit tests generated for Cars.java
+13:17:46.628 INFO: Generating code.
+13:17:46.629 INFO: Generated 4 Daikon trace files for instrumentation data.
+13:17:49.160 INFO: Finished executing daikon and generating invariants.
+13:17:49.161 INFO: Generated 5 DiG trace files for instrumentation data.
+13:18:22.450 DEBUG: Checking if all invariants have become stable or not.
+13:18:22.450 DEBUG: exitloop has changed for DIG between 4 and 3
+13:18:22.450 DEBUG: Iteration 4 took 106570 ms.
+
+13:18:22.450 INFO: ---------------------- Starting iteration 5--------------------
+13:18:22.451 INFO: Instrumenting file: Cars.java
+13:18:22.464 INFO: Augmenting input file Cars.java
+13:18:22.464 INFO: Augmenting file: Cars.java
+13:18:22.476 INFO: Compiling augmented file Cars.java
+13:18:22.884 INFO: Running evosuite on augmented file Cars.java
+13:19:29.487 DEBUG: Evosuite run took 67037 ms.
+13:19:29.487 INFO: Compiling reporting file Cars.java
+13:19:30.345 INFO: Compiling evosuite test file for Cars.java
+13:19:32.052 INFO: Running JUnit tests generated for Cars.java
+13:19:32.894 INFO: Generating code.
+13:19:32.895 INFO: Generated 4 Daikon trace files for instrumentation data.
+13:19:35.337 INFO: Finished executing daikon and generating invariants.
+13:19:35.338 INFO: Generated 5 DiG trace files for instrumentation data.
+13:20:12.270 DEBUG: Checking if all invariants have become stable or not.
+13:20:12.270 DEBUG: exitloop has changed for DIG between 5 and 4
+13:20:12.270 DEBUG: Iteration 5 took 109820 ms.
+
+13:20:12.270 INFO: ---------------------- Starting iteration 6--------------------
+13:20:12.271 INFO: Instrumenting file: Cars.java
+13:20:12.286 INFO: Augmenting input file Cars.java
+13:20:12.287 INFO: Augmenting file: Cars.java
+13:20:12.300 INFO: Compiling augmented file Cars.java
+13:20:12.755 INFO: Running evosuite on augmented file Cars.java
+13:21:20.195 DEBUG: Evosuite run took 67925 ms.
+13:21:20.195 INFO: Compiling reporting file Cars.java
+13:21:21.101 INFO: Compiling evosuite test file for Cars.java
+13:21:22.810 INFO: Running JUnit tests generated for Cars.java
+13:21:23.623 INFO: Generating code.
+13:21:23.624 INFO: Generated 4 Daikon trace files for instrumentation data.
+13:21:26.216 INFO: Finished executing daikon and generating invariants.
+13:21:26.216 INFO: Generated 5 DiG trace files for instrumentation data.
+13:22:05.271 DEBUG: Checking if all invariants have become stable or not.
+13:22:05.271 DEBUG: Invariants have stabilized for key: exitloop
+13:22:05.271 INFO: All invariants have stabilized at iteration 6
+----------------------------------------------------------
+The following iterations caused each key's stabilization:
+Key: loopinvtrue, iteration: 3
+Key: loopinvfalse, iteration: 3
+Key: loopinv, iteration: 2
+Key: exitloop, iteration: 6
+----------------------------------------------------------
+13:22:05.272 INFO: Processed 6 iterations.
