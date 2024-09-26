@@ -66,7 +66,3 @@ run_all "Ex1"
 run_all "TriangleCheck"
 run_all "IntDivision"
 run_all "Cars"
-
-# Fig2 is permanently disabled, and will not be considered for benchmarks.
-#run_all "Fig2"
-
