@@ -1,4 +1,3 @@
-vtrace1 (3 invs):
-1. -p <= -2
-2. p === 0 (mod 2)
-3. -bufsize_0 - p === 0 (mod 2)
+vtrace1 (2 invs):
+1. p**2 - 8*p + 15 == 0
+2. -bufsize_0 - p === 0 (mod 2)

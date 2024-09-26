@@ -1,0 +1,4 @@
+vtrace1 (3 invs):
+1. firstif*outerloop - firstif*secondif - outerloop*secondif + secondif**2 == 0
+2. firstif - secondif <= 0
+3. secondif - max(outerloop, 0) <= 0

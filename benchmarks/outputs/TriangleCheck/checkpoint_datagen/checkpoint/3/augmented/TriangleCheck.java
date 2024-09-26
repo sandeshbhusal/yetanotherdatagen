@@ -5,7 +5,7 @@ public class TriangleCheck {
         int ab = a + b;
         int ac = a + c;
         int bc = b + c;
-        if (true && !(c == -1) && !(c == -930) && !(c == 1) && !(c == 0) && !(c == 0)) {
+        if (true && !(b == 18) && !(b == 7) && !(b == 8) && !(b == -440) && !(b == 1) && !(b == 570) && !(b == 0) && !(b == 1593) && !(b == 839) && !(b == 839)) {
             if (ab > c) {
                 if (ac > b) {
                     if (bc > a) {

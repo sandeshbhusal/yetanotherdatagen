@@ -1,0 +1,33 @@
+vtrace1 (32 invs):
+1. -cp1_off + n1 == 0
+2. -n1 <= 0
+3. -cp1_off + n2 <= 1
+4. max(MAXDATA, 0) - n2 == 0
+5. MAXDATA - max(n2, 0) == 0
+6. n1 - max(cp1_off, 0) == 0
+7. cp1_off - max(n1, 0) == 0
+8. max(n1, n2) - MAXDATA == 0
+9. min(cp1_off, n2) - n1 == 0
+10. max(MAXDATA, n1) - n2 == 0
+11. min(n1, n2) - cp1_off == 0
+12. max(MAXDATA, n1, 0) - n2 == 0
+13. max(n1, n2, 0) - MAXDATA == 0
+14. MAXDATA - max(cp1_off, n2) == 0
+15. max(MAXDATA, cp1_off) - n2 == 0
+16. min(MAXDATA, n1) - cp1_off == 0
+17. n1 - min(MAXDATA, cp1_off) == 0
+18. n2 - max(MAXDATA, cp1_off, 0) == 0
+19. max(cp1_off, n2, 0) - MAXDATA == 0
+20. min(MAXDATA, n1, n2) - cp1_off == 0
+21. max(MAXDATA, cp1_off, n1) - n2 == 0
+22. MAXDATA - max(cp1_off, n1, n2) == 0
+23. min(MAXDATA, cp1_off, n2) - n1 == 0
+24. n2 - max(MAXDATA, cp1_off, n1, 0) == 0
+25. MAXDATA - max(cp1_off, n1, n2, 0) == 0
+26. -n2 === 8840 (mod 8841)
+27. n1 + n2 === 1 (mod 17683)
+28. -cp1_off === 0 (mod 8842)
+29. cp1_off + n1 === 0 (mod 17684)
+30. -cp1_off - n2 === 17682 (mod 17683)
+31. MAXDATA + cp1_off === 1 (mod 17683)
+32. -MAXDATA - n2 === 17680 (mod 17682)

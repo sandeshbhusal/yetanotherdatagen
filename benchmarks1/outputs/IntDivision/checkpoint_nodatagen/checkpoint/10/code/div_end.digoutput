@@ -1,0 +1,37 @@
+vtrace1 (36 invs):
+1. r == 0
+2. a - b == 0
+3. q - 1 == 0
+4. -a + q <= 0
+5. max(b, r) - a == 0
+6. b - max(a, r) == 0
+7. b - max(a, q) == 0
+8. r - min(a, 0) == 0
+9. max(a, 0) - b == 0
+10. max(b, 0) - a == 0
+11. r - min(b, 0) == 0
+12. min(q, 0) - r == 0
+13. a - max(b, q) == 0
+14. max(b, q, 0) - a == 0
+15. min(a, q, 0) - r == 0
+16. a - max(b, q, r) == 0
+17. a - max(b, r, 0) == 0
+18. r - min(a, b, 0) == 0
+19. max(a, r, 0) - b == 0
+20. b - max(a, q, 0) == 0
+21. max(a, q, r) - b == 0
+22. min(b, q, 0) - r == 0
+23. q - 1 - max(r, 0) == 0
+24. min(r, 0) - q - 1 == 0
+25. min(b, 0) - q - 1 == 0
+26. min(b, r) - q - 1 == 0
+27. min(a, 0) - q - 1 == 0
+28. q - 1 - min(a, r) == 0
+29. r - min(a, b, q, 0) == 0
+30. max(a, q, r, 0) - b == 0
+31. a - max(b, q, r, 0) == 0
+32. q - 1 - min(a, b, 0) == 0
+33. min(b, r, 0) - q - 1 == 0
+34. q - 1 - min(a, r, 0) == 0
+35. q - 1 - min(a, b, r) == 0
+36. q - 1 - min(a, b, r, 0) == 0

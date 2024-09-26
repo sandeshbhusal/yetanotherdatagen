@@ -58,13 +58,15 @@ run_all() {
     echo "__________________________________"
 }
 
-#run_all "A_LT_B"
-#run_all "TriangleCheck"
-#run_all "MADWiFi"
-#run_all "BindExpandsVars2"
-#run_all "DaggerEX1"
-#run_all "IntDivision"
-#run_all "Cars"
-#run_all "Fig2"
+run_all "A_LT_B"
+run_all "MADWiFi"
+run_all "BindExpandsVars2"
+run_all "DaggerEX1"
 run_all "Ex1"
+run_all "TriangleCheck"
+run_all "IntDivision"
+run_all "Cars"
+
+# Fig2 is permanently disabled, and will not be considered for benchmarks.
+#run_all "Fig2"
 

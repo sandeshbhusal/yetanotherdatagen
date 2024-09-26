@@ -1,9 +1,9 @@
 vtrace1; I unknown_int; I v1; I v2; I v3
+vtrace1; 1; 1; 1; 0
 vtrace1; 5; 5; 5; 5
-vtrace1; 1; 1; 1; 1
-vtrace1; -2793; 0; 0; 0
-vtrace1; 0; 4179; 0; 0
-vtrace1; -751; 0; -751; -1
-vtrace1; 1428; 0; 0; 0
-vtrace1; 0; -1; -5; 0
-vtrace1; 0; 0; 4179; 0
+vtrace1; -1868; 1; 1; 1
+vtrace1; 867; 0; 0; 0
+vtrace1; 5; 1279; 0; 2177
+vtrace1; 0; 0; -1882; -207
+vtrace1; -1095; -735; 849; 0
+vtrace1; -5; -5; -5; -5

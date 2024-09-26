@@ -1,61 +1,10 @@
-vtrace1 (60 invs):
-1. a - c == 0
-2. ab - bc == 0
-3. ac - 2*c == 0
-4. b - bc + c == 0
-5. bc*c - 650*bc - 2*c**2 + 1300*c == 0
-6. bc**2 - 2275*bc - 4*c**2 + 4550*c == 0
-7. -a + b <= 0
-8. a - bc <= -1
-9. max(b, c) - a == 0
-10. a - max(c, 0) == 0
-11. c - max(a, b) == 0
-12. max(a, 0) - c == 0
-13. a - min(ab, c) == 0
-14. a - min(ac, c) == 0
-15. c - min(a, ab) == 0
-16. min(bc, c) - a == 0
-17. min(a, bc) - c == 0
-18. c - min(a, ac) == 0
-19. max(a, ab) - bc == 0
-20. max(b, bc) - ab == 0
-21. bc - max(ab, c) == 0
-22. ab - max(a, bc) == 0
-23. max(bc, c) - ab == 0
-24. bc - max(ab, 0) == 0
-25. ab - max(bc, 0) == 0
-26. bc - max(ab, b) == 0
-27. a - max(b, c, 0) == 0
-28. bc - min(ab, ac) == 0
-29. min(ac, bc) - ab == 0
-30. c - max(a, b, 0) == 0
-31. min(a, ab, ac) - c == 0
-32. bc - max(ab, b, c) == 0
-33. bc - max(ab, c, 0) == 0
-34. min(ab, ac, c) - a == 0
-35. max(b, bc, c) - ab == 0
-36. max(a, bc, c) - ab == 0
-37. ab - max(a, bc, 0) == 0
-38. bc - max(a, ab, b) == 0
-39. min(ab, bc, c) - a == 0
-40. max(bc, c, 0) - ab == 0
-41. max(a, b, bc) - ab == 0
-42. bc - max(ab, b, 0) == 0
-43. min(ac, bc, c) - a == 0
-44. max(a, ab, 0) - bc == 0
-45. bc - max(a, ab, c) == 0
-46. c - min(a, ac, bc) == 0
-47. ab - max(b, bc, 0) == 0
-48. c - min(a, ab, bc) == 0
-49. max(ab, b, c, 0) - bc == 0
-50. ab - max(a, b, bc, 0) == 0
-51. bc - max(a, ab, b, c) == 0
-52. max(a, bc, c, 0) - ab == 0
-53. bc - max(a, ab, c, 0) == 0
-54. max(a, b, bc, c) - ab == 0
-55. max(b, bc, c, 0) - ab == 0
-56. max(a, ab, b, 0) - bc == 0
-57. a - min(ab, ac, bc, c) == 0
-58. c - min(a, ab, ac, bc) == 0
-59. bc - max(a, ab, b, c, 0) == 0
-60. ab - max(a, b, bc, c, 0) == 0
+vtrace1 (9 invs):
+1. a - ac + c == 0
+2. b - bc + c == 0
+3. ab - ac - bc + 2*c == 0
+4. -a + c <= 0
+5. ab - ac <= 3
+6. a - bc <= -1
+7. -ac + b <= -1
+8. -ab + bc <= 0
+9. ab - 1 - max(ac, bc, c, 0) <= 0

@@ -7,7 +7,7 @@ public class Fig2 {
         int x = 0, y = 0, z = 0, w = 0;
         // Original Assertion
         // assert 3 * x >= y
-        Report.datagen_guard_instrument(16044, "entermethod", "outerloop", outerloop, "firstif", firstif, "secondif", secondif);
+        Report.datagen_guard_instrument(13653, "entermethod", "outerloop", outerloop, "firstif", firstif, "secondif", secondif);
         while (outerloop > 0) {
             if (firstif > 0) {
                 x++;
@@ -24,6 +24,6 @@ public class Fig2 {
                 y = -y;
             }
         }
-        Report.datagen_instrument(16044, "exitloop", "x", x, "y", y);
+        Report.datagen_instrument(13653, "exitloop", "x", x, "y", y);
     }
 }

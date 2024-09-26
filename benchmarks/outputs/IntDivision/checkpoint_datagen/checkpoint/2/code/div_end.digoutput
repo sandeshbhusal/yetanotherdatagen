@@ -1,41 +1,38 @@
-vtrace1 (40 invs):
+vtrace1 (37 invs):
 1. r == 0
-2. b - 1 == 0
-3. a - q == 0
-4. -a + q <= 0
-5. max(a, r) - q == 0
-6. a - max(q, r) == 0
-7. min(a, 0) - r == 0
-8. q - max(a, b) == 0
-9. max(q, 0) - a == 0
-10. max(a, 0) - q == 0
-11. min(q, 0) - r == 0
-12. min(b, 0) - r == 0
-13. a - max(b, q) == 0
-14. q - max(a, r, 0) == 0
-15. max(b, q, 0) - a == 0
-16. a - max(q, r, 0) == 0
-17. q - max(a, b, 0) == 0
-18. max(a, b, r) - q == 0
-19. a - max(b, q, r) == 0
-20. min(a, q, 0) - r == 0
-21. min(a, b, 0) - r == 0
-22. min(b, q, 0) - r == 0
-23. min(q, 0) - b - 1 == 0
-24. b - 1 - min(a, 0) == 0
-25. min(a, r) - b - 1 == 0
-26. b - 1 - min(q, r) == 0
-27. b - 1 - max(r, 0) == 0
-28. b - 1 - min(r, 0) == 0
-29. a - max(b, q, r, 0) == 0
-30. max(a, b, r, 0) - q == 0
-31. r - min(a, b, q, 0) == 0
-32. b - 1 - min(a, r, 0) == 0
-33. min(q, r, 0) - b - 1 == 0
-34. b - 1 - min(a, q, r) == 0
-35. b - 1 - min(a, q, 0) == 0
-36. min(a, q, r, 0) - b - 1 == 0
-37. a === 1 (mod 416)
-38. a + q === 2 (mod 832)
-39. a - r === 1 (mod 416)
-40. -b + q === 0 (mod 416)
+2. a - b == 0
+3. q - 1 == 0
+4. b**2 - 9*b + 8 == 0
+5. -b + q <= 0
+6. a - max(b, q) == 0
+7. max(b, r) - a == 0
+8. r - min(b, 0) == 0
+9. max(a, r) - b == 0
+10. r - min(q, 0) == 0
+11. max(a, 0) - b == 0
+12. r - min(a, 0) == 0
+13. b - max(a, q) == 0
+14. max(b, 0) - a == 0
+15. r - min(b, q, 0) == 0
+16. max(b, q, r) - a == 0
+17. r - min(a, b, 0) == 0
+18. max(a, q, r) - b == 0
+19. r - min(a, q, 0) == 0
+20. max(a, r, 0) - b == 0
+21. max(a, q, 0) - b == 0
+22. max(b, r, 0) - a == 0
+23. max(b, q, 0) - a == 0
+24. q - 1 - max(r, 0) == 0
+25. min(b, 0) - q - 1 == 0
+26. q - 1 - min(a, r) == 0
+27. q - 1 - min(b, r) == 0
+28. min(a, 0) - q - 1 == 0
+29. q - 1 - min(r, 0) == 0
+30. r - min(a, b, q, 0) == 0
+31. b - max(a, q, r, 0) == 0
+32. max(b, q, r, 0) - a == 0
+33. q - 1 - min(a, b, 0) == 0
+34. q - 1 - min(a, r, 0) == 0
+35. min(b, r, 0) - q - 1 == 0
+36. min(a, b, r) - q - 1 == 0
+37. q - 1 - min(a, b, r, 0) == 0

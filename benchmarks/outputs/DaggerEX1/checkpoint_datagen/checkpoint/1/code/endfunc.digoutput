@@ -1,0 +1,4 @@
+vtrace1 (3 invs):
+1. -ya <= 0
+2. -xa <= 0
+3. -xa === 0 (mod 4)

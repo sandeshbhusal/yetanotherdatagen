@@ -1,0 +1,23 @@
+vtrace1 (22 invs):
+1. a - ac + c == 0
+2. b - bc + c == 0
+3. ab - ac - bc + 2*c == 0
+4. ac*bc - ac*c + ac - bc*c + c**2 - c == 0
+5. a <= 0
+6. b - c <= 0
+7. a - ac <= 0
+8. ab - b <= 0
+9. ac - c <= 0
+10. b - bc <= 0
+11. -ac - c <= 0
+12. ac - bc <= 0
+13. ab - ac <= 0
+14. -ac - bc <= 0
+15. min(ac, bc, c, 0) - b <= 0
+16. a === 0 (mod 1246)
+17. ab + b === 0 (mod 2)
+18. b + bc === 0 (mod 3)
+19. ab - ac === 0 (mod 3)
+20. -bc - c === 0 (mod 3)
+21. ac - c === 0 (mod 1246)
+22. -ab + b === 0 (mod 1246)

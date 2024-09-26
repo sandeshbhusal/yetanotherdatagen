@@ -1,701 +1,835 @@
-Starting DataPointServer on port 13289
-DataPointServer bound on port 13289 as DataPointServer_13289
-21:04:58.674 INFO: Starting datagen.
+Starting DataPointServer on port 11817
+DataPointServer bound on port 11817 as DataPointServer_11817
+15:13:42.719 INFO: Starting datagen.
 
-21:04:58.690 INFO: ---------------------- Starting iteration 1--------------------
-21:04:58.696 INFO: Instrumenting file: TriangleCheck.java
-21:04:58.898 INFO: Augmenting input file TriangleCheck.java
-21:04:58.898 INFO: Augmenting file: TriangleCheck.java
-21:04:58.913 INFO: Compiling augmented file TriangleCheck.java
-21:04:59.323 INFO: Running evosuite on augmented file TriangleCheck.java
-21:05:07.911 DEBUG: Evosuite run took 9218 ms.
-21:05:07.912 INFO: Compiling reporting file TriangleCheck.java
-21:05:08.759 INFO: Compiling evosuite test file for TriangleCheck.java
-21:05:10.430 INFO: Running JUnit tests generated for TriangleCheck.java
-21:05:11.231 INFO: Generating code.
-21:05:11.231 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:05:13.701 INFO: Finished executing daikon and generating invariants.
-21:05:13.701 INFO: Generated 5 DiG trace files for instrumentation data.
-21:20:16.774 INFO: Finished first iteration. No stabilization checks will be done
-21:20:16.781 DEBUG: Iteration 1 took 918087 ms.
+15:13:42.738 INFO: ---------------------- Starting iteration 1--------------------
+15:13:42.744 INFO: Instrumenting file: TriangleCheck.java
+15:13:42.949 INFO: Augmenting input file TriangleCheck.java
+15:13:42.949 INFO: Augmenting file: TriangleCheck.java
+15:13:42.965 INFO: Compiling augmented file TriangleCheck.java
+15:13:43.409 INFO: Running evosuite on augmented file TriangleCheck.java
+15:13:56.690 DEBUG: Evosuite run took 13949 ms.
+15:13:56.690 INFO: Compiling reporting file TriangleCheck.java
+15:13:57.437 INFO: Compiling evosuite test file for TriangleCheck.java
+15:13:59.095 INFO: Running JUnit tests generated for TriangleCheck.java
+15:13:59.822 INFO: Generating code.
+15:13:59.822 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:14:02.309 INFO: Finished executing daikon and generating invariants.
+15:14:02.310 INFO: Generated 5 DiG trace files for instrumentation data.
+15:29:16.130 INFO: Finished first iteration. No stabilization checks will be done
+15:29:16.136 DEBUG: Iteration 1 took 933394 ms.
 
-21:20:16.781 INFO: ---------------------- Starting iteration 2--------------------
-21:20:16.781 INFO: Instrumenting file: TriangleCheck.java
-21:20:16.796 INFO: Augmenting input file TriangleCheck.java
-21:20:16.796 INFO: Augmenting file: TriangleCheck.java
-21:20:16.813 INFO: Compiling augmented file TriangleCheck.java
-21:20:17.246 INFO: Running evosuite on augmented file TriangleCheck.java
-21:21:23.178 DEBUG: Evosuite run took 66397 ms.
-21:21:23.178 INFO: Compiling reporting file TriangleCheck.java
-21:21:23.955 INFO: Compiling evosuite test file for TriangleCheck.java
-21:21:25.648 INFO: Running JUnit tests generated for TriangleCheck.java
-21:21:26.369 INFO: Generating code.
-21:21:26.370 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:21:28.790 INFO: Finished executing daikon and generating invariants.
-21:21:28.791 INFO: Generated 5 DiG trace files for instrumentation data.
-21:22:12.670 DEBUG: Checking if all invariants have become stable or not.
-21:22:12.672 DEBUG: triangle_not_ok has changed for daikon between 2 and 1
-21:22:12.672 DEBUG: triangle_ok has changed for daikon between 2 and 1
-21:22:12.672 DEBUG: triangle_not_ok_ab_ok has changed for daikon between 2 and 1
-21:22:12.672 DEBUG: triangle_not_ok_ab_ac_ok has changed for daikon between 2 and 1
-21:22:12.672 DEBUG: Iteration 2 took 115891 ms.
+15:29:16.136 INFO: ---------------------- Starting iteration 2--------------------
+15:29:16.137 INFO: Instrumenting file: TriangleCheck.java
+15:29:16.152 INFO: Augmenting input file TriangleCheck.java
+15:29:16.152 INFO: Augmenting file: TriangleCheck.java
+15:29:16.169 INFO: Compiling augmented file TriangleCheck.java
+15:29:16.564 INFO: Running evosuite on augmented file TriangleCheck.java
+15:30:22.428 DEBUG: Evosuite run took 66292 ms.
+15:30:22.428 INFO: Compiling reporting file TriangleCheck.java
+15:30:23.221 INFO: Compiling evosuite test file for TriangleCheck.java
+15:30:24.978 INFO: Running JUnit tests generated for TriangleCheck.java
+15:30:25.794 INFO: Generating code.
+15:30:25.794 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:30:28.376 INFO: Finished executing daikon and generating invariants.
+15:30:28.377 INFO: Generated 5 DiG trace files for instrumentation data.
+15:31:12.655 DEBUG: Checking if all invariants have become stable or not.
+15:31:12.656 DEBUG: triangle_not_ok has changed for daikon between 2 and 1
+15:31:12.657 DEBUG: triangle_ok has changed for daikon between 2 and 1
+15:31:12.657 DEBUG: triangle_not_ok_ab_ok has changed for daikon between 2 and 1
+15:31:12.657 DEBUG: triangle_not_ok_ab_ac_ok has changed for daikon between 2 and 1
+15:31:12.657 DEBUG: Iteration 2 took 116521 ms.
 
-21:22:12.672 INFO: ---------------------- Starting iteration 3--------------------
-21:22:12.673 INFO: Instrumenting file: TriangleCheck.java
-21:22:12.685 INFO: Augmenting input file TriangleCheck.java
-21:22:12.685 INFO: Augmenting file: TriangleCheck.java
-21:22:12.696 INFO: Compiling augmented file TriangleCheck.java
-21:22:13.081 INFO: Running evosuite on augmented file TriangleCheck.java
-21:23:18.954 DEBUG: Evosuite run took 66282 ms.
-21:23:18.955 INFO: Compiling reporting file TriangleCheck.java
-21:23:19.757 INFO: Compiling evosuite test file for TriangleCheck.java
-21:23:21.420 INFO: Running JUnit tests generated for TriangleCheck.java
-21:23:22.189 INFO: Generating code.
-21:23:22.190 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:23:24.664 INFO: Finished executing daikon and generating invariants.
-21:23:24.665 INFO: Generated 5 DiG trace files for instrumentation data.
-21:24:10.038 DEBUG: Checking if all invariants have become stable or not.
-21:24:10.038 DEBUG: triangle_not_ok has changed for daikon between 3 and 2
-21:24:10.039 DEBUG: triangle_ok has changed for daikon between 3 and 2
-21:24:10.039 DEBUG: triangle_not_ok_ab_ok has changed for daikon between 3 and 2
-21:24:10.039 DEBUG: triangle_not_ok_ab_ac_ok has changed for daikon between 3 and 2
-21:24:10.039 DEBUG: Iteration 3 took 117367 ms.
+15:31:12.657 INFO: ---------------------- Starting iteration 3--------------------
+15:31:12.658 INFO: Instrumenting file: TriangleCheck.java
+15:31:12.673 INFO: Augmenting input file TriangleCheck.java
+15:31:12.673 INFO: Augmenting file: TriangleCheck.java
+15:31:12.687 INFO: Compiling augmented file TriangleCheck.java
+15:31:13.152 INFO: Running evosuite on augmented file TriangleCheck.java
+15:32:19.892 DEBUG: Evosuite run took 67235 ms.
+15:32:19.893 INFO: Compiling reporting file TriangleCheck.java
+15:32:20.766 INFO: Compiling evosuite test file for TriangleCheck.java
+15:32:22.441 INFO: Running JUnit tests generated for TriangleCheck.java
+15:32:23.230 INFO: Generating code.
+15:32:23.231 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:32:25.864 INFO: Finished executing daikon and generating invariants.
+15:32:25.865 INFO: Generated 5 DiG trace files for instrumentation data.
+15:33:24.776 DEBUG: Checking if all invariants have become stable or not.
+15:33:24.776 DEBUG: triangle_not_ok has changed for daikon between 3 and 2
+15:33:24.776 DEBUG: triangle_ok has changed for daikon between 3 and 2
+15:33:24.777 DEBUG: triangle_not_ok_ab_ok has changed for daikon between 3 and 2
+15:33:24.777 DEBUG: triangle_not_ok_ab_ac_ok has changed for daikon between 3 and 2
+15:33:24.777 DEBUG: Iteration 3 took 132120 ms.
 
-21:24:10.039 INFO: ---------------------- Starting iteration 4--------------------
-21:24:10.040 INFO: Instrumenting file: TriangleCheck.java
-21:24:10.054 INFO: Augmenting input file TriangleCheck.java
-21:24:10.054 INFO: Augmenting file: TriangleCheck.java
-21:24:10.070 INFO: Compiling augmented file TriangleCheck.java
-21:24:10.482 INFO: Running evosuite on augmented file TriangleCheck.java
-21:25:17.084 DEBUG: Evosuite run took 67045 ms.
-21:25:17.084 INFO: Compiling reporting file TriangleCheck.java
-21:25:17.873 INFO: Compiling evosuite test file for TriangleCheck.java
-21:25:19.534 INFO: Running JUnit tests generated for TriangleCheck.java
-21:25:20.322 INFO: Generating code.
-21:25:20.323 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:25:22.832 INFO: Finished executing daikon and generating invariants.
-21:25:22.833 INFO: Generated 5 DiG trace files for instrumentation data.
-21:26:11.699 DEBUG: Checking if all invariants have become stable or not.
-21:26:11.700 DEBUG: triangle_not_ok has changed for DIG between 4 and 3
-21:26:11.700 DEBUG: triangle_ok has changed for DIG between 4 and 3
-21:26:11.701 DEBUG: triangle_not_ok_ab_ok has changed for daikon between 4 and 3
-21:26:11.701 DEBUG: triangle_not_ok_ab_ac_ok has changed for daikon between 4 and 3
-21:26:11.701 DEBUG: Iteration 4 took 121662 ms.
+15:33:24.777 INFO: ---------------------- Starting iteration 4--------------------
+15:33:24.777 INFO: Instrumenting file: TriangleCheck.java
+15:33:24.787 INFO: Augmenting input file TriangleCheck.java
+15:33:24.787 INFO: Augmenting file: TriangleCheck.java
+15:33:24.798 INFO: Compiling augmented file TriangleCheck.java
+15:33:25.195 INFO: Running evosuite on augmented file TriangleCheck.java
+15:34:31.648 DEBUG: Evosuite run took 66871 ms.
+15:34:31.649 INFO: Compiling reporting file TriangleCheck.java
+15:34:32.446 INFO: Compiling evosuite test file for TriangleCheck.java
+15:34:34.115 INFO: Running JUnit tests generated for TriangleCheck.java
+15:34:34.835 INFO: Generating code.
+15:34:34.836 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:34:37.264 INFO: Finished executing daikon and generating invariants.
+15:34:37.265 INFO: Generated 5 DiG trace files for instrumentation data.
+15:35:26.264 DEBUG: Checking if all invariants have become stable or not.
+15:35:26.264 DEBUG: triangle_not_ok has changed for daikon between 4 and 3
+15:35:26.265 DEBUG: triangle_ok has changed for daikon between 4 and 3
+15:35:26.265 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 4 and 3
+15:35:26.265 DEBUG: triangle_not_ok_ab_ac_ok has changed for daikon between 4 and 3
+15:35:26.265 DEBUG: Iteration 4 took 121488 ms.
 
-21:26:11.701 INFO: ---------------------- Starting iteration 5--------------------
-21:26:11.702 INFO: Instrumenting file: TriangleCheck.java
-21:26:11.715 INFO: Augmenting input file TriangleCheck.java
-21:26:11.715 INFO: Augmenting file: TriangleCheck.java
-21:26:11.728 INFO: Compiling augmented file TriangleCheck.java
-21:26:12.121 INFO: Running evosuite on augmented file TriangleCheck.java
-21:27:18.637 DEBUG: Evosuite run took 66936 ms.
-21:27:18.637 INFO: Compiling reporting file TriangleCheck.java
-21:27:19.485 INFO: Compiling evosuite test file for TriangleCheck.java
-21:27:21.150 INFO: Running JUnit tests generated for TriangleCheck.java
-21:27:21.907 INFO: Generating code.
-21:27:21.908 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:27:24.453 INFO: Finished executing daikon and generating invariants.
-21:27:24.454 INFO: Generated 5 DiG trace files for instrumentation data.
-21:28:12.748 DEBUG: Checking if all invariants have become stable or not.
-21:28:12.749 DEBUG: triangle_not_ok has changed for DIG between 5 and 4
-21:28:12.749 DEBUG: triangle_ok has changed for daikon between 5 and 4
-21:28:12.749 DEBUG: triangle_not_ok_ab_ok has changed for daikon between 5 and 4
-21:28:12.749 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 5 and 4
-21:28:12.749 DEBUG: Iteration 5 took 121048 ms.
+15:35:26.265 INFO: ---------------------- Starting iteration 5--------------------
+15:35:26.266 INFO: Instrumenting file: TriangleCheck.java
+15:35:26.276 INFO: Augmenting input file TriangleCheck.java
+15:35:26.276 INFO: Augmenting file: TriangleCheck.java
+15:35:26.287 INFO: Compiling augmented file TriangleCheck.java
+15:35:26.700 INFO: Running evosuite on augmented file TriangleCheck.java
+15:36:34.122 DEBUG: Evosuite run took 67857 ms.
+15:36:34.122 INFO: Compiling reporting file TriangleCheck.java
+15:36:34.859 INFO: Compiling evosuite test file for TriangleCheck.java
+15:36:36.586 INFO: Running JUnit tests generated for TriangleCheck.java
+15:36:37.369 INFO: Generating code.
+15:36:37.370 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:36:39.687 INFO: Finished executing daikon and generating invariants.
+15:36:39.687 INFO: Generated 5 DiG trace files for instrumentation data.
+15:37:30.737 DEBUG: Checking if all invariants have become stable or not.
+15:37:30.738 DEBUG: triangle_not_ok has changed for DIG between 5 and 4
+15:37:30.738 DEBUG: triangle_ok has changed for DIG between 5 and 4
+15:37:30.739 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 5 and 4
+15:37:30.739 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 5 and 4
+15:37:30.739 DEBUG: Iteration 5 took 124474 ms.
 
-21:28:12.749 INFO: ---------------------- Starting iteration 6--------------------
-21:28:12.750 INFO: Instrumenting file: TriangleCheck.java
-21:28:12.759 INFO: Augmenting input file TriangleCheck.java
-21:28:12.759 INFO: Augmenting file: TriangleCheck.java
-21:28:12.769 INFO: Compiling augmented file TriangleCheck.java
-21:28:13.181 INFO: Running evosuite on augmented file TriangleCheck.java
-21:29:20.062 DEBUG: Evosuite run took 67313 ms.
-21:29:20.063 INFO: Compiling reporting file TriangleCheck.java
-21:29:20.903 INFO: Compiling evosuite test file for TriangleCheck.java
-21:29:22.515 INFO: Running JUnit tests generated for TriangleCheck.java
-21:29:23.298 INFO: Generating code.
-21:29:23.299 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:29:25.772 INFO: Finished executing daikon and generating invariants.
-21:29:25.773 INFO: Generated 5 DiG trace files for instrumentation data.
-21:30:20.249 DEBUG: Checking if all invariants have become stable or not.
-21:30:20.249 DEBUG: triangle_not_ok has changed for DIG between 6 and 5
-21:30:20.250 DEBUG: triangle_ok has changed for DIG between 6 and 5
-21:30:20.250 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 6 and 5
-21:30:20.250 DEBUG: triangle_not_ok_ab_ac_ok has changed for daikon between 6 and 5
-21:30:20.250 DEBUG: Iteration 6 took 127501 ms.
+15:37:30.739 INFO: ---------------------- Starting iteration 6--------------------
+15:37:30.739 INFO: Instrumenting file: TriangleCheck.java
+15:37:30.754 INFO: Augmenting input file TriangleCheck.java
+15:37:30.754 INFO: Augmenting file: TriangleCheck.java
+15:37:30.773 INFO: Compiling augmented file TriangleCheck.java
+15:37:31.175 INFO: Running evosuite on augmented file TriangleCheck.java
+15:38:39.600 DEBUG: Evosuite run took 68861 ms.
+15:38:39.600 INFO: Compiling reporting file TriangleCheck.java
+15:38:40.429 INFO: Compiling evosuite test file for TriangleCheck.java
+15:38:42.237 INFO: Running JUnit tests generated for TriangleCheck.java
+15:38:43.094 INFO: Generating code.
+15:38:43.095 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:38:45.903 INFO: Finished executing daikon and generating invariants.
+15:38:45.904 INFO: Generated 5 DiG trace files for instrumentation data.
+15:39:43.001 DEBUG: Checking if all invariants have become stable or not.
+15:39:43.002 DEBUG: triangle_not_ok has changed for DIG between 6 and 5
+15:39:43.002 DEBUG: triangle_ok has changed for DIG between 6 and 5
+15:39:43.002 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 6 and 5
+15:39:43.002 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 6 and 5
+15:39:43.003 DEBUG: Iteration 6 took 132263 ms.
 
-21:30:20.250 INFO: ---------------------- Starting iteration 7--------------------
-21:30:20.251 INFO: Instrumenting file: TriangleCheck.java
-21:30:20.261 INFO: Augmenting input file TriangleCheck.java
-21:30:20.261 INFO: Augmenting file: TriangleCheck.java
-21:30:20.276 INFO: Compiling augmented file TriangleCheck.java
-21:30:20.708 INFO: Running evosuite on augmented file TriangleCheck.java
-21:31:29.082 DEBUG: Evosuite run took 68832 ms.
-21:31:29.083 INFO: Compiling reporting file TriangleCheck.java
-21:31:29.869 INFO: Compiling evosuite test file for TriangleCheck.java
-21:31:31.618 INFO: Running JUnit tests generated for TriangleCheck.java
-21:31:32.419 INFO: Generating code.
-21:31:32.419 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:31:34.921 INFO: Finished executing daikon and generating invariants.
-21:31:34.922 INFO: Generated 5 DiG trace files for instrumentation data.
-21:32:42.421 DEBUG: Checking if all invariants have become stable or not.
-21:32:42.421 DEBUG: triangle_not_ok has changed for DIG between 7 and 6
-21:32:42.421 DEBUG: triangle_ok has changed for daikon between 7 and 6
-21:32:42.422 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 7 and 6
-21:32:42.422 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 7 and 6
-21:32:42.422 DEBUG: Iteration 7 took 142172 ms.
+15:39:43.003 INFO: ---------------------- Starting iteration 7--------------------
+15:39:43.003 INFO: Instrumenting file: TriangleCheck.java
+15:39:43.014 INFO: Augmenting input file TriangleCheck.java
+15:39:43.014 INFO: Augmenting file: TriangleCheck.java
+15:39:43.032 INFO: Compiling augmented file TriangleCheck.java
+15:39:43.503 INFO: Running evosuite on augmented file TriangleCheck.java
+15:40:51.932 DEBUG: Evosuite run took 68928 ms.
+15:40:51.932 INFO: Compiling reporting file TriangleCheck.java
+15:40:52.794 INFO: Compiling evosuite test file for TriangleCheck.java
+15:40:54.554 INFO: Running JUnit tests generated for TriangleCheck.java
+15:40:55.461 INFO: Generating code.
+15:40:55.462 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:40:58.028 INFO: Finished executing daikon and generating invariants.
+15:40:58.029 INFO: Generated 5 DiG trace files for instrumentation data.
+15:42:03.554 DEBUG: Checking if all invariants have become stable or not.
+15:42:03.554 DEBUG: triangle_not_ok has changed for DIG between 7 and 6
+15:42:03.554 DEBUG: triangle_ok has changed for daikon between 7 and 6
+15:42:03.555 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 7 and 6
+15:42:03.555 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 7 and 6
+15:42:03.555 DEBUG: Iteration 7 took 140552 ms.
 
-21:32:42.422 INFO: ---------------------- Starting iteration 8--------------------
-21:32:42.422 INFO: Instrumenting file: TriangleCheck.java
-21:32:42.431 INFO: Augmenting input file TriangleCheck.java
-21:32:42.431 INFO: Augmenting file: TriangleCheck.java
-21:32:42.446 INFO: Compiling augmented file TriangleCheck.java
-21:32:42.878 INFO: Running evosuite on augmented file TriangleCheck.java
-21:33:51.056 DEBUG: Evosuite run took 68634 ms.
-21:33:51.056 INFO: Compiling reporting file TriangleCheck.java
-21:33:51.865 INFO: Compiling evosuite test file for TriangleCheck.java
-21:33:53.547 INFO: Running JUnit tests generated for TriangleCheck.java
-21:33:54.404 INFO: Generating code.
-21:33:54.405 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:33:56.899 INFO: Finished executing daikon and generating invariants.
-21:33:56.900 INFO: Generated 5 DiG trace files for instrumentation data.
-21:35:17.085 DEBUG: Checking if all invariants have become stable or not.
-21:35:17.086 DEBUG: triangle_not_ok has changed for DIG between 8 and 7
-21:35:17.086 DEBUG: triangle_ok has changed for daikon between 8 and 7
-21:35:17.086 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 8 and 7
-21:35:17.087 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 8 and 7
-21:35:17.087 DEBUG: Iteration 8 took 154665 ms.
+15:42:03.555 INFO: ---------------------- Starting iteration 8--------------------
+15:42:03.555 INFO: Instrumenting file: TriangleCheck.java
+15:42:03.566 INFO: Augmenting input file TriangleCheck.java
+15:42:03.566 INFO: Augmenting file: TriangleCheck.java
+15:42:03.586 INFO: Compiling augmented file TriangleCheck.java
+15:42:04.007 INFO: Running evosuite on augmented file TriangleCheck.java
+15:43:13.317 DEBUG: Evosuite run took 69762 ms.
+15:43:13.317 INFO: Compiling reporting file TriangleCheck.java
+15:43:14.085 INFO: Compiling evosuite test file for TriangleCheck.java
+15:43:15.841 INFO: Running JUnit tests generated for TriangleCheck.java
+15:43:16.672 INFO: Generating code.
+15:43:16.673 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:43:19.193 INFO: Finished executing daikon and generating invariants.
+15:43:19.194 INFO: Generated 5 DiG trace files for instrumentation data.
+15:44:31.230 DEBUG: Checking if all invariants have become stable or not.
+15:44:31.231 DEBUG: triangle_not_ok has changed for DIG between 8 and 7
+15:44:31.231 DEBUG: triangle_ok has changed for DIG between 8 and 7
+15:44:31.231 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 8 and 7
+15:44:31.231 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 8 and 7
+15:44:31.231 DEBUG: Iteration 8 took 147676 ms.
 
-21:35:17.087 INFO: ---------------------- Starting iteration 9--------------------
-21:35:17.087 INFO: Instrumenting file: TriangleCheck.java
-21:35:17.096 INFO: Augmenting input file TriangleCheck.java
-21:35:17.096 INFO: Augmenting file: TriangleCheck.java
-21:35:17.116 INFO: Compiling augmented file TriangleCheck.java
-21:35:17.544 INFO: Running evosuite on augmented file TriangleCheck.java
-21:36:26.798 DEBUG: Evosuite run took 69711 ms.
-21:36:26.798 INFO: Compiling reporting file TriangleCheck.java
-21:36:27.627 INFO: Compiling evosuite test file for TriangleCheck.java
-21:36:29.245 INFO: Running JUnit tests generated for TriangleCheck.java
-21:36:30.192 INFO: Generating code.
-21:36:30.193 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:36:32.701 INFO: Finished executing daikon and generating invariants.
-21:36:32.703 INFO: Generated 5 DiG trace files for instrumentation data.
-21:37:56.101 DEBUG: Checking if all invariants have become stable or not.
-21:37:56.102 DEBUG: triangle_not_ok has changed for DIG between 9 and 8
-21:37:56.102 DEBUG: triangle_ok has changed for daikon between 9 and 8
-21:37:56.102 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 9 and 8
-21:37:56.103 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 9 and 8
-21:37:56.103 DEBUG: Iteration 9 took 159016 ms.
+15:44:31.231 INFO: ---------------------- Starting iteration 9--------------------
+15:44:31.232 INFO: Instrumenting file: TriangleCheck.java
+15:44:31.240 INFO: Augmenting input file TriangleCheck.java
+15:44:31.241 INFO: Augmenting file: TriangleCheck.java
+15:44:31.256 INFO: Compiling augmented file TriangleCheck.java
+15:44:31.708 INFO: Running evosuite on augmented file TriangleCheck.java
+15:45:40.902 DEBUG: Evosuite run took 69671 ms.
+15:45:40.902 INFO: Compiling reporting file TriangleCheck.java
+15:45:41.712 INFO: Compiling evosuite test file for TriangleCheck.java
+15:45:43.493 INFO: Running JUnit tests generated for TriangleCheck.java
+15:45:44.318 INFO: Generating code.
+15:45:44.319 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:45:46.787 INFO: Finished executing daikon and generating invariants.
+15:45:46.788 INFO: Generated 5 DiG trace files for instrumentation data.
+15:46:59.612 DEBUG: Checking if all invariants have become stable or not.
+15:46:59.612 DEBUG: triangle_not_ok has changed for DIG between 9 and 8
+15:46:59.612 DEBUG: triangle_ok has changed for DIG between 9 and 8
+15:46:59.612 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 9 and 8
+15:46:59.613 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 9 and 8
+15:46:59.613 DEBUG: Iteration 9 took 148382 ms.
 
-21:37:56.103 INFO: ---------------------- Starting iteration 10--------------------
-21:37:56.103 INFO: Instrumenting file: TriangleCheck.java
-21:37:56.112 INFO: Augmenting input file TriangleCheck.java
-21:37:56.112 INFO: Augmenting file: TriangleCheck.java
-21:37:56.125 INFO: Compiling augmented file TriangleCheck.java
-21:37:56.543 INFO: Running evosuite on augmented file TriangleCheck.java
-21:39:05.659 DEBUG: Evosuite run took 69555 ms.
-21:39:05.659 INFO: Compiling reporting file TriangleCheck.java
-21:39:06.413 INFO: Compiling evosuite test file for TriangleCheck.java
-21:39:08.093 INFO: Running JUnit tests generated for TriangleCheck.java
-21:39:08.958 INFO: Generating code.
-21:39:08.959 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:39:11.527 INFO: Finished executing daikon and generating invariants.
-21:39:11.528 INFO: Generated 5 DiG trace files for instrumentation data.
-21:40:36.864 DEBUG: Checking if all invariants have become stable or not.
-21:40:36.865 DEBUG: triangle_not_ok has changed for DIG between 10 and 9
-21:40:36.865 DEBUG: triangle_ok has changed for DIG between 10 and 9
-21:40:36.865 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 10 and 9
-21:40:36.866 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 10 and 9
-21:40:36.866 DEBUG: Iteration 10 took 160763 ms.
+15:46:59.613 INFO: ---------------------- Starting iteration 10--------------------
+15:46:59.613 INFO: Instrumenting file: TriangleCheck.java
+15:46:59.622 INFO: Augmenting input file TriangleCheck.java
+15:46:59.622 INFO: Augmenting file: TriangleCheck.java
+15:46:59.639 INFO: Compiling augmented file TriangleCheck.java
+15:47:00.095 INFO: Running evosuite on augmented file TriangleCheck.java
+15:48:09.456 DEBUG: Evosuite run took 69843 ms.
+15:48:09.456 INFO: Compiling reporting file TriangleCheck.java
+15:48:10.241 INFO: Compiling evosuite test file for TriangleCheck.java
+15:48:12.036 INFO: Running JUnit tests generated for TriangleCheck.java
+15:48:13.024 INFO: Generating code.
+15:48:13.025 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:48:15.459 INFO: Finished executing daikon and generating invariants.
+15:48:15.461 INFO: Generated 5 DiG trace files for instrumentation data.
+15:49:28.199 DEBUG: Checking if all invariants have become stable or not.
+15:49:28.200 DEBUG: triangle_not_ok has changed for DIG between 10 and 9
+15:49:28.200 DEBUG: triangle_ok has changed for DIG between 10 and 9
+15:49:28.200 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 10 and 9
+15:49:28.201 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 10 and 9
+15:49:28.201 DEBUG: Iteration 10 took 148588 ms.
 
-21:40:36.866 INFO: ---------------------- Starting iteration 11--------------------
-21:40:36.866 INFO: Instrumenting file: TriangleCheck.java
-21:40:36.880 INFO: Augmenting input file TriangleCheck.java
-21:40:36.881 INFO: Augmenting file: TriangleCheck.java
-21:40:36.895 INFO: Compiling augmented file TriangleCheck.java
-21:40:37.302 INFO: Running evosuite on augmented file TriangleCheck.java
-21:41:47.608 DEBUG: Evosuite run took 70742 ms.
-21:41:47.608 INFO: Compiling reporting file TriangleCheck.java
-21:41:48.385 INFO: Compiling evosuite test file for TriangleCheck.java
-21:41:50.152 INFO: Running JUnit tests generated for TriangleCheck.java
-21:41:51.054 INFO: Generating code.
-21:41:51.056 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:41:53.555 INFO: Finished executing daikon and generating invariants.
-21:41:53.556 INFO: Generated 5 DiG trace files for instrumentation data.
-21:43:21.438 DEBUG: Checking if all invariants have become stable or not.
-21:43:21.439 DEBUG: triangle_not_ok has changed for DIG between 11 and 10
-21:43:21.439 DEBUG: triangle_ok has changed for DIG between 11 and 10
-21:43:21.439 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 11 and 10
-21:43:21.439 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 11 and 10
-21:43:21.439 DEBUG: Iteration 11 took 164573 ms.
+15:49:28.201 INFO: ---------------------- Starting iteration 11--------------------
+15:49:28.201 INFO: Instrumenting file: TriangleCheck.java
+15:49:28.209 INFO: Augmenting input file TriangleCheck.java
+15:49:28.209 INFO: Augmenting file: TriangleCheck.java
+15:49:28.222 INFO: Compiling augmented file TriangleCheck.java
+15:49:28.623 INFO: Running evosuite on augmented file TriangleCheck.java
+15:50:37.679 DEBUG: Evosuite run took 69478 ms.
+15:50:37.679 INFO: Compiling reporting file TriangleCheck.java
+15:50:38.401 INFO: Compiling evosuite test file for TriangleCheck.java
+15:50:40.122 INFO: Running JUnit tests generated for TriangleCheck.java
+15:50:40.963 INFO: Generating code.
+15:50:40.965 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:50:43.682 INFO: Finished executing daikon and generating invariants.
+15:50:43.683 INFO: Generated 5 DiG trace files for instrumentation data.
+15:51:53.593 DEBUG: Checking if all invariants have become stable or not.
+15:51:53.594 DEBUG: triangle_not_ok has changed for DIG between 11 and 10
+15:51:53.594 DEBUG: triangle_ok has changed for DIG between 11 and 10
+15:51:53.594 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 11 and 10
+15:51:53.594 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 11 and 10
+15:51:53.594 DEBUG: Iteration 11 took 145393 ms.
 
-21:43:21.439 INFO: ---------------------- Starting iteration 12--------------------
-21:43:21.440 INFO: Instrumenting file: TriangleCheck.java
-21:43:21.446 INFO: Augmenting input file TriangleCheck.java
-21:43:21.446 INFO: Augmenting file: TriangleCheck.java
-21:43:21.456 INFO: Compiling augmented file TriangleCheck.java
-21:43:21.881 INFO: Running evosuite on augmented file TriangleCheck.java
-21:44:33.040 DEBUG: Evosuite run took 71601 ms.
-21:44:33.040 INFO: Compiling reporting file TriangleCheck.java
-21:44:33.898 INFO: Compiling evosuite test file for TriangleCheck.java
-21:44:35.727 INFO: Running JUnit tests generated for TriangleCheck.java
-21:44:36.709 INFO: Generating code.
-21:44:36.711 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:44:39.325 INFO: Finished executing daikon and generating invariants.
-21:44:39.326 INFO: Generated 5 DiG trace files for instrumentation data.
-21:46:04.526 DEBUG: Checking if all invariants have become stable or not.
-21:46:04.526 DEBUG: triangle_not_ok has changed for DIG between 12 and 11
-21:46:04.526 DEBUG: triangle_ok has changed for DIG between 12 and 11
-21:46:04.526 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 12 and 11
-21:46:04.527 DEBUG: Invariants have stabilized for key: triangle_not_ok_ab_ac_ok
-21:46:04.527 DEBUG: Iteration 12 took 163088 ms.
+15:51:53.594 INFO: ---------------------- Starting iteration 12--------------------
+15:51:53.595 INFO: Instrumenting file: TriangleCheck.java
+15:51:53.603 INFO: Augmenting input file TriangleCheck.java
+15:51:53.603 INFO: Augmenting file: TriangleCheck.java
+15:51:53.615 INFO: Compiling augmented file TriangleCheck.java
+15:51:54.014 INFO: Running evosuite on augmented file TriangleCheck.java
+15:53:12.575 DEBUG: Evosuite run took 78981 ms.
+15:53:12.575 INFO: Compiling reporting file TriangleCheck.java
+15:53:15.080 INFO: Compiling evosuite test file for TriangleCheck.java
+15:53:21.238 INFO: Running JUnit tests generated for TriangleCheck.java
+15:53:25.190 INFO: Generating code.
+15:53:25.193 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:53:33.944 INFO: Finished executing daikon and generating invariants.
+15:53:33.946 INFO: Generated 5 DiG trace files for instrumentation data.
+15:54:51.513 DEBUG: Checking if all invariants have become stable or not.
+15:54:51.513 DEBUG: triangle_not_ok has changed for DIG between 12 and 11
+15:54:51.513 DEBUG: triangle_ok has changed for DIG between 12 and 11
+15:54:51.513 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 12 and 11
+15:54:51.514 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 12 and 11
+15:54:51.514 DEBUG: Iteration 12 took 177920 ms.
 
-21:46:04.527 INFO: ---------------------- Starting iteration 13--------------------
-21:46:04.528 INFO: Instrumenting file: TriangleCheck.java
-21:46:04.537 INFO: Augmenting input file TriangleCheck.java
-21:46:04.537 INFO: Augmenting file: TriangleCheck.java
-21:46:04.551 INFO: Compiling augmented file TriangleCheck.java
-21:46:04.978 INFO: Running evosuite on augmented file TriangleCheck.java
-21:47:16.668 DEBUG: Evosuite run took 72141 ms.
-21:47:16.668 INFO: Compiling reporting file TriangleCheck.java
-21:47:17.441 INFO: Compiling evosuite test file for TriangleCheck.java
-21:47:19.340 INFO: Running JUnit tests generated for TriangleCheck.java
-21:47:20.306 INFO: Generating code.
-21:47:20.308 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:47:22.913 INFO: Finished executing daikon and generating invariants.
-21:47:22.914 INFO: Generated 5 DiG trace files for instrumentation data.
-21:48:39.133 DEBUG: Checking if all invariants have become stable or not.
-21:48:39.134 DEBUG: Invariants have stabilized for key: triangle_not_ok
-21:48:39.134 DEBUG: triangle_ok has changed for daikon between 13 and 12
-21:48:39.134 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 13 and 12
-21:48:39.134 DEBUG: Iteration 13 took 154607 ms.
+15:54:51.514 INFO: ---------------------- Starting iteration 13--------------------
+15:54:51.514 INFO: Instrumenting file: TriangleCheck.java
+15:54:51.523 INFO: Augmenting input file TriangleCheck.java
+15:54:51.523 INFO: Augmenting file: TriangleCheck.java
+15:54:51.540 INFO: Compiling augmented file TriangleCheck.java
+15:54:51.973 INFO: Running evosuite on augmented file TriangleCheck.java
+15:56:04.835 DEBUG: Evosuite run took 73321 ms.
+15:56:04.835 INFO: Compiling reporting file TriangleCheck.java
+15:56:05.730 INFO: Compiling evosuite test file for TriangleCheck.java
+15:56:07.700 INFO: Running JUnit tests generated for TriangleCheck.java
+15:56:08.750 INFO: Generating code.
+15:56:08.752 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:56:11.599 INFO: Finished executing daikon and generating invariants.
+15:56:11.601 INFO: Generated 5 DiG trace files for instrumentation data.
+15:57:29.795 DEBUG: Checking if all invariants have become stable or not.
+15:57:29.796 DEBUG: triangle_not_ok has changed for DIG between 13 and 12
+15:57:29.796 DEBUG: Invariants have stabilized for key: triangle_ok
+15:57:29.797 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 13 and 12
+15:57:29.797 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 13 and 12
+15:57:29.797 DEBUG: Iteration 13 took 158283 ms.
 
-21:48:39.134 INFO: ---------------------- Starting iteration 14--------------------
-21:48:39.134 INFO: Instrumenting file: TriangleCheck.java
-21:48:39.142 INFO: Augmenting input file TriangleCheck.java
-21:48:39.142 INFO: Augmenting file: TriangleCheck.java
-21:48:39.160 INFO: Compiling augmented file TriangleCheck.java
-21:48:39.622 INFO: Running evosuite on augmented file TriangleCheck.java
-21:49:51.963 DEBUG: Evosuite run took 72829 ms.
-21:49:51.964 INFO: Compiling reporting file TriangleCheck.java
-21:49:52.750 INFO: Compiling evosuite test file for TriangleCheck.java
-21:49:54.477 INFO: Running JUnit tests generated for TriangleCheck.java
-21:49:55.415 INFO: Generating code.
-21:49:55.417 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:49:58.039 INFO: Finished executing daikon and generating invariants.
-21:49:58.040 INFO: Generated 5 DiG trace files for instrumentation data.
-21:51:04.628 DEBUG: Checking if all invariants have become stable or not.
-21:51:04.628 DEBUG: triangle_ok has changed for DIG between 14 and 13
-21:51:04.628 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 14 and 13
-21:51:04.629 DEBUG: Iteration 14 took 145495 ms.
+15:57:29.797 INFO: ---------------------- Starting iteration 14--------------------
+15:57:29.798 INFO: Instrumenting file: TriangleCheck.java
+15:57:29.804 INFO: Augmenting input file TriangleCheck.java
+15:57:29.804 INFO: Augmenting file: TriangleCheck.java
+15:57:29.821 INFO: Compiling augmented file TriangleCheck.java
+15:57:30.297 INFO: Running evosuite on augmented file TriangleCheck.java
+15:58:43.118 DEBUG: Evosuite run took 73321 ms.
+15:58:43.118 INFO: Compiling reporting file TriangleCheck.java
+15:58:43.923 INFO: Compiling evosuite test file for TriangleCheck.java
+15:58:45.757 INFO: Running JUnit tests generated for TriangleCheck.java
+15:58:46.809 INFO: Generating code.
+15:58:46.811 INFO: Generated 4 Daikon trace files for instrumentation data.
+15:58:49.598 INFO: Finished executing daikon and generating invariants.
+15:58:49.600 INFO: Generated 5 DiG trace files for instrumentation data.
+15:59:55.205 DEBUG: Checking if all invariants have become stable or not.
+15:59:55.205 DEBUG: triangle_not_ok has changed for DIG between 14 and 13
+15:59:55.206 DEBUG: triangle_not_ok_ab_ok has changed for daikon between 14 and 13
+15:59:55.206 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 14 and 13
+15:59:55.206 DEBUG: Iteration 14 took 145409 ms.
 
-21:51:04.629 INFO: ---------------------- Starting iteration 15--------------------
-21:51:04.629 INFO: Instrumenting file: TriangleCheck.java
-21:51:04.637 INFO: Augmenting input file TriangleCheck.java
-21:51:04.637 INFO: Augmenting file: TriangleCheck.java
-21:51:04.650 INFO: Compiling augmented file TriangleCheck.java
-21:51:05.101 INFO: Running evosuite on augmented file TriangleCheck.java
-21:52:17.048 DEBUG: Evosuite run took 72419 ms.
-21:52:17.049 INFO: Compiling reporting file TriangleCheck.java
-21:52:17.888 INFO: Compiling evosuite test file for TriangleCheck.java
-21:52:19.573 INFO: Running JUnit tests generated for TriangleCheck.java
-21:52:20.500 INFO: Generating code.
-21:52:20.502 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:52:23.185 INFO: Finished executing daikon and generating invariants.
-21:52:23.187 INFO: Generated 5 DiG trace files for instrumentation data.
-21:53:40.797 DEBUG: Checking if all invariants have become stable or not.
-21:53:40.797 DEBUG: triangle_ok has changed for daikon between 15 and 14
-21:53:40.797 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 15 and 14
-21:53:40.797 DEBUG: Iteration 15 took 156168 ms.
+15:59:55.206 INFO: ---------------------- Starting iteration 15--------------------
+15:59:55.207 INFO: Instrumenting file: TriangleCheck.java
+15:59:55.220 INFO: Augmenting input file TriangleCheck.java
+15:59:55.220 INFO: Augmenting file: TriangleCheck.java
+15:59:55.232 INFO: Compiling augmented file TriangleCheck.java
+15:59:55.659 INFO: Running evosuite on augmented file TriangleCheck.java
+16:01:07.520 DEBUG: Evosuite run took 72314 ms.
+16:01:07.521 INFO: Compiling reporting file TriangleCheck.java
+16:01:08.309 INFO: Compiling evosuite test file for TriangleCheck.java
+16:01:10.030 INFO: Running JUnit tests generated for TriangleCheck.java
+16:01:10.995 INFO: Generating code.
+16:01:10.998 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:01:13.709 INFO: Finished executing daikon and generating invariants.
+16:01:13.711 INFO: Generated 5 DiG trace files for instrumentation data.
+16:02:22.403 DEBUG: Checking if all invariants have become stable or not.
+16:02:22.403 DEBUG: triangle_not_ok has changed for DIG between 15 and 14
+16:02:22.403 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 15 and 14
+16:02:22.403 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 15 and 14
+16:02:22.403 DEBUG: Iteration 15 took 147197 ms.
 
-21:53:40.797 INFO: ---------------------- Starting iteration 16--------------------
-21:53:40.798 INFO: Instrumenting file: TriangleCheck.java
-21:53:40.806 INFO: Augmenting input file TriangleCheck.java
-21:53:40.806 INFO: Augmenting file: TriangleCheck.java
-21:53:40.827 INFO: Compiling augmented file TriangleCheck.java
-21:53:41.255 INFO: Running evosuite on augmented file TriangleCheck.java
-21:54:54.514 DEBUG: Evosuite run took 73717 ms.
-21:54:54.514 INFO: Compiling reporting file TriangleCheck.java
-21:54:55.327 INFO: Compiling evosuite test file for TriangleCheck.java
-21:54:57.029 INFO: Running JUnit tests generated for TriangleCheck.java
-21:54:57.950 INFO: Generating code.
-21:54:57.952 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:55:00.515 INFO: Finished executing daikon and generating invariants.
-21:55:00.516 INFO: Generated 5 DiG trace files for instrumentation data.
-21:56:34.354 DEBUG: Checking if all invariants have become stable or not.
-21:56:34.355 DEBUG: triangle_ok has changed for daikon between 16 and 15
-21:56:34.355 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 16 and 15
-21:56:34.355 DEBUG: Iteration 16 took 173558 ms.
+16:02:22.403 INFO: ---------------------- Starting iteration 16--------------------
+16:02:22.404 INFO: Instrumenting file: TriangleCheck.java
+16:02:22.411 INFO: Augmenting input file TriangleCheck.java
+16:02:22.411 INFO: Augmenting file: TriangleCheck.java
+16:02:22.423 INFO: Compiling augmented file TriangleCheck.java
+16:02:22.841 INFO: Running evosuite on augmented file TriangleCheck.java
+16:03:35.064 DEBUG: Evosuite run took 72661 ms.
+16:03:35.065 INFO: Compiling reporting file TriangleCheck.java
+16:03:35.840 INFO: Compiling evosuite test file for TriangleCheck.java
+16:03:37.681 INFO: Running JUnit tests generated for TriangleCheck.java
+16:03:38.688 INFO: Generating code.
+16:03:38.690 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:03:41.524 INFO: Finished executing daikon and generating invariants.
+16:03:41.526 INFO: Generated 5 DiG trace files for instrumentation data.
+16:05:03.569 DEBUG: Checking if all invariants have become stable or not.
+16:05:03.569 DEBUG: triangle_not_ok has changed for DIG between 16 and 15
+16:05:03.569 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 16 and 15
+16:05:03.569 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 16 and 15
+16:05:03.569 DEBUG: Iteration 16 took 161166 ms.
 
-21:56:34.355 INFO: ---------------------- Starting iteration 17--------------------
-21:56:34.355 INFO: Instrumenting file: TriangleCheck.java
-21:56:34.362 INFO: Augmenting input file TriangleCheck.java
-21:56:34.363 INFO: Augmenting file: TriangleCheck.java
-21:56:34.373 INFO: Compiling augmented file TriangleCheck.java
-21:56:34.796 INFO: Running evosuite on augmented file TriangleCheck.java
-21:57:47.926 DEBUG: Evosuite run took 73571 ms.
-21:57:47.926 INFO: Compiling reporting file TriangleCheck.java
-21:57:48.698 INFO: Compiling evosuite test file for TriangleCheck.java
-21:57:50.362 INFO: Running JUnit tests generated for TriangleCheck.java
-21:57:51.345 INFO: Generating code.
-21:57:51.346 INFO: Generated 4 Daikon trace files for instrumentation data.
-21:57:53.885 INFO: Finished executing daikon and generating invariants.
-21:57:53.887 INFO: Generated 5 DiG trace files for instrumentation data.
-21:59:29.341 DEBUG: Checking if all invariants have become stable or not.
-21:59:29.342 DEBUG: triangle_ok has changed for DIG between 17 and 16
-21:59:29.342 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 17 and 16
-21:59:29.342 DEBUG: Iteration 17 took 174987 ms.
+16:05:03.569 INFO: ---------------------- Starting iteration 17--------------------
+16:05:03.570 INFO: Instrumenting file: TriangleCheck.java
+16:05:03.577 INFO: Augmenting input file TriangleCheck.java
+16:05:03.578 INFO: Augmenting file: TriangleCheck.java
+16:05:03.588 INFO: Compiling augmented file TriangleCheck.java
+16:05:04.015 INFO: Running evosuite on augmented file TriangleCheck.java
+16:06:16.798 DEBUG: Evosuite run took 73229 ms.
+16:06:16.799 INFO: Compiling reporting file TriangleCheck.java
+16:06:17.608 INFO: Compiling evosuite test file for TriangleCheck.java
+16:06:19.477 INFO: Running JUnit tests generated for TriangleCheck.java
+16:06:20.436 INFO: Generating code.
+16:06:20.439 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:06:23.174 INFO: Finished executing daikon and generating invariants.
+16:06:23.175 INFO: Generated 5 DiG trace files for instrumentation data.
+16:07:42.923 DEBUG: Checking if all invariants have become stable or not.
+16:07:42.924 DEBUG: triangle_not_ok has changed for DIG between 17 and 16
+16:07:42.924 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 17 and 16
+16:07:42.924 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 17 and 16
+16:07:42.924 DEBUG: Iteration 17 took 159355 ms.
 
-21:59:29.342 INFO: ---------------------- Starting iteration 18--------------------
-21:59:29.343 INFO: Instrumenting file: TriangleCheck.java
-21:59:29.349 INFO: Augmenting input file TriangleCheck.java
-21:59:29.349 INFO: Augmenting file: TriangleCheck.java
-21:59:29.361 INFO: Compiling augmented file TriangleCheck.java
-21:59:29.769 INFO: Running evosuite on augmented file TriangleCheck.java
-22:00:43.603 DEBUG: Evosuite run took 74261 ms.
-22:00:43.603 INFO: Compiling reporting file TriangleCheck.java
-22:00:44.447 INFO: Compiling evosuite test file for TriangleCheck.java
-22:00:46.185 INFO: Running JUnit tests generated for TriangleCheck.java
-22:00:47.169 INFO: Generating code.
-22:00:47.170 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:00:49.732 INFO: Finished executing daikon and generating invariants.
-22:00:49.733 INFO: Generated 5 DiG trace files for instrumentation data.
-22:02:02.821 DEBUG: Checking if all invariants have become stable or not.
-22:02:02.821 DEBUG: triangle_ok has changed for DIG between 18 and 17
-22:02:02.822 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 18 and 17
-22:02:02.822 DEBUG: Iteration 18 took 153480 ms.
+16:07:42.924 INFO: ---------------------- Starting iteration 18--------------------
+16:07:42.925 INFO: Instrumenting file: TriangleCheck.java
+16:07:42.933 INFO: Augmenting input file TriangleCheck.java
+16:07:42.933 INFO: Augmenting file: TriangleCheck.java
+16:07:42.947 INFO: Compiling augmented file TriangleCheck.java
+16:07:43.423 INFO: Running evosuite on augmented file TriangleCheck.java
+16:08:59.023 DEBUG: Evosuite run took 76099 ms.
+16:08:59.023 INFO: Compiling reporting file TriangleCheck.java
+16:08:59.830 INFO: Compiling evosuite test file for TriangleCheck.java
+16:09:01.630 INFO: Running JUnit tests generated for TriangleCheck.java
+16:09:02.684 INFO: Generating code.
+16:09:02.686 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:09:05.156 INFO: Finished executing daikon and generating invariants.
+16:09:05.158 INFO: Generated 5 DiG trace files for instrumentation data.
+16:10:23.487 DEBUG: Checking if all invariants have become stable or not.
+16:10:23.488 DEBUG: triangle_not_ok has changed for DIG between 18 and 17
+16:10:23.488 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 18 and 17
+16:10:23.488 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 18 and 17
+16:10:23.488 DEBUG: Iteration 18 took 160564 ms.
 
-22:02:02.822 INFO: ---------------------- Starting iteration 19--------------------
-22:02:02.822 INFO: Instrumenting file: TriangleCheck.java
-22:02:02.828 INFO: Augmenting input file TriangleCheck.java
-22:02:02.828 INFO: Augmenting file: TriangleCheck.java
-22:02:02.840 INFO: Compiling augmented file TriangleCheck.java
-22:02:03.276 INFO: Running evosuite on augmented file TriangleCheck.java
-22:03:18.445 DEBUG: Evosuite run took 75623 ms.
-22:03:18.446 INFO: Compiling reporting file TriangleCheck.java
-22:03:19.291 INFO: Compiling evosuite test file for TriangleCheck.java
-22:03:21.048 INFO: Running JUnit tests generated for TriangleCheck.java
-22:03:22.100 INFO: Generating code.
-22:03:22.101 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:03:24.680 INFO: Finished executing daikon and generating invariants.
-22:03:24.682 INFO: Generated 5 DiG trace files for instrumentation data.
-22:04:32.386 DEBUG: Checking if all invariants have become stable or not.
-22:04:32.386 DEBUG: triangle_ok has changed for DIG between 19 and 18
-22:04:32.387 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 19 and 18
-22:04:32.387 DEBUG: Iteration 19 took 149565 ms.
+16:10:23.488 INFO: ---------------------- Starting iteration 19--------------------
+16:10:23.489 INFO: Instrumenting file: TriangleCheck.java
+16:10:23.504 INFO: Augmenting input file TriangleCheck.java
+16:10:23.504 INFO: Augmenting file: TriangleCheck.java
+16:10:23.524 INFO: Compiling augmented file TriangleCheck.java
+16:10:23.989 INFO: Running evosuite on augmented file TriangleCheck.java
+16:11:42.306 DEBUG: Evosuite run took 78818 ms.
+16:11:42.307 INFO: Compiling reporting file TriangleCheck.java
+16:11:43.081 INFO: Compiling evosuite test file for TriangleCheck.java
+16:11:45.204 INFO: Running JUnit tests generated for TriangleCheck.java
+16:11:46.550 INFO: Generating code.
+16:11:46.553 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:11:49.340 INFO: Finished executing daikon and generating invariants.
+16:11:49.342 INFO: Generated 5 DiG trace files for instrumentation data.
+16:13:12.021 DEBUG: Checking if all invariants have become stable or not.
+16:13:12.021 DEBUG: Invariants have stabilized for key: triangle_not_ok
+16:13:12.021 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 19 and 18
+16:13:12.021 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 19 and 18
+16:13:12.021 DEBUG: Iteration 19 took 168533 ms.
 
-22:04:32.387 INFO: ---------------------- Starting iteration 20--------------------
-22:04:32.387 INFO: Instrumenting file: TriangleCheck.java
-22:04:32.393 INFO: Augmenting input file TriangleCheck.java
-22:04:32.393 INFO: Augmenting file: TriangleCheck.java
-22:04:32.412 INFO: Compiling augmented file TriangleCheck.java
-22:04:32.837 INFO: Running evosuite on augmented file TriangleCheck.java
-22:05:50.021 DEBUG: Evosuite run took 77634 ms.
-22:05:50.021 INFO: Compiling reporting file TriangleCheck.java
-22:05:50.754 INFO: Compiling evosuite test file for TriangleCheck.java
-22:05:52.648 INFO: Running JUnit tests generated for TriangleCheck.java
-22:05:53.659 INFO: Generating code.
-22:05:53.661 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:05:56.225 INFO: Finished executing daikon and generating invariants.
-22:05:56.227 INFO: Generated 5 DiG trace files for instrumentation data.
-22:07:09.872 DEBUG: Checking if all invariants have become stable or not.
-22:07:09.873 DEBUG: triangle_ok has changed for DIG between 20 and 19
-22:07:09.873 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 20 and 19
-22:07:09.873 DEBUG: Iteration 20 took 157486 ms.
+16:13:12.021 INFO: ---------------------- Starting iteration 20--------------------
+16:13:12.022 INFO: Instrumenting file: TriangleCheck.java
+16:13:12.028 INFO: Augmenting input file TriangleCheck.java
+16:13:12.028 INFO: Augmenting file: TriangleCheck.java
+16:13:12.045 INFO: Compiling augmented file TriangleCheck.java
+16:13:12.525 INFO: Running evosuite on augmented file TriangleCheck.java
+16:14:31.005 DEBUG: Evosuite run took 78984 ms.
+16:14:31.005 INFO: Compiling reporting file TriangleCheck.java
+16:14:31.739 INFO: Compiling evosuite test file for TriangleCheck.java
+16:14:33.730 INFO: Running JUnit tests generated for TriangleCheck.java
+16:14:34.844 INFO: Generating code.
+16:14:34.845 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:14:37.438 INFO: Finished executing daikon and generating invariants.
+16:14:37.439 INFO: Generated 5 DiG trace files for instrumentation data.
+16:16:00.757 DEBUG: Checking if all invariants have become stable or not.
+16:16:00.757 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 20 and 19
+16:16:00.758 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 20 and 19
+16:16:00.758 DEBUG: Iteration 20 took 168737 ms.
 
-22:07:09.873 INFO: ---------------------- Starting iteration 21--------------------
-22:07:09.874 INFO: Instrumenting file: TriangleCheck.java
-22:07:09.881 INFO: Augmenting input file TriangleCheck.java
-22:07:09.881 INFO: Augmenting file: TriangleCheck.java
-22:07:09.901 INFO: Compiling augmented file TriangleCheck.java
-22:07:10.327 INFO: Running evosuite on augmented file TriangleCheck.java
-22:08:26.319 DEBUG: Evosuite run took 76446 ms.
-22:08:26.320 INFO: Compiling reporting file TriangleCheck.java
-22:08:27.137 INFO: Compiling evosuite test file for TriangleCheck.java
-22:08:28.866 INFO: Running JUnit tests generated for TriangleCheck.java
-22:08:29.904 INFO: Generating code.
-22:08:29.907 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:08:32.556 INFO: Finished executing daikon and generating invariants.
-22:08:32.558 INFO: Generated 5 DiG trace files for instrumentation data.
-22:09:35.201 DEBUG: Checking if all invariants have become stable or not.
-22:09:35.201 DEBUG: Invariants have stabilized for key: triangle_ok
-22:09:35.201 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 21 and 20
-22:09:35.201 DEBUG: Iteration 21 took 145328 ms.
+16:16:00.758 INFO: ---------------------- Starting iteration 21--------------------
+16:16:00.758 INFO: Instrumenting file: TriangleCheck.java
+16:16:00.765 INFO: Augmenting input file TriangleCheck.java
+16:16:00.765 INFO: Augmenting file: TriangleCheck.java
+16:16:00.782 INFO: Compiling augmented file TriangleCheck.java
+16:16:01.228 INFO: Running evosuite on augmented file TriangleCheck.java
+16:17:21.193 DEBUG: Evosuite run took 80435 ms.
+16:17:21.193 INFO: Compiling reporting file TriangleCheck.java
+16:17:22.014 INFO: Compiling evosuite test file for TriangleCheck.java
+16:17:24.029 INFO: Running JUnit tests generated for TriangleCheck.java
+16:17:25.407 INFO: Generating code.
+16:17:25.409 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:17:28.339 INFO: Finished executing daikon and generating invariants.
+16:17:28.341 INFO: Generated 5 DiG trace files for instrumentation data.
+16:18:44.200 DEBUG: Checking if all invariants have become stable or not.
+16:18:44.201 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 21 and 20
+16:18:44.201 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 21 and 20
+16:18:44.201 DEBUG: Iteration 21 took 163443 ms.
 
-22:09:35.201 INFO: ---------------------- Starting iteration 22--------------------
-22:09:35.202 INFO: Instrumenting file: TriangleCheck.java
-22:09:35.209 INFO: Augmenting input file TriangleCheck.java
-22:09:35.209 INFO: Augmenting file: TriangleCheck.java
-22:09:35.229 INFO: Compiling augmented file TriangleCheck.java
-22:09:35.657 INFO: Running evosuite on augmented file TriangleCheck.java
-22:10:56.064 DEBUG: Evosuite run took 80863 ms.
-22:10:56.064 INFO: Compiling reporting file TriangleCheck.java
-22:10:56.831 INFO: Compiling evosuite test file for TriangleCheck.java
-22:10:58.641 INFO: Running JUnit tests generated for TriangleCheck.java
-22:10:59.830 INFO: Generating code.
-22:10:59.832 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:11:02.553 INFO: Finished executing daikon and generating invariants.
-22:11:02.556 INFO: Generated 5 DiG trace files for instrumentation data.
-22:12:10.392 DEBUG: Checking if all invariants have become stable or not.
-22:12:10.393 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 22 and 21
-22:12:10.393 DEBUG: Iteration 22 took 155192 ms.
+16:18:44.201 INFO: ---------------------- Starting iteration 22--------------------
+16:18:44.201 INFO: Instrumenting file: TriangleCheck.java
+16:18:44.207 INFO: Augmenting input file TriangleCheck.java
+16:18:44.207 INFO: Augmenting file: TriangleCheck.java
+16:18:44.232 INFO: Compiling augmented file TriangleCheck.java
+16:18:44.666 INFO: Running evosuite on augmented file TriangleCheck.java
+16:20:04.054 DEBUG: Evosuite run took 79853 ms.
+16:20:04.054 INFO: Compiling reporting file TriangleCheck.java
+16:20:04.878 INFO: Compiling evosuite test file for TriangleCheck.java
+16:20:06.690 INFO: Running JUnit tests generated for TriangleCheck.java
+16:20:07.756 INFO: Generating code.
+16:20:07.758 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:20:10.387 INFO: Finished executing daikon and generating invariants.
+16:20:10.390 INFO: Generated 5 DiG trace files for instrumentation data.
+16:21:21.843 DEBUG: Checking if all invariants have become stable or not.
+16:21:21.843 DEBUG: Invariants have stabilized for key: triangle_not_ok_ab_ok
+16:21:21.843 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 22 and 21
+16:21:21.843 DEBUG: Iteration 22 took 157642 ms.
 
-22:12:10.393 INFO: ---------------------- Starting iteration 23--------------------
-22:12:10.393 INFO: Instrumenting file: TriangleCheck.java
-22:12:10.400 INFO: Augmenting input file TriangleCheck.java
-22:12:10.400 INFO: Augmenting file: TriangleCheck.java
-22:12:10.419 INFO: Compiling augmented file TriangleCheck.java
-22:12:10.856 INFO: Running evosuite on augmented file TriangleCheck.java
-22:13:30.198 DEBUG: Evosuite run took 79805 ms.
-22:13:30.198 INFO: Compiling reporting file TriangleCheck.java
-22:13:30.929 INFO: Compiling evosuite test file for TriangleCheck.java
-22:13:32.698 INFO: Running JUnit tests generated for TriangleCheck.java
-22:13:33.900 INFO: Generating code.
-22:13:33.903 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:13:36.532 INFO: Finished executing daikon and generating invariants.
-22:13:36.536 INFO: Generated 5 DiG trace files for instrumentation data.
-22:14:46.284 DEBUG: Checking if all invariants have become stable or not.
-22:14:46.284 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 23 and 22
-22:14:46.284 DEBUG: Iteration 23 took 155891 ms.
+16:21:21.843 INFO: ---------------------- Starting iteration 23--------------------
+16:21:21.843 INFO: Instrumenting file: TriangleCheck.java
+16:21:21.851 INFO: Augmenting input file TriangleCheck.java
+16:21:21.851 INFO: Augmenting file: TriangleCheck.java
+16:21:21.869 INFO: Compiling augmented file TriangleCheck.java
+16:21:22.318 INFO: Running evosuite on augmented file TriangleCheck.java
+16:22:42.694 DEBUG: Evosuite run took 80851 ms.
+16:22:42.694 INFO: Compiling reporting file TriangleCheck.java
+16:22:43.586 INFO: Compiling evosuite test file for TriangleCheck.java
+16:22:45.488 INFO: Running JUnit tests generated for TriangleCheck.java
+16:22:46.636 INFO: Generating code.
+16:22:46.639 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:22:54.074 INFO: Finished executing daikon and generating invariants.
+16:22:54.080 INFO: Generated 5 DiG trace files for instrumentation data.
+16:24:49.843 DEBUG: Checking if all invariants have become stable or not.
+16:24:49.844 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 23 and 22
+16:24:49.844 DEBUG: Iteration 23 took 208001 ms.
 
-22:14:46.284 INFO: ---------------------- Starting iteration 24--------------------
-22:14:46.285 INFO: Instrumenting file: TriangleCheck.java
-22:14:46.292 INFO: Augmenting input file TriangleCheck.java
-22:14:46.292 INFO: Augmenting file: TriangleCheck.java
-22:14:46.323 INFO: Compiling augmented file TriangleCheck.java
-22:14:46.785 INFO: Running evosuite on augmented file TriangleCheck.java
-22:16:07.072 DEBUG: Evosuite run took 80788 ms.
-22:16:07.072 INFO: Compiling reporting file TriangleCheck.java
-22:16:07.933 INFO: Compiling evosuite test file for TriangleCheck.java
-22:16:09.768 INFO: Running JUnit tests generated for TriangleCheck.java
-22:16:10.944 INFO: Generating code.
-22:16:10.945 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:16:13.551 INFO: Finished executing daikon and generating invariants.
-22:16:13.554 INFO: Generated 5 DiG trace files for instrumentation data.
-22:17:25.963 DEBUG: Checking if all invariants have become stable or not.
-22:17:25.963 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 24 and 23
-22:17:25.963 DEBUG: Iteration 24 took 159679 ms.
+16:24:49.844 INFO: ---------------------- Starting iteration 24--------------------
+16:24:49.845 INFO: Instrumenting file: TriangleCheck.java
+16:24:49.854 INFO: Augmenting input file TriangleCheck.java
+16:24:49.855 INFO: Augmenting file: TriangleCheck.java
+16:24:49.887 INFO: Compiling augmented file TriangleCheck.java
+16:24:50.475 INFO: Running evosuite on augmented file TriangleCheck.java
+16:26:08.761 DEBUG: Evosuite run took 78917 ms.
+16:26:08.762 INFO: Compiling reporting file TriangleCheck.java
+16:26:09.564 INFO: Compiling evosuite test file for TriangleCheck.java
+16:26:11.314 INFO: Running JUnit tests generated for TriangleCheck.java
+16:26:12.427 INFO: Generating code.
+16:26:12.428 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:26:15.122 INFO: Finished executing daikon and generating invariants.
+16:26:15.124 INFO: Generated 5 DiG trace files for instrumentation data.
+16:27:34.157 DEBUG: Checking if all invariants have become stable or not.
+16:27:34.157 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 24 and 23
+16:27:34.157 DEBUG: Iteration 24 took 164313 ms.
 
-22:17:25.963 INFO: ---------------------- Starting iteration 25--------------------
-22:17:25.963 INFO: Instrumenting file: TriangleCheck.java
-22:17:25.970 INFO: Augmenting input file TriangleCheck.java
-22:17:25.971 INFO: Augmenting file: TriangleCheck.java
-22:17:25.992 INFO: Compiling augmented file TriangleCheck.java
-22:17:26.433 INFO: Running evosuite on augmented file TriangleCheck.java
-22:18:48.157 DEBUG: Evosuite run took 82194 ms.
-22:18:48.157 INFO: Compiling reporting file TriangleCheck.java
-22:18:48.891 INFO: Compiling evosuite test file for TriangleCheck.java
-22:18:50.729 INFO: Running JUnit tests generated for TriangleCheck.java
-22:18:51.951 INFO: Generating code.
-22:18:51.953 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:18:54.494 INFO: Finished executing daikon and generating invariants.
-22:18:54.497 INFO: Generated 5 DiG trace files for instrumentation data.
-22:20:10.497 DEBUG: Checking if all invariants have become stable or not.
-22:20:10.497 DEBUG: triangle_not_ok_ab_ok has changed for daikon between 25 and 24
-22:20:10.497 DEBUG: Iteration 25 took 164534 ms.
+16:27:34.157 INFO: ---------------------- Starting iteration 25--------------------
+16:27:34.158 INFO: Instrumenting file: TriangleCheck.java
+16:27:34.166 INFO: Augmenting input file TriangleCheck.java
+16:27:34.166 INFO: Augmenting file: TriangleCheck.java
+16:27:34.187 INFO: Compiling augmented file TriangleCheck.java
+16:27:34.737 INFO: Running evosuite on augmented file TriangleCheck.java
+16:28:55.388 DEBUG: Evosuite run took 81231 ms.
+16:28:55.388 INFO: Compiling reporting file TriangleCheck.java
+16:28:56.248 INFO: Compiling evosuite test file for TriangleCheck.java
+16:28:58.083 INFO: Running JUnit tests generated for TriangleCheck.java
+16:28:59.131 INFO: Generating code.
+16:28:59.132 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:29:02.246 INFO: Finished executing daikon and generating invariants.
+16:29:02.249 INFO: Generated 5 DiG trace files for instrumentation data.
+16:30:27.388 DEBUG: Checking if all invariants have become stable or not.
+16:30:27.389 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 25 and 24
+16:30:27.389 DEBUG: Iteration 25 took 173232 ms.
 
-22:20:10.497 INFO: ---------------------- Starting iteration 26--------------------
-22:20:10.497 INFO: Instrumenting file: TriangleCheck.java
-22:20:10.504 INFO: Augmenting input file TriangleCheck.java
-22:20:10.505 INFO: Augmenting file: TriangleCheck.java
-22:20:10.537 INFO: Compiling augmented file TriangleCheck.java
-22:20:11.005 INFO: Running evosuite on augmented file TriangleCheck.java
-22:21:36.446 DEBUG: Evosuite run took 85949 ms.
-22:21:36.446 INFO: Compiling reporting file TriangleCheck.java
-22:21:37.221 INFO: Compiling evosuite test file for TriangleCheck.java
-22:21:39.028 INFO: Running JUnit tests generated for TriangleCheck.java
-22:21:40.456 INFO: Generating code.
-22:21:40.458 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:21:43.051 INFO: Finished executing daikon and generating invariants.
-22:21:43.055 INFO: Generated 5 DiG trace files for instrumentation data.
-22:23:04.924 DEBUG: Checking if all invariants have become stable or not.
-22:23:04.924 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 26 and 25
-22:23:04.924 DEBUG: Iteration 26 took 174427 ms.
+16:30:27.389 INFO: ---------------------- Starting iteration 26--------------------
+16:30:27.389 INFO: Instrumenting file: TriangleCheck.java
+16:30:27.395 INFO: Augmenting input file TriangleCheck.java
+16:30:27.395 INFO: Augmenting file: TriangleCheck.java
+16:30:27.410 INFO: Compiling augmented file TriangleCheck.java
+16:30:27.948 INFO: Running evosuite on augmented file TriangleCheck.java
+16:31:46.602 DEBUG: Evosuite run took 79213 ms.
+16:31:46.602 INFO: Compiling reporting file TriangleCheck.java
+16:31:47.522 INFO: Compiling evosuite test file for TriangleCheck.java
+16:31:49.615 INFO: Running JUnit tests generated for TriangleCheck.java
+16:31:50.839 INFO: Generating code.
+16:31:50.840 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:31:54.187 INFO: Finished executing daikon and generating invariants.
+16:31:54.191 INFO: Generated 5 DiG trace files for instrumentation data.
+16:33:14.986 DEBUG: Checking if all invariants have become stable or not.
+16:33:14.987 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 26 and 25
+16:33:14.987 DEBUG: Iteration 26 took 167598 ms.
 
-22:23:04.924 INFO: ---------------------- Starting iteration 27--------------------
-22:23:04.925 INFO: Instrumenting file: TriangleCheck.java
-22:23:04.931 INFO: Augmenting input file TriangleCheck.java
-22:23:04.931 INFO: Augmenting file: TriangleCheck.java
-22:23:04.959 INFO: Compiling augmented file TriangleCheck.java
-22:23:05.387 INFO: Running evosuite on augmented file TriangleCheck.java
-22:24:32.208 DEBUG: Evosuite run took 87284 ms.
-22:24:32.208 INFO: Compiling reporting file TriangleCheck.java
-22:24:32.964 INFO: Compiling evosuite test file for TriangleCheck.java
-22:24:34.751 INFO: Running JUnit tests generated for TriangleCheck.java
-22:24:36.039 INFO: Generating code.
-22:24:36.040 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:24:38.609 INFO: Finished executing daikon and generating invariants.
-22:24:38.612 INFO: Generated 5 DiG trace files for instrumentation data.
-22:26:07.337 DEBUG: Checking if all invariants have become stable or not.
-22:26:07.337 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 27 and 26
-22:26:07.337 DEBUG: Iteration 27 took 182413 ms.
+16:33:14.987 INFO: ---------------------- Starting iteration 27--------------------
+16:33:14.987 INFO: Instrumenting file: TriangleCheck.java
+16:33:14.992 INFO: Augmenting input file TriangleCheck.java
+16:33:14.992 INFO: Augmenting file: TriangleCheck.java
+16:33:15.018 INFO: Compiling augmented file TriangleCheck.java
+16:33:15.571 INFO: Running evosuite on augmented file TriangleCheck.java
+16:34:36.044 DEBUG: Evosuite run took 81057 ms.
+16:34:36.044 INFO: Compiling reporting file TriangleCheck.java
+16:34:36.904 INFO: Compiling evosuite test file for TriangleCheck.java
+16:34:38.615 INFO: Running JUnit tests generated for TriangleCheck.java
+16:34:39.747 INFO: Generating code.
+16:34:39.749 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:34:42.435 INFO: Finished executing daikon and generating invariants.
+16:34:42.440 INFO: Generated 5 DiG trace files for instrumentation data.
+16:36:08.684 DEBUG: Checking if all invariants have become stable or not.
+16:36:08.684 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 27 and 26
+16:36:08.684 DEBUG: Iteration 27 took 173697 ms.
 
-22:26:07.337 INFO: ---------------------- Starting iteration 28--------------------
-22:26:07.338 INFO: Instrumenting file: TriangleCheck.java
-22:26:07.345 INFO: Augmenting input file TriangleCheck.java
-22:26:07.345 INFO: Augmenting file: TriangleCheck.java
-22:26:07.372 INFO: Compiling augmented file TriangleCheck.java
-22:26:07.827 INFO: Running evosuite on augmented file TriangleCheck.java
-22:27:31.339 DEBUG: Evosuite run took 84001 ms.
-22:27:31.339 INFO: Compiling reporting file TriangleCheck.java
-22:27:32.130 INFO: Compiling evosuite test file for TriangleCheck.java
-22:27:33.878 INFO: Running JUnit tests generated for TriangleCheck.java
-22:27:35.171 INFO: Generating code.
-22:27:35.172 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:27:37.880 INFO: Finished executing daikon and generating invariants.
-22:27:37.881 INFO: Generated 5 DiG trace files for instrumentation data.
-22:29:10.004 DEBUG: Checking if all invariants have become stable or not.
-22:29:10.004 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 28 and 27
-22:29:10.004 DEBUG: Iteration 28 took 182667 ms.
+16:36:08.684 INFO: ---------------------- Starting iteration 28--------------------
+16:36:08.685 INFO: Instrumenting file: TriangleCheck.java
+16:36:08.692 INFO: Augmenting input file TriangleCheck.java
+16:36:08.692 INFO: Augmenting file: TriangleCheck.java
+16:36:08.710 INFO: Compiling augmented file TriangleCheck.java
+16:36:09.201 INFO: Running evosuite on augmented file TriangleCheck.java
+16:37:31.228 DEBUG: Evosuite run took 82544 ms.
+16:37:31.228 INFO: Compiling reporting file TriangleCheck.java
+16:37:32.145 INFO: Compiling evosuite test file for TriangleCheck.java
+16:37:34.179 INFO: Running JUnit tests generated for TriangleCheck.java
+16:37:35.376 INFO: Generating code.
+16:37:35.378 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:37:38.356 INFO: Finished executing daikon and generating invariants.
+16:37:38.359 INFO: Generated 5 DiG trace files for instrumentation data.
+16:39:02.347 DEBUG: Checking if all invariants have become stable or not.
+16:39:02.347 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 28 and 27
+16:39:02.347 DEBUG: Iteration 28 took 173663 ms.
 
-22:29:10.004 INFO: ---------------------- Starting iteration 29--------------------
-22:29:10.005 INFO: Instrumenting file: TriangleCheck.java
-22:29:10.012 INFO: Augmenting input file TriangleCheck.java
-22:29:10.012 INFO: Augmenting file: TriangleCheck.java
-22:29:10.056 INFO: Compiling augmented file TriangleCheck.java
-22:29:10.525 INFO: Running evosuite on augmented file TriangleCheck.java
-22:30:49.879 DEBUG: Evosuite run took 99875 ms.
-22:30:49.879 INFO: Compiling reporting file TriangleCheck.java
-22:30:50.704 INFO: Compiling evosuite test file for TriangleCheck.java
-22:30:52.630 INFO: Running JUnit tests generated for TriangleCheck.java
-22:30:54.019 INFO: Generating code.
-22:30:54.021 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:30:56.676 INFO: Finished executing daikon and generating invariants.
-22:30:56.677 INFO: Generated 5 DiG trace files for instrumentation data.
-22:32:40.765 DEBUG: Checking if all invariants have become stable or not.
-22:32:40.765 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 29 and 28
-22:32:40.765 DEBUG: Iteration 29 took 210761 ms.
+16:39:02.347 INFO: ---------------------- Starting iteration 29--------------------
+16:39:02.348 INFO: Instrumenting file: TriangleCheck.java
+16:39:02.354 INFO: Augmenting input file TriangleCheck.java
+16:39:02.354 INFO: Augmenting file: TriangleCheck.java
+16:39:02.369 INFO: Compiling augmented file TriangleCheck.java
+16:39:02.804 INFO: Running evosuite on augmented file TriangleCheck.java
+16:40:22.556 DEBUG: Evosuite run took 80209 ms.
+16:40:22.556 INFO: Compiling reporting file TriangleCheck.java
+16:40:23.376 INFO: Compiling evosuite test file for TriangleCheck.java
+16:40:25.268 INFO: Running JUnit tests generated for TriangleCheck.java
+16:40:26.407 INFO: Generating code.
+16:40:26.409 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:40:29.004 INFO: Finished executing daikon and generating invariants.
+16:40:29.006 INFO: Generated 5 DiG trace files for instrumentation data.
+16:41:58.023 DEBUG: Checking if all invariants have become stable or not.
+16:41:58.023 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 29 and 28
+16:41:58.023 DEBUG: Iteration 29 took 175676 ms.
 
-22:32:40.765 INFO: ---------------------- Starting iteration 30--------------------
-22:32:40.766 INFO: Instrumenting file: TriangleCheck.java
-22:32:40.773 INFO: Augmenting input file TriangleCheck.java
-22:32:40.773 INFO: Augmenting file: TriangleCheck.java
-22:32:40.815 INFO: Compiling augmented file TriangleCheck.java
-22:32:41.282 INFO: Running evosuite on augmented file TriangleCheck.java
-22:34:20.947 DEBUG: Evosuite run took 100182 ms.
-22:34:20.948 INFO: Compiling reporting file TriangleCheck.java
-22:34:21.697 INFO: Compiling evosuite test file for TriangleCheck.java
-22:34:23.586 INFO: Running JUnit tests generated for TriangleCheck.java
-22:34:25.034 INFO: Generating code.
-22:34:25.037 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:34:27.924 INFO: Finished executing daikon and generating invariants.
-22:34:27.926 INFO: Generated 5 DiG trace files for instrumentation data.
-22:36:17.564 DEBUG: Checking if all invariants have become stable or not.
-22:36:17.564 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 30 and 29
-22:36:17.564 DEBUG: Iteration 30 took 216799 ms.
+16:41:58.024 INFO: ---------------------- Starting iteration 30--------------------
+16:41:58.024 INFO: Instrumenting file: TriangleCheck.java
+16:41:58.031 INFO: Augmenting input file TriangleCheck.java
+16:41:58.031 INFO: Augmenting file: TriangleCheck.java
+16:41:58.050 INFO: Compiling augmented file TriangleCheck.java
+16:41:58.519 INFO: Running evosuite on augmented file TriangleCheck.java
+16:43:17.735 DEBUG: Evosuite run took 79712 ms.
+16:43:17.735 INFO: Compiling reporting file TriangleCheck.java
+16:43:18.531 INFO: Compiling evosuite test file for TriangleCheck.java
+16:43:20.411 INFO: Running JUnit tests generated for TriangleCheck.java
+16:43:21.506 INFO: Generating code.
+16:43:21.508 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:43:24.222 INFO: Finished executing daikon and generating invariants.
+16:43:24.224 INFO: Generated 5 DiG trace files for instrumentation data.
+16:44:49.860 DEBUG: Checking if all invariants have become stable or not.
+16:44:49.860 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 30 and 29
+16:44:49.860 DEBUG: Iteration 30 took 171837 ms.
 
-22:36:17.564 INFO: ---------------------- Starting iteration 31--------------------
-22:36:17.565 INFO: Instrumenting file: TriangleCheck.java
-22:36:17.572 INFO: Augmenting input file TriangleCheck.java
-22:36:17.572 INFO: Augmenting file: TriangleCheck.java
-22:36:17.622 INFO: Compiling augmented file TriangleCheck.java
-22:36:18.117 INFO: Running evosuite on augmented file TriangleCheck.java
-22:38:00.432 DEBUG: Evosuite run took 102868 ms.
-22:38:00.432 INFO: Compiling reporting file TriangleCheck.java
-22:38:01.205 INFO: Compiling evosuite test file for TriangleCheck.java
-22:38:03.205 INFO: Running JUnit tests generated for TriangleCheck.java
-22:38:04.717 INFO: Generating code.
-22:38:04.720 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:38:07.576 INFO: Finished executing daikon and generating invariants.
-22:38:07.578 INFO: Generated 5 DiG trace files for instrumentation data.
-22:40:02.730 DEBUG: Checking if all invariants have become stable or not.
-22:40:02.730 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 31 and 30
-22:40:02.730 DEBUG: Iteration 31 took 225166 ms.
+16:44:49.860 INFO: ---------------------- Starting iteration 31--------------------
+16:44:49.860 INFO: Instrumenting file: TriangleCheck.java
+16:44:49.871 INFO: Augmenting input file TriangleCheck.java
+16:44:49.871 INFO: Augmenting file: TriangleCheck.java
+16:44:49.886 INFO: Compiling augmented file TriangleCheck.java
+16:44:50.308 INFO: Running evosuite on augmented file TriangleCheck.java
+16:46:08.890 DEBUG: Evosuite run took 79030 ms.
+16:46:08.890 INFO: Compiling reporting file TriangleCheck.java
+16:46:09.718 INFO: Compiling evosuite test file for TriangleCheck.java
+16:46:11.540 INFO: Running JUnit tests generated for TriangleCheck.java
+16:46:12.618 INFO: Generating code.
+16:46:12.620 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:46:15.420 INFO: Finished executing daikon and generating invariants.
+16:46:15.421 INFO: Generated 5 DiG trace files for instrumentation data.
+16:48:20.560 DEBUG: Checking if all invariants have become stable or not.
+16:48:20.561 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 31 and 30
+16:48:20.561 DEBUG: Iteration 31 took 210701 ms.
 
-22:40:02.730 INFO: ---------------------- Starting iteration 32--------------------
-22:40:02.731 INFO: Instrumenting file: TriangleCheck.java
-22:40:02.738 INFO: Augmenting input file TriangleCheck.java
-22:40:02.738 INFO: Augmenting file: TriangleCheck.java
-22:40:02.816 INFO: Compiling augmented file TriangleCheck.java
-22:40:03.342 INFO: Running evosuite on augmented file TriangleCheck.java
-22:42:10.622 DEBUG: Evosuite run took 127892 ms.
-22:42:10.623 INFO: Compiling reporting file TriangleCheck.java
-22:42:11.450 INFO: Compiling evosuite test file for TriangleCheck.java
-22:42:13.383 INFO: Running JUnit tests generated for TriangleCheck.java
-22:42:15.011 INFO: Generating code.
-22:42:15.014 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:42:17.831 INFO: Finished executing daikon and generating invariants.
-22:42:17.833 INFO: Generated 5 DiG trace files for instrumentation data.
-22:44:25.413 DEBUG: Checking if all invariants have become stable or not.
-22:44:25.413 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 32 and 31
-22:44:25.413 DEBUG: Iteration 32 took 262683 ms.
+16:48:20.561 INFO: ---------------------- Starting iteration 32--------------------
+16:48:20.561 INFO: Instrumenting file: TriangleCheck.java
+16:48:20.568 INFO: Augmenting input file TriangleCheck.java
+16:48:20.568 INFO: Augmenting file: TriangleCheck.java
+16:48:20.587 INFO: Compiling augmented file TriangleCheck.java
+16:48:21.044 INFO: Running evosuite on augmented file TriangleCheck.java
+16:49:42.568 DEBUG: Evosuite run took 82007 ms.
+16:49:42.568 INFO: Compiling reporting file TriangleCheck.java
+16:49:43.482 INFO: Compiling evosuite test file for TriangleCheck.java
+16:49:45.420 INFO: Running JUnit tests generated for TriangleCheck.java
+16:49:46.680 INFO: Generating code.
+16:49:46.683 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:49:49.687 INFO: Finished executing daikon and generating invariants.
+16:49:49.688 INFO: Generated 5 DiG trace files for instrumentation data.
+16:51:24.254 DEBUG: Checking if all invariants have become stable or not.
+16:51:24.254 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 32 and 31
+16:51:24.254 DEBUG: Iteration 32 took 183693 ms.
 
-22:44:25.413 INFO: ---------------------- Starting iteration 33--------------------
-22:44:25.414 INFO: Instrumenting file: TriangleCheck.java
-22:44:25.420 INFO: Augmenting input file TriangleCheck.java
-22:44:25.421 INFO: Augmenting file: TriangleCheck.java
-22:44:25.498 INFO: Compiling augmented file TriangleCheck.java
-22:44:25.967 INFO: Running evosuite on augmented file TriangleCheck.java
-22:46:34.102 DEBUG: Evosuite run took 128688 ms.
-22:46:34.102 INFO: Compiling reporting file TriangleCheck.java
-22:46:34.892 INFO: Compiling evosuite test file for TriangleCheck.java
-22:46:36.830 INFO: Running JUnit tests generated for TriangleCheck.java
-22:46:38.568 INFO: Generating code.
-22:46:38.571 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:46:41.356 INFO: Finished executing daikon and generating invariants.
-22:46:41.359 INFO: Generated 5 DiG trace files for instrumentation data.
-22:49:03.388 DEBUG: Checking if all invariants have become stable or not.
-22:49:03.389 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 33 and 32
-22:49:03.389 DEBUG: Iteration 33 took 277976 ms.
+16:51:24.254 INFO: ---------------------- Starting iteration 33--------------------
+16:51:24.254 INFO: Instrumenting file: TriangleCheck.java
+16:51:24.260 INFO: Augmenting input file TriangleCheck.java
+16:51:24.260 INFO: Augmenting file: TriangleCheck.java
+16:51:24.283 INFO: Compiling augmented file TriangleCheck.java
+16:51:24.737 INFO: Running evosuite on augmented file TriangleCheck.java
+16:52:45.037 DEBUG: Evosuite run took 80783 ms.
+16:52:45.037 INFO: Compiling reporting file TriangleCheck.java
+16:52:45.921 INFO: Compiling evosuite test file for TriangleCheck.java
+16:52:47.829 INFO: Running JUnit tests generated for TriangleCheck.java
+16:52:49.047 INFO: Generating code.
+16:52:49.049 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:52:51.853 INFO: Finished executing daikon and generating invariants.
+16:52:51.854 INFO: Generated 5 DiG trace files for instrumentation data.
+16:54:28.520 DEBUG: Checking if all invariants have become stable or not.
+16:54:28.520 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 33 and 32
+16:54:28.520 DEBUG: Iteration 33 took 184266 ms.
 
-22:49:03.389 INFO: ---------------------- Starting iteration 34--------------------
-22:49:03.389 INFO: Instrumenting file: TriangleCheck.java
-22:49:03.396 INFO: Augmenting input file TriangleCheck.java
-22:49:03.396 INFO: Augmenting file: TriangleCheck.java
-22:49:03.504 INFO: Compiling augmented file TriangleCheck.java
-22:49:04.005 INFO: Running evosuite on augmented file TriangleCheck.java
-22:52:08.469 DEBUG: Evosuite run took 185080 ms.
-22:52:08.470 INFO: Compiling reporting file TriangleCheck.java
-22:52:09.297 INFO: Compiling evosuite test file for TriangleCheck.java
-22:52:11.631 INFO: Running JUnit tests generated for TriangleCheck.java
-22:52:15.653 INFO: Generating code.
-22:52:15.661 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:52:18.529 INFO: Finished executing daikon and generating invariants.
-22:52:18.534 INFO: Generated 5 DiG trace files for instrumentation data.
-22:55:53.298 DEBUG: Checking if all invariants have become stable or not.
-22:55:53.299 DEBUG: triangle_not_ok_ab_ok has changed for DIG between 34 and 33
-22:55:53.299 DEBUG: Iteration 34 took 409910 ms.
+16:54:28.520 INFO: ---------------------- Starting iteration 34--------------------
+16:54:28.521 INFO: Instrumenting file: TriangleCheck.java
+16:54:28.527 INFO: Augmenting input file TriangleCheck.java
+16:54:28.527 INFO: Augmenting file: TriangleCheck.java
+16:54:28.566 INFO: Compiling augmented file TriangleCheck.java
+16:54:29.045 INFO: Running evosuite on augmented file TriangleCheck.java
+16:56:29.269 DEBUG: Evosuite run took 120749 ms.
+16:56:29.269 INFO: Compiling reporting file TriangleCheck.java
+16:56:30.249 INFO: Compiling evosuite test file for TriangleCheck.java
+16:56:32.258 INFO: Running JUnit tests generated for TriangleCheck.java
+16:56:33.532 INFO: Generating code.
+16:56:33.534 INFO: Generated 4 Daikon trace files for instrumentation data.
+16:56:36.367 INFO: Finished executing daikon and generating invariants.
+16:56:36.369 INFO: Generated 5 DiG trace files for instrumentation data.
+16:58:15.877 DEBUG: Checking if all invariants have become stable or not.
+16:58:15.878 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 34 and 33
+16:58:15.878 DEBUG: Iteration 34 took 227358 ms.
 
-22:55:53.299 INFO: ---------------------- Starting iteration 35--------------------
-22:55:53.300 INFO: Instrumenting file: TriangleCheck.java
-22:55:53.307 INFO: Augmenting input file TriangleCheck.java
-22:55:53.307 INFO: Augmenting file: TriangleCheck.java
-22:55:53.720 INFO: Compiling augmented file TriangleCheck.java
-22:55:54.233 INFO: Running evosuite on augmented file TriangleCheck.java
-22:58:53.715 DEBUG: Evosuite run took 180416 ms.
-22:58:53.716 INFO: Compiling reporting file TriangleCheck.java
-22:58:54.551 INFO: Compiling evosuite test file for TriangleCheck.java
-22:58:56.585 INFO: Running JUnit tests generated for TriangleCheck.java
-22:58:58.256 INFO: Generating code.
-22:58:58.264 INFO: Generated 4 Daikon trace files for instrumentation data.
-22:59:01.385 INFO: Finished executing daikon and generating invariants.
-22:59:01.390 INFO: Generated 5 DiG trace files for instrumentation data.
-23:02:50.598 DEBUG: Checking if all invariants have become stable or not.
-23:02:50.598 DEBUG: triangle_not_ok_ab_ok has changed for daikon between 35 and 34
-23:02:50.598 DEBUG: Iteration 35 took 417299 ms.
+16:58:15.878 INFO: ---------------------- Starting iteration 35--------------------
+16:58:15.878 INFO: Instrumenting file: TriangleCheck.java
+16:58:15.884 INFO: Augmenting input file TriangleCheck.java
+16:58:15.884 INFO: Augmenting file: TriangleCheck.java
+16:58:15.904 INFO: Compiling augmented file TriangleCheck.java
+16:58:16.370 INFO: Running evosuite on augmented file TriangleCheck.java
+17:00:32.446 DEBUG: Evosuite run took 136568 ms.
+17:00:32.447 INFO: Compiling reporting file TriangleCheck.java
+17:00:36.130 INFO: Compiling evosuite test file for TriangleCheck.java
+17:00:44.478 INFO: Running JUnit tests generated for TriangleCheck.java
+17:00:52.799 INFO: Generating code.
+17:00:52.803 INFO: Generated 4 Daikon trace files for instrumentation data.
+17:00:56.434 INFO: Finished executing daikon and generating invariants.
+17:00:56.435 INFO: Generated 5 DiG trace files for instrumentation data.
+17:02:39.963 DEBUG: Checking if all invariants have become stable or not.
+17:02:39.963 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 35 and 34
+17:02:39.963 DEBUG: Iteration 35 took 264085 ms.
 
-23:02:50.598 INFO: ---------------------- Starting iteration 36--------------------
-23:02:50.599 INFO: Instrumenting file: TriangleCheck.java
-23:02:50.605 INFO: Augmenting input file TriangleCheck.java
-23:02:50.605 INFO: Augmenting file: TriangleCheck.java
-23:02:51.006 INFO: Compiling augmented file TriangleCheck.java
-23:02:51.545 INFO: Running evosuite on augmented file TriangleCheck.java
-23:05:49.499 DEBUG: Evosuite run took 178901 ms.
-23:05:49.499 INFO: Compiling reporting file TriangleCheck.java
-23:05:50.262 INFO: Compiling evosuite test file for TriangleCheck.java
-23:05:52.160 INFO: Running JUnit tests generated for TriangleCheck.java
-23:05:53.778 INFO: Generating code.
-23:05:53.787 INFO: Generated 4 Daikon trace files for instrumentation data.
-23:05:56.877 INFO: Finished executing daikon and generating invariants.
-23:05:56.883 INFO: Generated 5 DiG trace files for instrumentation data.
-23:09:50.856 DEBUG: Checking if all invariants have become stable or not.
-23:09:50.857 DEBUG: Invariants have stabilized for key: triangle_not_ok_ab_ok
-23:09:50.859 INFO: All invariants have stabilized at iteration 36
+17:02:39.963 INFO: ---------------------- Starting iteration 36--------------------
+17:02:39.964 INFO: Instrumenting file: TriangleCheck.java
+17:02:39.970 INFO: Augmenting input file TriangleCheck.java
+17:02:39.971 INFO: Augmenting file: TriangleCheck.java
+17:02:39.988 INFO: Compiling augmented file TriangleCheck.java
+17:02:40.430 INFO: Running evosuite on augmented file TriangleCheck.java
+17:03:59.504 DEBUG: Evosuite run took 79541 ms.
+17:03:59.505 INFO: Compiling reporting file TriangleCheck.java
+17:04:00.286 INFO: Compiling evosuite test file for TriangleCheck.java
+17:04:02.034 INFO: Running JUnit tests generated for TriangleCheck.java
+17:04:03.182 INFO: Generating code.
+17:04:03.184 INFO: Generated 4 Daikon trace files for instrumentation data.
+17:04:05.872 INFO: Finished executing daikon and generating invariants.
+17:04:05.874 INFO: Generated 5 DiG trace files for instrumentation data.
+17:05:46.119 DEBUG: Checking if all invariants have become stable or not.
+17:05:46.119 DEBUG: triangle_not_ok_ab_ac_ok has changed for daikon between 36 and 35
+17:05:46.119 DEBUG: Iteration 36 took 186156 ms.
+
+17:05:46.119 INFO: ---------------------- Starting iteration 37--------------------
+17:05:46.120 INFO: Instrumenting file: TriangleCheck.java
+17:05:46.125 INFO: Augmenting input file TriangleCheck.java
+17:05:46.125 INFO: Augmenting file: TriangleCheck.java
+17:05:46.143 INFO: Compiling augmented file TriangleCheck.java
+17:05:46.567 INFO: Running evosuite on augmented file TriangleCheck.java
+17:07:08.234 DEBUG: Evosuite run took 82115 ms.
+17:07:08.234 INFO: Compiling reporting file TriangleCheck.java
+17:07:09.089 INFO: Compiling evosuite test file for TriangleCheck.java
+17:07:10.951 INFO: Running JUnit tests generated for TriangleCheck.java
+17:07:12.079 INFO: Generating code.
+17:07:12.081 INFO: Generated 4 Daikon trace files for instrumentation data.
+17:07:14.741 INFO: Finished executing daikon and generating invariants.
+17:07:14.743 INFO: Generated 5 DiG trace files for instrumentation data.
+17:08:57.291 DEBUG: Checking if all invariants have become stable or not.
+17:08:57.292 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 37 and 36
+17:08:57.292 DEBUG: Iteration 37 took 191173 ms.
+
+17:08:57.292 INFO: ---------------------- Starting iteration 38--------------------
+17:08:57.292 INFO: Instrumenting file: TriangleCheck.java
+17:08:57.299 INFO: Augmenting input file TriangleCheck.java
+17:08:57.299 INFO: Augmenting file: TriangleCheck.java
+17:08:57.328 INFO: Compiling augmented file TriangleCheck.java
+17:08:57.779 INFO: Running evosuite on augmented file TriangleCheck.java
+17:10:18.307 DEBUG: Evosuite run took 81015 ms.
+17:10:18.307 INFO: Compiling reporting file TriangleCheck.java
+17:10:19.088 INFO: Compiling evosuite test file for TriangleCheck.java
+17:10:20.827 INFO: Running JUnit tests generated for TriangleCheck.java
+17:10:21.913 INFO: Generating code.
+17:10:21.916 INFO: Generated 4 Daikon trace files for instrumentation data.
+17:10:24.656 INFO: Finished executing daikon and generating invariants.
+17:10:24.657 INFO: Generated 5 DiG trace files for instrumentation data.
+17:12:09.898 DEBUG: Checking if all invariants have become stable or not.
+17:12:09.898 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 38 and 37
+17:12:09.898 DEBUG: Iteration 38 took 192606 ms.
+
+17:12:09.898 INFO: ---------------------- Starting iteration 39--------------------
+17:12:09.898 INFO: Instrumenting file: TriangleCheck.java
+17:12:09.903 INFO: Augmenting input file TriangleCheck.java
+17:12:09.903 INFO: Augmenting file: TriangleCheck.java
+17:12:09.928 INFO: Compiling augmented file TriangleCheck.java
+17:12:10.372 INFO: Running evosuite on augmented file TriangleCheck.java
+17:13:31.555 DEBUG: Evosuite run took 81657 ms.
+17:13:31.555 INFO: Compiling reporting file TriangleCheck.java
+17:13:32.367 INFO: Compiling evosuite test file for TriangleCheck.java
+17:13:34.194 INFO: Running JUnit tests generated for TriangleCheck.java
+17:13:35.298 INFO: Generating code.
+17:13:35.300 INFO: Generated 4 Daikon trace files for instrumentation data.
+17:13:37.968 INFO: Finished executing daikon and generating invariants.
+17:13:37.969 INFO: Generated 5 DiG trace files for instrumentation data.
+17:15:23.408 DEBUG: Checking if all invariants have become stable or not.
+17:15:23.408 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 39 and 38
+17:15:23.408 DEBUG: Iteration 39 took 193510 ms.
+
+17:15:23.408 INFO: ---------------------- Starting iteration 40--------------------
+17:15:23.409 INFO: Instrumenting file: TriangleCheck.java
+17:15:23.415 INFO: Augmenting input file TriangleCheck.java
+17:15:23.415 INFO: Augmenting file: TriangleCheck.java
+17:15:23.436 INFO: Compiling augmented file TriangleCheck.java
+17:15:23.879 INFO: Running evosuite on augmented file TriangleCheck.java
+17:16:46.935 DEBUG: Evosuite run took 83527 ms.
+17:16:46.935 INFO: Compiling reporting file TriangleCheck.java
+17:16:47.742 INFO: Compiling evosuite test file for TriangleCheck.java
+17:16:49.508 INFO: Running JUnit tests generated for TriangleCheck.java
+17:16:50.642 INFO: Generating code.
+17:16:50.645 INFO: Generated 4 Daikon trace files for instrumentation data.
+17:16:53.333 INFO: Finished executing daikon and generating invariants.
+17:16:53.335 INFO: Generated 5 DiG trace files for instrumentation data.
+17:18:38.570 DEBUG: Checking if all invariants have become stable or not.
+17:18:38.570 DEBUG: triangle_not_ok_ab_ac_ok has changed for daikon between 40 and 39
+17:18:38.570 DEBUG: Iteration 40 took 195162 ms.
+
+17:18:38.570 INFO: ---------------------- Starting iteration 41--------------------
+17:18:38.570 INFO: Instrumenting file: TriangleCheck.java
+17:18:38.575 INFO: Augmenting input file TriangleCheck.java
+17:18:38.575 INFO: Augmenting file: TriangleCheck.java
+17:18:38.594 INFO: Compiling augmented file TriangleCheck.java
+17:18:39.026 INFO: Running evosuite on augmented file TriangleCheck.java
+17:20:00.900 DEBUG: Evosuite run took 82330 ms.
+17:20:00.901 INFO: Compiling reporting file TriangleCheck.java
+17:20:01.666 INFO: Compiling evosuite test file for TriangleCheck.java
+17:20:03.425 INFO: Running JUnit tests generated for TriangleCheck.java
+17:20:04.587 INFO: Generating code.
+17:20:04.590 INFO: Generated 4 Daikon trace files for instrumentation data.
+17:20:07.463 INFO: Finished executing daikon and generating invariants.
+17:20:07.465 INFO: Generated 5 DiG trace files for instrumentation data.
+17:21:56.280 DEBUG: Checking if all invariants have become stable or not.
+17:21:56.280 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 41 and 40
+17:21:56.280 DEBUG: Iteration 41 took 197710 ms.
+
+17:21:56.280 INFO: ---------------------- Starting iteration 42--------------------
+17:21:56.281 INFO: Instrumenting file: TriangleCheck.java
+17:21:56.291 INFO: Augmenting input file TriangleCheck.java
+17:21:56.291 INFO: Augmenting file: TriangleCheck.java
+17:21:56.309 INFO: Compiling augmented file TriangleCheck.java
+17:21:56.754 INFO: Running evosuite on augmented file TriangleCheck.java
+17:23:18.521 DEBUG: Evosuite run took 82241 ms.
+17:23:18.521 INFO: Compiling reporting file TriangleCheck.java
+17:23:19.323 INFO: Compiling evosuite test file for TriangleCheck.java
+17:23:21.155 INFO: Running JUnit tests generated for TriangleCheck.java
+17:23:22.263 INFO: Generating code.
+17:23:22.265 INFO: Generated 4 Daikon trace files for instrumentation data.
+17:23:25.003 INFO: Finished executing daikon and generating invariants.
+17:23:25.005 INFO: Generated 5 DiG trace files for instrumentation data.
+17:25:16.087 DEBUG: Checking if all invariants have become stable or not.
+17:25:16.087 DEBUG: triangle_not_ok_ab_ac_ok has changed for DIG between 42 and 41
+17:25:16.087 DEBUG: Iteration 42 took 199807 ms.
+
+17:25:16.087 INFO: ---------------------- Starting iteration 43--------------------
+17:25:16.088 INFO: Instrumenting file: TriangleCheck.java
+17:25:16.093 INFO: Augmenting input file TriangleCheck.java
+17:25:16.094 INFO: Augmenting file: TriangleCheck.java
+17:25:16.113 INFO: Compiling augmented file TriangleCheck.java
+17:25:16.541 INFO: Running evosuite on augmented file TriangleCheck.java
+17:26:39.360 DEBUG: Evosuite run took 83273 ms.
+17:26:39.360 INFO: Compiling reporting file TriangleCheck.java
+17:26:40.180 INFO: Compiling evosuite test file for TriangleCheck.java
+17:26:41.906 INFO: Running JUnit tests generated for TriangleCheck.java
+17:26:43.023 INFO: Generating code.
+17:26:43.026 INFO: Generated 4 Daikon trace files for instrumentation data.
+17:26:45.756 INFO: Finished executing daikon and generating invariants.
+17:26:45.758 INFO: Generated 5 DiG trace files for instrumentation data.
+17:28:40.971 DEBUG: Checking if all invariants have become stable or not.
+17:28:40.972 DEBUG: Invariants have stabilized for key: triangle_not_ok_ab_ac_ok
+17:28:40.974 INFO: All invariants have stabilized at iteration 43
 ----------------------------------------------------------
 The following iterations caused each key's stabilization:
-Key: triangle_not_ok, iteration: 13
-Key: triangle_ok, iteration: 21
-Key: triangle_not_ok_ab_ok, iteration: 36
-Key: triangle_not_ok_ab_ac_ok, iteration: 12
+Key: triangle_not_ok, iteration: 19
+Key: triangle_ok, iteration: 13
+Key: triangle_not_ok_ab_ok, iteration: 22
+Key: triangle_not_ok_ab_ac_ok, iteration: 43
 ----------------------------------------------------------
-23:09:50.860 INFO: Processed 36 iterations.
+17:28:40.976 INFO: Processed 43 iterations.

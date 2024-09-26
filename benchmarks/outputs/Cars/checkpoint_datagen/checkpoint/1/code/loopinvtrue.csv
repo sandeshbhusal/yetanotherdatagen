@@ -1,6 +1,10 @@
 vtrace1; I x1; I x2; I x3
 vtrace1; 100; 69; -50
 vtrace1; 100; 74; -50
+vtrace1; 105; 80; -45
 vtrace1; 100; 75; -50
 vtrace1; 100; 72; -50
+vtrace1; 110; 84; -40
 vtrace1; 100; 65; -50
+vtrace1; 115; 87; -35
+vtrace1; 120; 89; -30

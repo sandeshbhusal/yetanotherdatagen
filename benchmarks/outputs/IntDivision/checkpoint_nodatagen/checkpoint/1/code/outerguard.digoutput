@@ -1,4 +1,5 @@
-vtrace1 (3 invs):
-1. b - max(a, 0) <= 0
-2. b === 2 (mod 10)
-3. a - b === 0 (mod 14)
+vtrace1 (4 invs):
+1. a*b - a == 0
+2. -b <= 0
+3. -a <= 0
+4. a === 0 (mod 2353)

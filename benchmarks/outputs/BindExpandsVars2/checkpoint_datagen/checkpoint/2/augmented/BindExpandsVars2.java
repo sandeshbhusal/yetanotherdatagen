@@ -32,7 +32,7 @@ public class BindExpandsVars2 {
             return;
         if (n2 > MAXDATA * 2 - n1)
             return;
-        if (true && !(MAXDATA == 0) && !(MAXDATA == 2) && !(MAXDATA == 5060) && !(MAXDATA == 5060)) {
+        if (true && !(n1 == 2088) && !(n1 == 5318) && !(n1 == 5318)) {
             int mc_i;
             for (mc_i = 0; mc_i < n2; mc_i++) {
             }

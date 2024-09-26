@@ -1,0 +1,5 @@
+vtrace1 (4 invs):
+1. -a + b <= 0
+2. a - 2 - max(b, c) <= 0
+3. a - 1 - max(b, 0) <= 0
+4. b + c === 0 (mod 2)

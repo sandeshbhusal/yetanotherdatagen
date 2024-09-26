@@ -1,5 +1,3 @@
-vtrace1 (4 invs):
-1. -outerloop <= 1
-2. -outerloop - secondif <= 1
-3. min(firstif, outerloop) - secondif <= 0
-4. secondif - max(firstif, outerloop) <= 0
+vtrace1 (2 invs):
+1. firstif - secondif <= 0
+2. -outerloop + secondif <= 0

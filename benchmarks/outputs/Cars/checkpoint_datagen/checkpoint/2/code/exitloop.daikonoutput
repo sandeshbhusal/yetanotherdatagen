@@ -4,4 +4,5 @@ Reading declaration files Processing trace data; reading 1 dtrace file:
 ===========================================================================
 Faker.fakemethod(int, int, int, int):::DATAGEN
 t >= 0
+t != v2
 Exiting Daikon.

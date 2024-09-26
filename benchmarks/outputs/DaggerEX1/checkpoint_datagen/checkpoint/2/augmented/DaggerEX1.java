@@ -29,7 +29,7 @@ public class DaggerEX1 {
         int y;
         int xa = 0;
         int ya = 0;
-        if (true && !(a == -2289) && !(a == 2640) && !(a == 2640)) {
+        if (true && !(b == 0) && !(b == -879) && !(b == 3810) && !(b == 3810)) {
             while (a > 0) {
                 x = xa + 2 * ya;
                 y = -2 * xa + ya;

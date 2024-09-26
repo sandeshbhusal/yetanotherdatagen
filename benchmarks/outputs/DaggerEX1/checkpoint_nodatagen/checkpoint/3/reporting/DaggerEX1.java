@@ -31,7 +31,7 @@ public class DaggerEX1 {
         int y;
         int xa = 0;
         int ya = 0;
-        Report.datagen_guard_instrument(17431, "funcguard", "a", a, "b", b);
+        Report.datagen_guard_instrument(10458, "funcguard", "a", a, "b", b);
         while (a > 0) {
             x = xa + 2 * ya;
             y = -2 * xa + ya;
@@ -44,6 +44,6 @@ public class DaggerEX1 {
             ya = 2 * x + y;
             a--;
         }
-        Report.datagen_instrument(17431, "endfunc", "xa", xa, "ya", ya);
+        Report.datagen_instrument(10458, "endfunc", "xa", xa, "ya", ya);
     }
 }

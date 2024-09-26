@@ -1,0 +1,2 @@
+vtrace1 (1 invs):
+1. b - max(a, 0) <= 0

@@ -1,5 +1,4 @@
-vtrace1 (4 invs):
+vtrace1 (3 invs):
 1. a <= 0
-2. -b <= 0
-3. a - b <= -1
-4. -a === 0 (mod 6)
+2. a - b <= -1
+3. -a - b <= 1

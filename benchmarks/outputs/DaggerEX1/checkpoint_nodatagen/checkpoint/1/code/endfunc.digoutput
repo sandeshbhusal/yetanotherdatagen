@@ -1,4 +1,5 @@
-vtrace1 (3 invs):
-1. -xa - ya <= 0
-2. min(xa, 0) - ya <= 0
-3. -ya === 0 (mod 8)
+vtrace1 (4 invs):
+1. xa <= 3
+2. -ya <= 0
+3. xa - ya <= 2
+4. -xa - ya <= 0

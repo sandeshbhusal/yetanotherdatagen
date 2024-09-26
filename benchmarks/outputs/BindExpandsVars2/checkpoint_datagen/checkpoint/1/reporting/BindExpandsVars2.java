@@ -34,11 +34,11 @@ public class BindExpandsVars2 {
             return;
         if (n2 > MAXDATA * 2 - n1)
             return;
-        Report.datagen_instrument(11048, "startingconds", "cp1_off", cp1_off, "n1", n1, "n2", n2, "MAXDATA", MAXDATA);
-        Report.datagen_guard_instrument(11048, "funcguard", "cp1_off", cp1_off, "n1", n1, "n2", n2, "MAXDATA", MAXDATA);
+        Report.datagen_instrument(10285, "startingconds", "cp1_off", cp1_off, "n1", n1, "n2", n2, "MAXDATA", MAXDATA);
+        Report.datagen_guard_instrument(10285, "funcguard", "cp1_off", cp1_off, "n1", n1, "n2", n2, "MAXDATA", MAXDATA);
         int mc_i;
         for (mc_i = 0; mc_i < n2; mc_i++) {
-            Report.datagen_instrument(11048, "loopinvariant", "mc_i", mc_i, "cp1_off", cp1_off, "MAXDATA", MAXDATA);
+            Report.datagen_instrument(10285, "loopinvariant", "mc_i", mc_i, "cp1_off", cp1_off, "MAXDATA", MAXDATA);
         }
     }
 }

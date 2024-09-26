@@ -1,17 +1,11 @@
-vtrace1 (16 invs):
-1. a - ab + b == 0
-2. -a + ab - bc + c == 0
-3. -2*a + ab + ac - bc == 0
-4. -c <= 0
-5. a - c <= 1
-6. a + b <= 0
-7. b - bc <= 0
-8. a - ac <= 0
-9. bc - c <= 0
-10. a + ab <= 0
-11. -a + bc <= 0
-12. -a + ab <= 0
-13. c - max(a, ac, b, bc, 0) <= 0
-14. -c === 0 (mod 2399)
-15. -b + bc === 0 (mod 2399)
-16. -a + ac === 0 (mod 2399)
+vtrace1 (10 invs):
+1. a - ac + c == 0
+2. b - bc + c == 0
+3. ab - ac - bc + 2*c == 0
+4. ab - c <= 0
+5. min(a, b) - c <= 0
+6. ac - max(a, ab, c) <= 0
+7. ac - max(bc, c, 0) <= 0
+8. b - max(a, ab, c, 0) <= 0
+9. min(ac, b, bc, c, 0) - a <= 0
+10. bc - 1 - max(a, ab, ac, b, 0) <= 0

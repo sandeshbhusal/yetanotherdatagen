@@ -42,7 +42,7 @@ public class MADWiFi {
             return;
         if (bufsize < leader_len)
             return;
-        Report.datagen_guard_instrument(12601, "funcguard", "leader_len", leader_len, "bufsize", bufsize, "ielen", ielen);
+        Report.datagen_guard_instrument(16446, "funcguard", "leader_len", leader_len, "bufsize", bufsize, "ielen", ielen);
         int p;
         int bufsize_0;
         p = 0;
@@ -53,8 +53,8 @@ public class MADWiFi {
             return;
         for (int i = 0; i < ielen && bufsize > 2; i++) {
             p += 2;
-            Report.datagen_instrument(12601, "loop_o_lteq_p", "p", p);
-            Report.datagen_instrument(12601, "loop_p_bufsize0", "p", p, "bufsize_0", bufsize_0);
+            Report.datagen_instrument(16446, "loop_o_lteq_p", "p", p);
+            Report.datagen_instrument(16446, "loop_p_bufsize0", "p", p, "bufsize_0", bufsize_0);
         }
     }
 }

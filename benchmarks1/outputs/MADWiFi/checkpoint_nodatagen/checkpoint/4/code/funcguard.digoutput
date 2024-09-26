@@ -1,0 +1,5 @@
+vtrace1 (4 invs):
+1. -ielen <= 0
+2. -leader_len <= 0
+3. -bufsize + leader_len <= 0
+4. bufsize - leader_len === 0 (mod 2)

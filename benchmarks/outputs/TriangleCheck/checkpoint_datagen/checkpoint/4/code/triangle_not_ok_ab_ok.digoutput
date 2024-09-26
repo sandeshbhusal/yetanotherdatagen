@@ -1,16 +1,13 @@
-vtrace1 (15 invs):
+vtrace1 (12 invs):
 1. a - ac + c == 0
 2. b - bc + c == 0
 3. ab - ac - bc + 2*c == 0
-4. -ab <= 0
-5. -a - b <= 0
+4. -b <= 0
+5. a - ab <= 0
 6. ac - b <= 0
-7. -a - ab <= 0
-8. -bc + c <= 1
-9. -ac + c <= 2
-10. -ab + c <= -2
-11. min(c, 0) - ac <= 0
-12. min(ab, bc) - b <= 0
-13. ac - max(bc, c, 0) <= 0
-14. b - max(a, bc, c, 0) <= 0
-15. min(a, b, bc) - ab - 2 <= 0
+7. -bc + c <= 0
+8. -b + bc <= 4
+9. -ab - b <= -1
+10. -ab + c <= -8
+11. min(ac, bc, 0) - c <= 0
+12. bc - 1 - max(ab, ac, 0) <= 0

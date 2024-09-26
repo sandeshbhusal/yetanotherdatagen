@@ -24,7 +24,7 @@ public class Cars {
         // assert x2 + 5 * t >= 75 : "Assertion failed: x2 + 5*t >= 75";
         // assert v1 - 2 * v2 + v3 + 2 * t >= 0 : "Assertion failed: v1 - 2*v2 + v3 + 2*t >= 0";
         // assert v1 - v3 >= 0 : "Assertion failed: v1 - v3 >= 0";
-        if (true && !(unknown_int == -2) && !(unknown_int == 2311) && !(unknown_int == -3462) && !(unknown_int == 8) && !(unknown_int == 2) && !(unknown_int == 4) && !(unknown_int == 5) && !(unknown_int == 0) && !(unknown_int == 3) && !(unknown_int == 1) && !(unknown_int == 2946) && !(unknown_int == -1) && !(unknown_int == -1032) && !(unknown_int == -1032)) {
+        if (true && !(v3 == 0) && !(v3 == -4804) && !(v3 == 1127) && !(v3 == 2208) && !(v3 == 3) && !(v3 == -5) && !(v3 == -1) && !(v3 == 4) && !(v3 == 5) && !(v3 == 1) && !(v3 == 2) && !(v3 == 2)) {
             if (cond1 && cond2 && cond3 && cond4 && cond5 && cond6) {
                 while (unknown_int > 0) {
                     boolean c1 = v2 + 5 >= 0;

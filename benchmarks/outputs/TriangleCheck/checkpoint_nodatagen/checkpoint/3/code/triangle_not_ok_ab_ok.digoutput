@@ -1,16 +1,16 @@
 vtrace1 (15 invs):
-1. a - ab + b == 0
-2. -a + ab - bc + c == 0
-3. -2*a + ab + ac - bc == 0
-4. a - b <= 0
-5. -a + c <= 0
-6. -a - c <= 0
-7. b - bc <= 1
-8. a - bc <= 0
-9. ac - b <= 0
-10. ac - bc <= 0
-11. -ac + c <= 0
-12. -ab + b <= 0
-13. -ac - c <= 0
-14. -ab + bc <= 0
-15. -ab - ac <= -3
+1. a - ac + c == 0
+2. b - bc + c == 0
+3. ab - ac - bc + 2*c == 0
+4. ac**2 - 2*ac*c + c**2 - 1 == 0
+5. ac - b <= 0
+6. ac + c <= 1
+7. -ab + c <= -2
+8. min(b, 0) - ab <= 0
+9. b - 1 - max(a, bc, 0) <= 0
+10. min(a, ac, 0) - b - 1 <= 0
+11. min(a, bc, 0) - ab - 2 <= 0
+12. min(a, ab, ac, b, bc, 0) - c <= 0
+13. -ac - c === 5 (mod 6)
+14. -a - ac === 1 (mod 3)
+15. -ab + bc === 2 (mod 3)

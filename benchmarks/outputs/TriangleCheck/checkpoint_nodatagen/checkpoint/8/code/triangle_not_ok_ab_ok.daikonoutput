@@ -3,10 +3,9 @@ Reading declaration files Processing trace data; reading 1 dtrace file:
 
 ===========================================================================
 Faker.fakemethod(int, int, int, int, int, int):::DATAGEN
-a <= ab
+a >= -1
 ab > ac
 ab > c
-bc >= c
 b >= ac
 b > c
 a - ab + b == 0

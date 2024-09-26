@@ -3,6 +3,4 @@ Reading declaration files Processing trace data; reading 1 dtrace file:
 
 ===========================================================================
 Faker.fakemethod(int, int):::DATAGEN
-ya one of { 0, 364739064, 2033123272 }
-xa one of { -337879149, 0, 1204355072 }
 Exiting Daikon.

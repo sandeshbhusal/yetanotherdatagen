@@ -6,4 +6,4 @@ vtrace1 (8 invs):
 5. -ac + b <= -1
 6. -ab + c <= -1
 7. min(ac, 0) - ab <= 0
-8. c - 1 - max(b, bc, 0) <= 0
+8. min(ab, 0) - ac <= 0

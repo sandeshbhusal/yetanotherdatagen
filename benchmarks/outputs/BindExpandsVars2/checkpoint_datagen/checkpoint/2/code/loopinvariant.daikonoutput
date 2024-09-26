@@ -6,5 +6,4 @@ Faker.fakemethod(int, int, int):::DATAGEN
 mc_i >= 0
 mc_i <= cp1_off
 mc_i < MAXDATA
-cp1_off <= MAXDATA
 Exiting Daikon.

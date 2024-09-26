@@ -1,30 +1,32 @@
-vtrace1 (29 invs):
-1. -cp1_off + n1 == 0
-2. -cp1_off + n2 == 0
-3. MAXDATA - n2 <= 1
-4. -cp1_off + n2 <= 0
-5. max(n2, 0) - n1 == 0
-6. n2 - max(n1, 0) == 0
-7. n2 - max(cp1_off, 0) == 0
-8. cp1_off - max(n2, 0) == 0
-9. cp1_off - max(n1, 0) == 0
-10. n1 - max(cp1_off, 0) == 0
-11. max(n1, n2) - cp1_off == 0
-12. min(cp1_off, n2) - n1 == 0
-13. min(MAXDATA, n2) - n1 == 0
-14. n2 - min(MAXDATA, n1) == 0
-15. n1 - max(cp1_off, n2) == 0
-16. max(cp1_off, n1) - n2 == 0
-17. min(n1, n2) - cp1_off == 0
-18. n2 - min(cp1_off, n1) == 0
-19. max(cp1_off, n1, 0) - n2 == 0
-20. cp1_off - max(n1, n2, 0) == 0
-21. max(cp1_off, n2, 0) - n1 == 0
-22. min(MAXDATA, cp1_off) - n2 == 0
-23. cp1_off - min(MAXDATA, n1) == 0
-24. cp1_off - min(MAXDATA, n2) == 0
-25. min(MAXDATA, cp1_off) - n1 == 0
-26. n1 - min(MAXDATA, cp1_off, n2) == 0
-27. min(MAXDATA, n1, n2) - cp1_off == 0
-28. min(MAXDATA, cp1_off, n1) - n2 == 0
-29. -MAXDATA === 0 (mod 2)
+vtrace1 (31 invs):
+1. -cp1_off <= 0
+2. cp1_off - n2 <= 0
+3. -cp1_off + n2 <= 1
+4. n1 - max(MAXDATA, 0) == 0
+5. MAXDATA - max(n1, 0) == 0
+6. n1 - max(MAXDATA, n2) == 0
+7. MAXDATA - max(n1, n2) == 0
+8. max(MAXDATA, n2, 0) - n1 == 0
+9. MAXDATA - max(n1, n2, 0) == 0
+10. n1 - max(MAXDATA, cp1_off) == 0
+11. max(cp1_off, n1) - MAXDATA == 0
+12. MAXDATA - max(cp1_off, n1, 0) == 0
+13. max(MAXDATA, cp1_off, 0) - n1 == 0
+14. max(cp1_off, n1, n2) - MAXDATA == 0
+15. max(MAXDATA, cp1_off, n2) - n1 == 0
+16. max(MAXDATA, cp1_off, n2, 0) - n1 == 0
+17. MAXDATA - max(cp1_off, n1, n2, 0) == 0
+18. -n1 === 1142 (mod 3230)
+19. -n2 === 5316 (mod 5317)
+20. n1 - n2 === 0 (mod 2087)
+21. -cp1_off === 0 (mod 5318)
+22. n1 + n2 === 2089 (mod 8547)
+23. MAXDATA === 2088 (mod 3230)
+24. cp1_off - n1 === 0 (mod 2088)
+25. -MAXDATA + n2 === 0 (mod 2087)
+26. cp1_off + n1 === 2088 (mod 8548)
+27. -MAXDATA - n2 === 6458 (mod 8547)
+28. -MAXDATA - n1 === 2284 (mod 6460)
+29. -MAXDATA + cp1_off === 0 (mod 2088)
+30. -cp1_off - n2 === 10634 (mod 10635)
+31. -MAXDATA - cp1_off === 6460 (mod 8548)

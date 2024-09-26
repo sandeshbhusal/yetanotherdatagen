@@ -3,8 +3,8 @@ vtrace1 (9 invs):
 2. a - ac + c == 0
 3. ab - ac - bc + 2*c == 0
 4. ab - c <= 0
-5. ab - max(ac, 0) <= 0
+5. ab - max(bc, 0) <= 0
 6. ab - max(ac, bc) <= 0
-7. a - max(ab, ac, 0) <= 0
-8. ab - 1 - max(a, ac) <= 0
-9. b - 2 - max(a, ab, 0) <= 0
+7. b - max(a, bc, 0) <= 0
+8. b - 1 - max(ab, 0) <= 0
+9. b - 1 - max(a, ac, 0) <= 0

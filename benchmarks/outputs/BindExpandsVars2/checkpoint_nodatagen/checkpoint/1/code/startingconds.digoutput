@@ -1,48 +1,14 @@
-vtrace1 (47 invs):
-1. -cp1_off + n1 == 0
-2. MAXDATA - cp1_off == 0
-3. -n2 <= -1
-4. MAXDATA - cp1_off <= 0
-5. max(n1, 0) - MAXDATA == 0
-6. n1 - max(cp1_off, 0) == 0
-7. n1 - max(MAXDATA, 0) == 0
-8. max(n1, 0) - cp1_off == 0
-9. MAXDATA - max(n1, n2) == 0
-10. cp1_off - max(n1, n2) == 0
-11. n1 - max(MAXDATA, n2) == 0
-12. max(cp1_off, n2) - n1 == 0
-13. n1 - max(MAXDATA, n2, 0) == 0
-14. MAXDATA - max(n1, n2, 0) == 0
-15. cp1_off - max(n1, n2, 0) == 0
-16. max(cp1_off, n2, 0) - n1 == 0
-17. cp1_off - max(MAXDATA, 0) == 0
-18. MAXDATA - max(cp1_off, 0) == 0
-19. cp1_off - max(MAXDATA, n1) == 0
-20. MAXDATA - max(cp1_off, n1) == 0
-21. cp1_off - max(MAXDATA, n2) == 0
-22. cp1_off - min(MAXDATA, n1) == 0
-23. MAXDATA - min(cp1_off, n1) == 0
-24. MAXDATA - max(cp1_off, n2) == 0
-25. n1 - max(MAXDATA, cp1_off) == 0
-26. min(MAXDATA, cp1_off) - n1 == 0
-27. MAXDATA - max(cp1_off, n2, 0) == 0
-28. max(MAXDATA, n2, 0) - cp1_off == 0
-29. MAXDATA - max(cp1_off, n1, 0) == 0
-30. cp1_off - max(MAXDATA, n1, 0) == 0
-31. n1 - max(MAXDATA, cp1_off, 0) == 0
-32. max(MAXDATA, n1, n2) - cp1_off == 0
-33. max(MAXDATA, cp1_off, n2) - n1 == 0
-34. max(cp1_off, n1, n2) - MAXDATA == 0
-35. cp1_off - max(MAXDATA, n1, n2, 0) == 0
-36. n1 - max(MAXDATA, cp1_off, n2, 0) == 0
-37. MAXDATA - max(cp1_off, n1, n2, 0) == 0
-38. -n2 === 5431 (mod 5432)
-39. -n1 + n2 === 0 (mod 474)
-40. cp1_off === 475 (mod 4958)
-41. MAXDATA - n2 === 0 (mod 474)
-42. -cp1_off + n2 === 0 (mod 474)
-43. -n1 - n2 === 9914 (mod 10390)
-44. -MAXDATA - n1 === 8966 (mod 9916)
-45. -cp1_off - n2 === 9914 (mod 10390)
-46. -MAXDATA - n2 === 9914 (mod 10390)
-47. -MAXDATA - cp1_off === 8966 (mod 9916)
+vtrace1 (13 invs):
+1. -n2 <= 0
+2. n1 - n2 <= 2
+3. -cp1_off <= 0
+4. cp1_off - n1 <= 0
+5. -cp1_off + n1 <= 2
+6. -MAXDATA + n2 <= 0
+7. n1 - 1 - max(cp1_off, n2) <= 0
+8. min(cp1_off, n1, n2) - MAXDATA - 2 <= 0
+9. -n1 === 493 (mod 495)
+10. MAXDATA - n2 === 0 (mod 2)
+11. -cp1_off + n1 === 0 (mod 2)
+12. MAXDATA - cp1_off === 0 (mod 7)
+13. -MAXDATA - cp1_off === 2 (mod 3)

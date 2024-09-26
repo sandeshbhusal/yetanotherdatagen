@@ -1,0 +1,274 @@
+Starting DataPointServer on port 13069
+DataPointServer bound on port 13069 as DataPointServer_13069
+20:45:55.296 INFO: Starting datagen.
+
+20:45:55.320 INFO: ---------------------- Starting iteration 1--------------------
+20:45:55.330 INFO: Instrumenting file: IntDivision.java
+20:45:55.567 INFO: Augmenting input file IntDivision.java
+20:45:55.567 INFO: Augmenting file: IntDivision.java
+20:45:55.580 INFO: Compiling augmented file IntDivision.java
+20:45:56.078 INFO: Running evosuite on augmented file IntDivision.java
+20:46:04.760 DEBUG: Evosuite run took 9436 ms.
+20:46:04.760 INFO: Compiling reporting file IntDivision.java
+20:46:05.666 INFO: Compiling evosuite test file for IntDivision.java
+20:46:07.534 INFO: Running JUnit tests generated for IntDivision.java
+20:46:10.747 INFO: Generating code.
+20:46:10.760 INFO: Generated 3 Daikon trace files for instrumentation data.
+20:46:12.957 INFO: Finished executing daikon and generating invariants.
+20:46:12.965 INFO: Generated 4 DiG trace files for instrumentation data.
+20:46:47.715 INFO: Finished first iteration. No stabilization checks will be done
+20:46:47.722 DEBUG: Iteration 1 took 52397 ms.
+
+20:46:47.722 INFO: ---------------------- Starting iteration 2--------------------
+20:46:47.723 INFO: Instrumenting file: IntDivision.java
+20:46:47.737 INFO: Augmenting input file IntDivision.java
+20:46:47.737 INFO: Augmenting file: IntDivision.java
+20:46:47.747 INFO: Compiling augmented file IntDivision.java
+20:46:48.206 INFO: Running evosuite on augmented file IntDivision.java
+20:46:55.606 DEBUG: Evosuite run took 7884 ms.
+20:46:55.606 INFO: Compiling reporting file IntDivision.java
+20:46:56.529 INFO: Compiling evosuite test file for IntDivision.java
+20:46:58.506 INFO: Running JUnit tests generated for IntDivision.java
+20:47:01.877 INFO: Generating code.
+20:47:01.904 INFO: Generated 3 Daikon trace files for instrumentation data.
+20:47:04.196 INFO: Finished executing daikon and generating invariants.
+20:47:04.208 INFO: Generated 4 DiG trace files for instrumentation data.
+20:49:03.935 DEBUG: Checking if all invariants have become stable or not.
+20:49:03.936 DEBUG: loopcondition has changed for daikon between 2 and 1
+20:49:03.936 DEBUG: entermethod has changed for daikon between 2 and 1
+20:49:03.937 DEBUG: div_end has changed for daikon between 2 and 1
+20:49:03.937 DEBUG: Iteration 2 took 136215 ms.
+
+20:49:03.937 INFO: ---------------------- Starting iteration 3--------------------
+20:49:03.938 INFO: Instrumenting file: IntDivision.java
+20:49:03.947 INFO: Augmenting input file IntDivision.java
+20:49:03.947 INFO: Augmenting file: IntDivision.java
+20:49:03.954 INFO: Compiling augmented file IntDivision.java
+20:49:04.444 INFO: Running evosuite on augmented file IntDivision.java
+20:49:13.814 DEBUG: Evosuite run took 9876 ms.
+20:49:13.814 INFO: Compiling reporting file IntDivision.java
+20:49:14.688 INFO: Compiling evosuite test file for IntDivision.java
+20:49:16.618 INFO: Running JUnit tests generated for IntDivision.java
+20:49:18.802 INFO: Generating code.
+20:49:18.817 INFO: Generated 3 Daikon trace files for instrumentation data.
+20:49:21.278 INFO: Finished executing daikon and generating invariants.
+20:49:21.290 INFO: Generated 4 DiG trace files for instrumentation data.
+20:50:12.963 DEBUG: Checking if all invariants have become stable or not.
+20:50:12.963 DEBUG: loopcondition has changed for daikon between 3 and 2
+20:50:12.963 DEBUG: entermethod has changed for daikon between 3 and 2
+20:50:12.963 DEBUG: div_end has changed for daikon between 3 and 2
+20:50:12.964 DEBUG: Iteration 3 took 69027 ms.
+
+20:50:12.964 INFO: ---------------------- Starting iteration 4--------------------
+20:50:12.964 INFO: Instrumenting file: IntDivision.java
+20:50:12.976 INFO: Augmenting input file IntDivision.java
+20:50:12.976 INFO: Augmenting file: IntDivision.java
+20:50:12.987 INFO: Compiling augmented file IntDivision.java
+20:50:13.446 INFO: Running evosuite on augmented file IntDivision.java
+20:50:22.445 DEBUG: Evosuite run took 9481 ms.
+20:50:22.445 INFO: Compiling reporting file IntDivision.java
+20:50:23.317 INFO: Compiling evosuite test file for IntDivision.java
+20:50:25.272 INFO: Running JUnit tests generated for IntDivision.java
+20:50:27.425 INFO: Generating code.
+20:50:27.455 INFO: Generated 3 Daikon trace files for instrumentation data.
+20:50:29.917 INFO: Finished executing daikon and generating invariants.
+20:50:29.932 INFO: Generated 4 DiG trace files for instrumentation data.
+20:51:30.916 DEBUG: Checking if all invariants have become stable or not.
+20:51:30.917 DEBUG: loopcondition has changed for DIG between 4 and 3
+20:51:30.917 DEBUG: entermethod has changed for daikon between 4 and 3
+20:51:30.917 DEBUG: div_end has changed for daikon between 4 and 3
+20:51:30.917 DEBUG: Iteration 4 took 77953 ms.
+
+20:51:30.917 INFO: ---------------------- Starting iteration 5--------------------
+20:51:30.918 INFO: Instrumenting file: IntDivision.java
+20:51:30.930 INFO: Augmenting input file IntDivision.java
+20:51:30.930 INFO: Augmenting file: IntDivision.java
+20:51:30.939 INFO: Compiling augmented file IntDivision.java
+20:51:31.358 INFO: Running evosuite on augmented file IntDivision.java
+20:51:40.174 DEBUG: Evosuite run took 9257 ms.
+20:51:40.174 INFO: Compiling reporting file IntDivision.java
+20:51:41.101 INFO: Compiling evosuite test file for IntDivision.java
+20:51:43.030 INFO: Running JUnit tests generated for IntDivision.java
+20:51:45.343 INFO: Generating code.
+20:51:45.362 INFO: Generated 3 Daikon trace files for instrumentation data.
+20:51:47.954 INFO: Finished executing daikon and generating invariants.
+20:51:47.976 INFO: Generated 4 DiG trace files for instrumentation data.
+20:53:02.285 DEBUG: Checking if all invariants have become stable or not.
+20:53:02.285 DEBUG: loopcondition has changed for DIG between 5 and 4
+20:53:02.286 DEBUG: Invariants have stabilized for key: entermethod
+20:53:02.286 DEBUG: div_end has changed for daikon between 5 and 4
+20:53:02.286 DEBUG: Iteration 5 took 91369 ms.
+
+20:53:02.286 INFO: ---------------------- Starting iteration 6--------------------
+20:53:02.287 INFO: Instrumenting file: IntDivision.java
+20:53:02.299 INFO: Augmenting input file IntDivision.java
+20:53:02.299 INFO: Augmenting file: IntDivision.java
+20:53:02.307 INFO: Compiling augmented file IntDivision.java
+20:53:02.778 INFO: Running evosuite on augmented file IntDivision.java
+20:53:12.619 DEBUG: Evosuite run took 10333 ms.
+20:53:12.619 INFO: Compiling reporting file IntDivision.java
+20:53:13.533 INFO: Compiling evosuite test file for IntDivision.java
+20:53:15.389 INFO: Running JUnit tests generated for IntDivision.java
+20:53:17.597 INFO: Generating code.
+20:53:17.611 INFO: Generated 3 Daikon trace files for instrumentation data.
+20:53:20.137 INFO: Finished executing daikon and generating invariants.
+20:53:20.142 INFO: Generated 4 DiG trace files for instrumentation data.
+20:54:33.573 DEBUG: Checking if all invariants have become stable or not.
+20:54:33.573 DEBUG: loopcondition has changed for DIG between 6 and 5
+20:54:33.574 DEBUG: div_end has changed for daikon between 6 and 5
+20:54:33.574 DEBUG: Iteration 6 took 91288 ms.
+
+20:54:33.574 INFO: ---------------------- Starting iteration 7--------------------
+20:54:33.574 INFO: Instrumenting file: IntDivision.java
+20:54:33.584 INFO: Augmenting input file IntDivision.java
+20:54:33.584 INFO: Augmenting file: IntDivision.java
+20:54:33.591 INFO: Compiling augmented file IntDivision.java
+20:54:34.031 INFO: Running evosuite on augmented file IntDivision.java
+20:54:43.394 DEBUG: Evosuite run took 9819 ms.
+20:54:43.394 INFO: Compiling reporting file IntDivision.java
+20:54:44.257 INFO: Compiling evosuite test file for IntDivision.java
+20:54:46.201 INFO: Running JUnit tests generated for IntDivision.java
+20:54:48.399 INFO: Generating code.
+20:54:48.422 INFO: Generated 3 Daikon trace files for instrumentation data.
+20:54:50.779 INFO: Finished executing daikon and generating invariants.
+20:54:50.784 INFO: Generated 4 DiG trace files for instrumentation data.
+20:56:12.815 DEBUG: Checking if all invariants have become stable or not.
+20:56:12.816 DEBUG: loopcondition has changed for DIG between 7 and 6
+20:56:12.816 DEBUG: div_end has changed for daikon between 7 and 6
+20:56:12.816 DEBUG: Iteration 7 took 99242 ms.
+
+20:56:12.816 INFO: ---------------------- Starting iteration 8--------------------
+20:56:12.817 INFO: Instrumenting file: IntDivision.java
+20:56:12.826 INFO: Augmenting input file IntDivision.java
+20:56:12.826 INFO: Augmenting file: IntDivision.java
+20:56:12.833 INFO: Compiling augmented file IntDivision.java
+20:56:13.266 INFO: Running evosuite on augmented file IntDivision.java
+20:56:22.275 DEBUG: Evosuite run took 9459 ms.
+20:56:22.275 INFO: Compiling reporting file IntDivision.java
+20:56:23.239 INFO: Compiling evosuite test file for IntDivision.java
+20:56:25.195 INFO: Running JUnit tests generated for IntDivision.java
+20:56:27.528 INFO: Generating code.
+20:56:27.544 INFO: Generated 3 Daikon trace files for instrumentation data.
+20:56:30.001 INFO: Finished executing daikon and generating invariants.
+20:56:30.007 INFO: Generated 4 DiG trace files for instrumentation data.
+20:57:58.357 DEBUG: Checking if all invariants have become stable or not.
+20:57:58.357 DEBUG: loopcondition has changed for daikon between 8 and 7
+20:57:58.358 DEBUG: div_end has changed for daikon between 8 and 7
+20:57:58.358 DEBUG: Iteration 8 took 105542 ms.
+
+20:57:58.358 INFO: ---------------------- Starting iteration 9--------------------
+20:57:58.358 INFO: Instrumenting file: IntDivision.java
+20:57:58.365 INFO: Augmenting input file IntDivision.java
+20:57:58.365 INFO: Augmenting file: IntDivision.java
+20:57:58.372 INFO: Compiling augmented file IntDivision.java
+20:57:58.861 INFO: Running evosuite on augmented file IntDivision.java
+20:58:09.239 DEBUG: Evosuite run took 10881 ms.
+20:58:09.239 INFO: Compiling reporting file IntDivision.java
+20:58:10.145 INFO: Compiling evosuite test file for IntDivision.java
+20:58:11.978 INFO: Running JUnit tests generated for IntDivision.java
+20:58:14.264 INFO: Generating code.
+20:58:14.287 INFO: Generated 3 Daikon trace files for instrumentation data.
+20:58:16.875 INFO: Finished executing daikon and generating invariants.
+20:58:16.883 INFO: Generated 4 DiG trace files for instrumentation data.
+20:59:50.870 DEBUG: Checking if all invariants have become stable or not.
+20:59:50.871 DEBUG: loopcondition has changed for DIG between 9 and 8
+20:59:50.871 DEBUG: div_end has changed for DIG between 9 and 8
+20:59:50.871 DEBUG: Iteration 9 took 112513 ms.
+
+20:59:50.871 INFO: ---------------------- Starting iteration 10--------------------
+20:59:50.872 INFO: Instrumenting file: IntDivision.java
+20:59:50.881 INFO: Augmenting input file IntDivision.java
+20:59:50.881 INFO: Augmenting file: IntDivision.java
+20:59:50.889 INFO: Compiling augmented file IntDivision.java
+20:59:51.348 INFO: Running evosuite on augmented file IntDivision.java
+21:00:00.790 DEBUG: Evosuite run took 9919 ms.
+21:00:00.790 INFO: Compiling reporting file IntDivision.java
+21:00:01.607 INFO: Compiling evosuite test file for IntDivision.java
+21:00:03.538 INFO: Running JUnit tests generated for IntDivision.java
+21:00:05.765 INFO: Generating code.
+21:00:05.783 INFO: Generated 3 Daikon trace files for instrumentation data.
+21:00:08.153 INFO: Finished executing daikon and generating invariants.
+21:00:08.160 INFO: Generated 4 DiG trace files for instrumentation data.
+21:01:52.550 DEBUG: Checking if all invariants have become stable or not.
+21:01:52.550 DEBUG: loopcondition has changed for DIG between 10 and 9
+21:01:52.551 DEBUG: Invariants have stabilized for key: div_end
+21:01:52.551 DEBUG: Iteration 10 took 121680 ms.
+
+21:01:52.551 INFO: ---------------------- Starting iteration 11--------------------
+21:01:52.551 INFO: Instrumenting file: IntDivision.java
+21:01:52.560 INFO: Augmenting input file IntDivision.java
+21:01:52.560 INFO: Augmenting file: IntDivision.java
+21:01:52.569 INFO: Compiling augmented file IntDivision.java
+21:01:53.002 INFO: Running evosuite on augmented file IntDivision.java
+21:02:02.671 DEBUG: Evosuite run took 10120 ms.
+21:02:02.671 INFO: Compiling reporting file IntDivision.java
+21:02:03.621 INFO: Compiling evosuite test file for IntDivision.java
+21:02:05.545 INFO: Running JUnit tests generated for IntDivision.java
+21:02:07.979 INFO: Generating code.
+21:02:08.000 INFO: Generated 3 Daikon trace files for instrumentation data.
+21:02:10.354 INFO: Finished executing daikon and generating invariants.
+21:02:10.368 INFO: Generated 4 DiG trace files for instrumentation data.
+21:03:59.240 DEBUG: Checking if all invariants have become stable or not.
+21:03:59.240 DEBUG: loopcondition has changed for DIG between 11 and 10
+21:03:59.240 DEBUG: Iteration 11 took 126689 ms.
+
+21:03:59.240 INFO: ---------------------- Starting iteration 12--------------------
+21:03:59.241 INFO: Instrumenting file: IntDivision.java
+21:03:59.248 INFO: Augmenting input file IntDivision.java
+21:03:59.248 INFO: Augmenting file: IntDivision.java
+21:03:59.253 INFO: Compiling augmented file IntDivision.java
+21:03:59.694 INFO: Running evosuite on augmented file IntDivision.java
+21:04:08.864 DEBUG: Evosuite run took 9624 ms.
+21:04:08.865 INFO: Compiling reporting file IntDivision.java
+21:04:09.730 INFO: Compiling evosuite test file for IntDivision.java
+21:04:11.575 INFO: Running JUnit tests generated for IntDivision.java
+21:04:13.757 INFO: Generating code.
+21:04:13.778 INFO: Generated 3 Daikon trace files for instrumentation data.
+21:04:16.297 INFO: Finished executing daikon and generating invariants.
+21:04:16.305 INFO: Generated 4 DiG trace files for instrumentation data.
+21:06:13.475 DEBUG: Checking if all invariants have become stable or not.
+21:06:13.476 DEBUG: loopcondition has changed for DIG between 12 and 11
+21:06:13.476 DEBUG: Iteration 12 took 134236 ms.
+
+21:06:13.476 INFO: ---------------------- Starting iteration 13--------------------
+21:06:13.477 INFO: Instrumenting file: IntDivision.java
+21:06:13.484 INFO: Augmenting input file IntDivision.java
+21:06:13.484 INFO: Augmenting file: IntDivision.java
+21:06:13.490 INFO: Compiling augmented file IntDivision.java
+21:06:13.969 INFO: Running evosuite on augmented file IntDivision.java
+21:06:22.977 DEBUG: Evosuite run took 9501 ms.
+21:06:22.977 INFO: Compiling reporting file IntDivision.java
+21:06:23.843 INFO: Compiling evosuite test file for IntDivision.java
+21:06:25.710 INFO: Running JUnit tests generated for IntDivision.java
+21:06:27.958 INFO: Generating code.
+21:06:27.988 INFO: Generated 3 Daikon trace files for instrumentation data.
+21:06:30.510 INFO: Finished executing daikon and generating invariants.
+21:06:30.521 INFO: Generated 4 DiG trace files for instrumentation data.
+21:08:37.721 DEBUG: Checking if all invariants have become stable or not.
+21:08:37.721 DEBUG: loopcondition has changed for DIG between 13 and 12
+21:08:37.721 DEBUG: Iteration 13 took 144245 ms.
+
+21:08:37.722 INFO: ---------------------- Starting iteration 14--------------------
+21:08:37.722 INFO: Instrumenting file: IntDivision.java
+21:08:37.729 INFO: Augmenting input file IntDivision.java
+21:08:37.729 INFO: Augmenting file: IntDivision.java
+21:08:37.738 INFO: Compiling augmented file IntDivision.java
+21:08:38.244 INFO: Running evosuite on augmented file IntDivision.java
+21:08:47.845 DEBUG: Evosuite run took 10124 ms.
+21:08:47.846 INFO: Compiling reporting file IntDivision.java
+21:08:48.682 INFO: Compiling evosuite test file for IntDivision.java
+21:08:50.505 INFO: Running JUnit tests generated for IntDivision.java
+21:08:52.781 INFO: Generating code.
+21:08:52.805 INFO: Generated 3 Daikon trace files for instrumentation data.
+21:08:55.420 INFO: Finished executing daikon and generating invariants.
+21:08:55.428 INFO: Generated 4 DiG trace files for instrumentation data.
+21:11:13.386 DEBUG: Checking if all invariants have become stable or not.
+21:11:13.387 DEBUG: Invariants have stabilized for key: loopcondition
+21:11:13.387 INFO: All invariants have stabilized at iteration 14
+----------------------------------------------------------
+The following iterations caused each key's stabilization:
+Key: loopcondition, iteration: 14
+Key: entermethod, iteration: 5
+Key: div_end, iteration: 10
+----------------------------------------------------------
+21:11:13.388 INFO: Processed 14 iterations.

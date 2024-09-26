@@ -3,5 +3,5 @@ vtrace1 (6 invs):
 2. a - ac + c == 0
 3. ab - ac - bc + 2*c == 0
 4. a - bc <= -1
-5. -ab + c <= -1
-6. -ac + b <= -1
+5. -ac + b <= -1
+6. -ab + c <= -1

@@ -1,2 +1,2 @@
 vtrace1 (1 invs):
-1. b - 1 - max(a, 0) <= 0
+1. min(a, 0) - b <= 0

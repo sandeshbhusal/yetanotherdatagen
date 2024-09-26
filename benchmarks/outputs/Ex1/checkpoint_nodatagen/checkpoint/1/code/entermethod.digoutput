@@ -1,9 +1,12 @@
-vtrace1 (8 invs):
-1. y == 0
-2. x == 0
-3. condition**2*outerloop - 3460*condition**2 - 1250*condition*outerloop + 4325000*condition == 0
-4. x + y <= 0
-5. max(y, 0) - x == 0
-6. y - min(x, 0) == 0
-7. y - max(x, 0) == 0
-8. x - min(y, 0) == 0
+vtrace1 (11 invs):
+1. x == 0
+2. y == 0
+3. x <= 0
+4. -condition - x <= 1
+5. max(x, 0) - y == 0
+6. x - min(y, 0) == 0
+7. x - max(y, 0) == 0
+8. y - min(x, 0) == 0
+9. outerloop === 3 (mod 7)
+10. outerloop - x === 3 (mod 7)
+11. -outerloop + y === 4 (mod 7)

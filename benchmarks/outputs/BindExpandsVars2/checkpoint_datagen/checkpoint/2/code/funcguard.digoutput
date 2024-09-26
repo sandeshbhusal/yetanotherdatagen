@@ -1,10 +1,10 @@
 vtrace1 (9 invs):
-1. -cp1_off**2 + cp1_off*n2 - 1902595*cp1_off + 1902595*n1 == 0
-2. MAXDATA*cp1_off - MAXDATA - cp1_off**2 + 12127205*cp1_off - 12127205*n1 + n2 == 0
-3. -n2 <= 0
-4. cp1_off - n1 <= 0
-5. -cp1_off + n1 <= 1
-6. -MAXDATA + n1 <= 0
-7. -MAXDATA + n2 <= 0
-8. -cp1_off - n1 <= 0
-9. -cp1_off + n2 <= 1
+1. -n2 <= 0
+2. -n1 + n2 <= 0
+3. cp1_off - n1 <= 0
+4. -cp1_off + n2 <= 1
+5. -MAXDATA + n2 <= 0
+6. -cp1_off - n2 <= -1
+7. -MAXDATA === 0 (mod 2)
+8. -MAXDATA + n1 === 0 (mod 2)
+9. MAXDATA - cp1_off === 0 (mod 3)

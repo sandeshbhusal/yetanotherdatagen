@@ -1,0 +1,123 @@
+Starting DataPointServer on port 15381
+DataPointServer bound on port 15381 as DataPointServer_15381
+11:14:36.514 INFO: Starting datagen.
+
+11:14:36.530 INFO: ---------------------- Starting iteration 1--------------------
+11:14:36.537 INFO: Instrumenting file: A_LT_B.java
+11:14:36.726 INFO: Augmenting input file A_LT_B.java
+11:14:36.726 INFO: Augmenting file: A_LT_B.java
+11:14:36.737 INFO: Compiling augmented file A_LT_B.java
+11:14:37.119 INFO: Running evosuite on augmented file A_LT_B.java
+11:14:41.518 DEBUG: Evosuite run took 4984 ms.
+11:14:41.518 INFO: Compiling reporting file A_LT_B.java
+11:14:42.245 INFO: Compiling evosuite test file for A_LT_B.java
+11:14:43.839 INFO: Running JUnit tests generated for A_LT_B.java
+11:14:44.545 INFO: Generating code.
+11:14:44.545 INFO: Generated 3 Daikon trace files for instrumentation data.
+11:14:46.333 INFO: Finished executing daikon and generating invariants.
+11:14:46.334 INFO: Generated 4 DiG trace files for instrumentation data.
+11:14:59.978 INFO: Finished first iteration. No stabilization checks will be done
+11:14:59.984 DEBUG: Iteration 1 took 23450 ms.
+
+11:14:59.984 INFO: ---------------------- Starting iteration 2--------------------
+11:14:59.985 INFO: Instrumenting file: A_LT_B.java
+11:14:59.995 INFO: Augmenting input file A_LT_B.java
+11:14:59.995 INFO: Augmenting file: A_LT_B.java
+11:15:00.004 INFO: Compiling augmented file A_LT_B.java
+11:15:00.419 INFO: Running evosuite on augmented file A_LT_B.java
+11:15:04.768 DEBUG: Evosuite run took 4784 ms.
+11:15:04.768 INFO: Compiling reporting file A_LT_B.java
+11:15:05.515 INFO: Compiling evosuite test file for A_LT_B.java
+11:15:07.177 INFO: Running JUnit tests generated for A_LT_B.java
+11:15:07.881 INFO: Generating code.
+11:15:07.881 INFO: Generated 3 Daikon trace files for instrumentation data.
+11:15:09.743 INFO: Finished executing daikon and generating invariants.
+11:15:09.744 INFO: Generated 4 DiG trace files for instrumentation data.
+11:15:35.681 DEBUG: Checking if all invariants have become stable or not.
+11:15:35.682 DEBUG: exitmethod_a_lt_b has changed for daikon between 2 and 1
+11:15:35.682 DEBUG: a_lt_b_falsebranch has changed for daikon between 2 and 1
+11:15:35.683 DEBUG: a_lt_b_truebranch has changed for daikon between 2 and 1
+11:15:35.683 DEBUG: Iteration 2 took 35699 ms.
+
+11:15:35.683 INFO: ---------------------- Starting iteration 3--------------------
+11:15:35.683 INFO: Instrumenting file: A_LT_B.java
+11:15:35.692 INFO: Augmenting input file A_LT_B.java
+11:15:35.692 INFO: Augmenting file: A_LT_B.java
+11:15:35.699 INFO: Compiling augmented file A_LT_B.java
+11:15:36.085 INFO: Running evosuite on augmented file A_LT_B.java
+11:15:40.315 DEBUG: Evosuite run took 4632 ms.
+11:15:40.316 INFO: Compiling reporting file A_LT_B.java
+11:15:41.086 INFO: Compiling evosuite test file for A_LT_B.java
+11:15:42.739 INFO: Running JUnit tests generated for A_LT_B.java
+11:15:43.448 INFO: Generating code.
+11:15:43.449 INFO: Generated 3 Daikon trace files for instrumentation data.
+11:15:45.217 INFO: Finished executing daikon and generating invariants.
+11:15:45.218 INFO: Generated 4 DiG trace files for instrumentation data.
+11:15:59.082 DEBUG: Checking if all invariants have become stable or not.
+11:15:59.083 DEBUG: exitmethod_a_lt_b has changed for DIG between 3 and 2
+11:15:59.083 DEBUG: a_lt_b_falsebranch has changed for DIG between 3 and 2
+11:15:59.083 DEBUG: a_lt_b_truebranch has changed for daikon between 3 and 2
+11:15:59.083 DEBUG: Iteration 3 took 23400 ms.
+
+11:15:59.083 INFO: ---------------------- Starting iteration 4--------------------
+11:15:59.084 INFO: Instrumenting file: A_LT_B.java
+11:15:59.092 INFO: Augmenting input file A_LT_B.java
+11:15:59.092 INFO: Augmenting file: A_LT_B.java
+11:15:59.099 INFO: Compiling augmented file A_LT_B.java
+11:15:59.498 INFO: Running evosuite on augmented file A_LT_B.java
+11:16:03.839 DEBUG: Evosuite run took 4756 ms.
+11:16:03.840 INFO: Compiling reporting file A_LT_B.java
+11:16:04.632 INFO: Compiling evosuite test file for A_LT_B.java
+11:16:06.290 INFO: Running JUnit tests generated for A_LT_B.java
+11:16:06.974 INFO: Generating code.
+11:16:06.975 INFO: Generated 3 Daikon trace files for instrumentation data.
+11:16:08.793 INFO: Finished executing daikon and generating invariants.
+11:16:08.793 INFO: Generated 4 DiG trace files for instrumentation data.
+11:16:22.559 DEBUG: Checking if all invariants have become stable or not.
+11:16:22.560 DEBUG: Invariants have stabilized for key: exitmethod_a_lt_b
+11:16:22.560 DEBUG: a_lt_b_falsebranch has changed for daikon between 4 and 3
+11:16:22.560 DEBUG: Invariants have stabilized for key: a_lt_b_truebranch
+11:16:22.560 DEBUG: Iteration 4 took 23477 ms.
+
+11:16:22.560 INFO: ---------------------- Starting iteration 5--------------------
+11:16:22.561 INFO: Instrumenting file: A_LT_B.java
+11:16:22.568 INFO: Augmenting input file A_LT_B.java
+11:16:22.568 INFO: Augmenting file: A_LT_B.java
+11:16:22.576 INFO: Compiling augmented file A_LT_B.java
+11:16:22.969 INFO: Running evosuite on augmented file A_LT_B.java
+11:16:27.664 DEBUG: Evosuite run took 5104 ms.
+11:16:27.664 INFO: Compiling reporting file A_LT_B.java
+11:16:28.439 INFO: Compiling evosuite test file for A_LT_B.java
+11:16:30.060 INFO: Running JUnit tests generated for A_LT_B.java
+11:16:30.765 INFO: Generating code.
+11:16:30.765 INFO: Generated 3 Daikon trace files for instrumentation data.
+11:16:32.547 INFO: Finished executing daikon and generating invariants.
+11:16:32.548 INFO: Generated 4 DiG trace files for instrumentation data.
+11:16:46.377 DEBUG: Checking if all invariants have become stable or not.
+11:16:46.377 DEBUG: a_lt_b_falsebranch has changed for DIG between 5 and 4
+11:16:46.377 DEBUG: Iteration 5 took 23817 ms.
+
+11:16:46.377 INFO: ---------------------- Starting iteration 6--------------------
+11:16:46.378 INFO: Instrumenting file: A_LT_B.java
+11:16:46.389 INFO: Augmenting input file A_LT_B.java
+11:16:46.389 INFO: Augmenting file: A_LT_B.java
+11:16:46.396 INFO: Compiling augmented file A_LT_B.java
+11:16:46.794 INFO: Running evosuite on augmented file A_LT_B.java
+11:16:51.313 DEBUG: Evosuite run took 4936 ms.
+11:16:51.314 INFO: Compiling reporting file A_LT_B.java
+11:16:52.039 INFO: Compiling evosuite test file for A_LT_B.java
+11:16:53.622 INFO: Running JUnit tests generated for A_LT_B.java
+11:16:54.346 INFO: Generating code.
+11:16:54.346 INFO: Generated 3 Daikon trace files for instrumentation data.
+11:16:56.056 INFO: Finished executing daikon and generating invariants.
+11:16:56.057 INFO: Generated 4 DiG trace files for instrumentation data.
+11:17:09.825 DEBUG: Checking if all invariants have become stable or not.
+11:17:09.825 DEBUG: Invariants have stabilized for key: a_lt_b_falsebranch
+11:17:09.825 INFO: All invariants have stabilized at iteration 6
+----------------------------------------------------------
+The following iterations caused each key's stabilization:
+Key: exitmethod_a_lt_b, iteration: 4
+Key: a_lt_b_falsebranch, iteration: 6
+Key: a_lt_b_truebranch, iteration: 4
+----------------------------------------------------------
+11:17:09.826 INFO: Processed 6 iterations.

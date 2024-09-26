@@ -3,8 +3,8 @@ Reading declaration files Processing trace data; reading 1 dtrace file:
 
 ===========================================================================
 Faker.fakemethod(int, int, int, int):::DATAGEN
-cp1_off == n1
-cp1_off == n2
-cp1_off one of { 0, 1, 5060 }
-MAXDATA one of { 0, 2, 5060 }
+n1 == MAXDATA
+cp1_off one of { 0, 5318 }
+n1 one of { 2088, 5318 }
+n2 one of { 1, 5318 }
 Exiting Daikon.

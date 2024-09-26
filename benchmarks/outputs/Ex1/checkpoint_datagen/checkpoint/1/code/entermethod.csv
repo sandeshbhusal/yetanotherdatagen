@@ -1,8 +1,10 @@
 vtrace1; I condition; I outerloop; I x; I y
-vtrace1; 0; -2051; 0; 0
-vtrace1; 0; 1236; 0; 0
-vtrace1; -713; 3544; 0; 0
-vtrace1; 1; 1064; 0; 0
-vtrace1; -1681; 2889; 0; 0
-vtrace1; 2889; 1236; 0; 0
-vtrace1; 2889; 1064; 0; 0
+vtrace1; 349; 3857; 0; 0
+vtrace1; 2169; 1196; 0; 0
+vtrace1; -1; 1217; 0; 0
+vtrace1; 0; -1; 0; 0
+vtrace1; -1717; 808; 0; 0
+vtrace1; 1; 1217; 0; 0
+vtrace1; 0; 1153; 0; 0
+vtrace1; 808; 808; 0; 0
+vtrace1; 1196; 1196; 0; 0

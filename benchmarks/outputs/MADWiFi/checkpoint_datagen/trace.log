@@ -1,117 +1,82 @@
-Starting DataPointServer on port 16731
-DataPointServer bound on port 16731 as DataPointServer_16731
-23:20:09.925 INFO: Starting datagen.
+Starting DataPointServer on port 15894
+DataPointServer bound on port 15894 as DataPointServer_15894
+11:49:04.729 INFO: Starting datagen.
 
-23:20:09.941 INFO: ---------------------- Starting iteration 1--------------------
-23:20:09.947 INFO: Instrumenting file: MADWiFi.java
-23:20:10.150 INFO: Augmenting input file MADWiFi.java
-23:20:10.150 INFO: Augmenting file: MADWiFi.java
-23:20:10.164 INFO: Compiling augmented file MADWiFi.java
-23:20:10.604 INFO: Running evosuite on augmented file MADWiFi.java
-23:21:16.383 DEBUG: Evosuite run took 66439 ms.
-23:21:16.383 INFO: Compiling reporting file MADWiFi.java
-23:21:17.206 INFO: Compiling evosuite test file for MADWiFi.java
-23:21:18.801 INFO: Running JUnit tests generated for MADWiFi.java
-23:21:19.690 INFO: Generating code.
-23:21:19.691 INFO: Generated 2 Daikon trace files for instrumentation data.
-23:21:20.887 INFO: Finished executing daikon and generating invariants.
-23:21:20.888 INFO: Generated 3 DiG trace files for instrumentation data.
-23:21:31.979 INFO: Finished first iteration. No stabilization checks will be done
-23:21:31.985 DEBUG: Iteration 1 took 82040 ms.
+11:49:04.753 INFO: ---------------------- Starting iteration 1--------------------
+11:49:04.763 INFO: Instrumenting file: MADWiFi.java
+11:49:05.020 INFO: Augmenting input file MADWiFi.java
+11:49:05.020 INFO: Augmenting file: MADWiFi.java
+11:49:05.034 INFO: Compiling augmented file MADWiFi.java
+11:49:05.519 INFO: Running evosuite on augmented file MADWiFi.java
+11:50:11.899 DEBUG: Evosuite run took 67145 ms.
+11:50:11.899 INFO: Compiling reporting file MADWiFi.java
+11:50:12.847 INFO: Compiling evosuite test file for MADWiFi.java
+11:50:14.815 INFO: Running JUnit tests generated for MADWiFi.java
+11:50:15.824 INFO: Generating code.
+11:50:15.824 INFO: Generated 2 Daikon trace files for instrumentation data.
+11:50:17.374 INFO: Finished executing daikon and generating invariants.
+11:50:17.375 INFO: Generated 3 DiG trace files for instrumentation data.
+11:50:30.580 INFO: Finished first iteration. No stabilization checks will be done
+11:50:30.587 DEBUG: Iteration 1 took 85830 ms.
 
-23:21:31.985 INFO: ---------------------- Starting iteration 2--------------------
-23:21:31.986 INFO: Instrumenting file: MADWiFi.java
-23:21:32.000 INFO: Augmenting input file MADWiFi.java
-23:21:32.000 INFO: Augmenting file: MADWiFi.java
-23:21:32.016 INFO: Compiling augmented file MADWiFi.java
-23:21:32.428 INFO: Running evosuite on augmented file MADWiFi.java
-23:22:38.455 DEBUG: Evosuite run took 66470 ms.
-23:22:38.455 INFO: Compiling reporting file MADWiFi.java
-23:22:39.319 INFO: Compiling evosuite test file for MADWiFi.java
-23:22:40.933 INFO: Running JUnit tests generated for MADWiFi.java
-23:22:41.695 INFO: Generating code.
-23:22:41.696 INFO: Generated 2 Daikon trace files for instrumentation data.
-23:22:42.867 INFO: Finished executing daikon and generating invariants.
-23:22:42.867 INFO: Generated 3 DiG trace files for instrumentation data.
-23:22:57.436 DEBUG: Checking if all invariants have become stable or not.
-23:22:57.437 DEBUG: Invariants have stabilized for key: loop_o_lteq_p
-23:22:57.438 DEBUG: loop_p_bufsize0 has changed for daikon between 2 and 1
-23:22:57.438 DEBUG: Iteration 2 took 85453 ms.
+11:50:30.587 INFO: ---------------------- Starting iteration 2--------------------
+11:50:30.587 INFO: Instrumenting file: MADWiFi.java
+11:50:30.606 INFO: Augmenting input file MADWiFi.java
+11:50:30.607 INFO: Augmenting file: MADWiFi.java
+11:50:30.633 INFO: Compiling augmented file MADWiFi.java
+11:50:31.148 INFO: Running evosuite on augmented file MADWiFi.java
+11:51:38.225 DEBUG: Evosuite run took 67638 ms.
+11:51:38.225 INFO: Compiling reporting file MADWiFi.java
+11:51:39.200 INFO: Compiling evosuite test file for MADWiFi.java
+11:51:41.285 INFO: Running JUnit tests generated for MADWiFi.java
+11:51:45.016 INFO: Generating code.
+11:51:45.026 INFO: Generated 2 Daikon trace files for instrumentation data.
+11:51:46.814 INFO: Finished executing daikon and generating invariants.
+11:51:46.820 INFO: Generated 3 DiG trace files for instrumentation data.
+11:52:07.130 DEBUG: Checking if all invariants have become stable or not.
+11:52:07.133 DEBUG: loop_o_lteq_p has changed for daikon between 2 and 1
+11:52:07.133 DEBUG: loop_p_bufsize0 has changed for daikon between 2 and 1
+11:52:07.133 DEBUG: Iteration 2 took 96546 ms.
 
-23:22:57.438 INFO: ---------------------- Starting iteration 3--------------------
-23:22:57.438 INFO: Instrumenting file: MADWiFi.java
-23:22:57.452 INFO: Augmenting input file MADWiFi.java
-23:22:57.452 INFO: Augmenting file: MADWiFi.java
-23:22:57.466 INFO: Compiling augmented file MADWiFi.java
-23:22:57.861 INFO: Running evosuite on augmented file MADWiFi.java
-23:24:03.704 DEBUG: Evosuite run took 66266 ms.
-23:24:03.704 INFO: Compiling reporting file MADWiFi.java
-23:24:04.499 INFO: Compiling evosuite test file for MADWiFi.java
-23:24:06.107 INFO: Running JUnit tests generated for MADWiFi.java
-23:24:06.835 INFO: Generating code.
-23:24:06.836 INFO: Generated 2 Daikon trace files for instrumentation data.
-23:24:08.041 INFO: Finished executing daikon and generating invariants.
-23:24:08.041 INFO: Generated 3 DiG trace files for instrumentation data.
-23:24:23.207 DEBUG: Checking if all invariants have become stable or not.
-23:24:23.207 DEBUG: loop_p_bufsize0 has changed for daikon between 3 and 2
-23:24:23.207 DEBUG: Iteration 3 took 85769 ms.
+11:52:07.133 INFO: ---------------------- Starting iteration 3--------------------
+11:52:07.134 INFO: Instrumenting file: MADWiFi.java
+11:52:07.151 INFO: Augmenting input file MADWiFi.java
+11:52:07.151 INFO: Augmenting file: MADWiFi.java
+11:52:07.164 INFO: Compiling augmented file MADWiFi.java
+11:52:07.702 INFO: Running evosuite on augmented file MADWiFi.java
+11:53:15.233 DEBUG: Evosuite run took 68100 ms.
+11:53:15.234 INFO: Compiling reporting file MADWiFi.java
+11:53:16.144 INFO: Compiling evosuite test file for MADWiFi.java
+11:53:18.194 INFO: Running JUnit tests generated for MADWiFi.java
+11:53:19.145 INFO: Generating code.
+11:53:19.149 INFO: Generated 2 Daikon trace files for instrumentation data.
+11:53:20.967 INFO: Finished executing daikon and generating invariants.
+11:53:20.971 INFO: Generated 3 DiG trace files for instrumentation data.
+11:53:41.390 DEBUG: Checking if all invariants have become stable or not.
+11:53:41.391 DEBUG: Invariants have stabilized for key: loop_o_lteq_p
+11:53:41.392 DEBUG: loop_p_bufsize0 has changed for daikon between 3 and 2
+11:53:41.392 DEBUG: Iteration 3 took 94259 ms.
 
-23:24:23.207 INFO: ---------------------- Starting iteration 4--------------------
-23:24:23.208 INFO: Instrumenting file: MADWiFi.java
-23:24:23.218 INFO: Augmenting input file MADWiFi.java
-23:24:23.218 INFO: Augmenting file: MADWiFi.java
-23:24:23.229 INFO: Compiling augmented file MADWiFi.java
-23:24:23.659 INFO: Running evosuite on augmented file MADWiFi.java
-23:25:29.727 DEBUG: Evosuite run took 66520 ms.
-23:25:29.727 INFO: Compiling reporting file MADWiFi.java
-23:25:30.595 INFO: Compiling evosuite test file for MADWiFi.java
-23:25:32.244 INFO: Running JUnit tests generated for MADWiFi.java
-23:25:33.092 INFO: Generating code.
-23:25:33.092 INFO: Generated 2 Daikon trace files for instrumentation data.
-23:25:34.283 INFO: Finished executing daikon and generating invariants.
-23:25:34.284 INFO: Generated 3 DiG trace files for instrumentation data.
-23:25:54.486 DEBUG: Checking if all invariants have become stable or not.
-23:25:54.487 DEBUG: loop_p_bufsize0 has changed for daikon between 4 and 3
-23:25:54.487 DEBUG: Iteration 4 took 91280 ms.
-
-23:25:54.487 INFO: ---------------------- Starting iteration 5--------------------
-23:25:54.487 INFO: Instrumenting file: MADWiFi.java
-23:25:54.496 INFO: Augmenting input file MADWiFi.java
-23:25:54.496 INFO: Augmenting file: MADWiFi.java
-23:25:54.505 INFO: Compiling augmented file MADWiFi.java
-23:25:54.928 INFO: Running evosuite on augmented file MADWiFi.java
-23:27:01.344 DEBUG: Evosuite run took 66857 ms.
-23:27:01.344 INFO: Compiling reporting file MADWiFi.java
-23:27:02.139 INFO: Compiling evosuite test file for MADWiFi.java
-23:27:03.785 INFO: Running JUnit tests generated for MADWiFi.java
-23:27:04.639 INFO: Generating code.
-23:27:04.640 INFO: Generated 2 Daikon trace files for instrumentation data.
-23:27:05.794 INFO: Finished executing daikon and generating invariants.
-23:27:05.794 INFO: Generated 3 DiG trace files for instrumentation data.
-23:27:24.528 DEBUG: Checking if all invariants have become stable or not.
-23:27:24.528 DEBUG: loop_p_bufsize0 has changed for DIG between 5 and 4
-23:27:24.529 DEBUG: Iteration 5 took 90042 ms.
-
-23:27:24.529 INFO: ---------------------- Starting iteration 6--------------------
-23:27:24.529 INFO: Instrumenting file: MADWiFi.java
-23:27:24.542 INFO: Augmenting input file MADWiFi.java
-23:27:24.542 INFO: Augmenting file: MADWiFi.java
-23:27:24.552 INFO: Compiling augmented file MADWiFi.java
-23:27:24.961 INFO: Running evosuite on augmented file MADWiFi.java
-23:28:31.569 DEBUG: Evosuite run took 67040 ms.
-23:28:31.569 INFO: Compiling reporting file MADWiFi.java
-23:28:32.312 INFO: Compiling evosuite test file for MADWiFi.java
-23:28:33.986 INFO: Running JUnit tests generated for MADWiFi.java
-23:28:35.544 INFO: Generating code.
-23:28:35.547 INFO: Generated 2 Daikon trace files for instrumentation data.
-23:28:36.937 INFO: Finished executing daikon and generating invariants.
-23:28:36.940 INFO: Generated 3 DiG trace files for instrumentation data.
-23:29:00.351 DEBUG: Checking if all invariants have become stable or not.
-23:29:00.351 DEBUG: Invariants have stabilized for key: loop_p_bufsize0
-23:29:00.351 INFO: All invariants have stabilized at iteration 6
+11:53:41.392 INFO: ---------------------- Starting iteration 4--------------------
+11:53:41.392 INFO: Instrumenting file: MADWiFi.java
+11:53:41.405 INFO: Augmenting input file MADWiFi.java
+11:53:41.405 INFO: Augmenting file: MADWiFi.java
+11:53:41.415 INFO: Compiling augmented file MADWiFi.java
+11:53:41.948 INFO: Running evosuite on augmented file MADWiFi.java
+11:54:48.808 DEBUG: Evosuite run took 67416 ms.
+11:54:48.809 INFO: Compiling reporting file MADWiFi.java
+11:54:49.708 INFO: Compiling evosuite test file for MADWiFi.java
+11:54:51.805 INFO: Running JUnit tests generated for MADWiFi.java
+11:54:53.131 INFO: Generating code.
+11:54:53.138 INFO: Generated 2 Daikon trace files for instrumentation data.
+11:54:54.832 INFO: Finished executing daikon and generating invariants.
+11:54:54.835 INFO: Generated 3 DiG trace files for instrumentation data.
+11:55:19.555 DEBUG: Checking if all invariants have become stable or not.
+11:55:19.555 DEBUG: Invariants have stabilized for key: loop_p_bufsize0
+11:55:19.555 INFO: All invariants have stabilized at iteration 4
 ----------------------------------------------------------
 The following iterations caused each key's stabilization:
-Key: loop_o_lteq_p, iteration: 2
-Key: loop_p_bufsize0, iteration: 6
+Key: loop_o_lteq_p, iteration: 3
+Key: loop_p_bufsize0, iteration: 4
 ----------------------------------------------------------
-23:29:00.352 INFO: Processed 6 iterations.
+11:55:19.556 INFO: Processed 4 iterations.

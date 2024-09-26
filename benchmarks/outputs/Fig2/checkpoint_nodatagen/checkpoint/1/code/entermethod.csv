@@ -1,7 +1,7 @@
 vtrace1; I outerloop; I firstif; I secondif
-vtrace1; 0; 2743; 1220
-vtrace1; 1220; 0; 0
-vtrace1; 337; 337; 337
-vtrace1; -1; 1; 0
-vtrace1; 1572; -2826; 1572
-vtrace1; 337; -266; -266
+vtrace1; 803; 803; 803
+vtrace1; 0; -1745; 0
+vtrace1; 674; 0; 674
+vtrace1; -1637; -1637; -1637
+vtrace1; 1062; 0; 0
+vtrace1; 2747; -2130; -2130

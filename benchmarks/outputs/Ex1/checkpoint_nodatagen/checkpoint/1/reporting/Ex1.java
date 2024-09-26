@@ -7,7 +7,7 @@ public class Ex1 {
         int y = 0;
         // Original Assertion
         // assert xa + 2 * ya >= 0 : "Assertion failed: xa + 2*ya >= 0";
-        Report.datagen_guard_instrument(15781, "entermethod", "outerloop", outerloop, "condition", condition, "x", x, "y", y);
+        Report.datagen_guard_instrument(12505, "entermethod", "outerloop", outerloop, "condition", condition, "x", x, "y", y);
         while (outerloop > 0) {
             x = xa + 2 * ya;
             y = -2 * xa + ya;
@@ -21,6 +21,6 @@ public class Ex1 {
             ya = 2 * x + y;
             outerloop -= 1;
         }
-        Report.datagen_instrument(15781, "exitmethod", "xa", xa, "ya", ya);
+        Report.datagen_instrument(12505, "exitmethod", "xa", xa, "ya", ya);
     }
 }

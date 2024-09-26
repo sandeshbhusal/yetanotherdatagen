@@ -1,10 +1,8 @@
-vtrace1 (9 invs):
-1. MAXDATA*mc_i - 5060*mc_i == 0
-2. cp1_off*mc_i - 5060*mc_i == 0
-3. -mc_i <= 0
-4. -MAXDATA + mc_i <= -2
-5. MAXDATA - cp1_off <= 1
-6. -MAXDATA + cp1_off <= 0
-7. cp1_off === 1 (mod 5059)
-8. -MAXDATA === 5056 (mod 5058)
-9. -MAXDATA - cp1_off === 10114 (mod 10117)
+vtrace1 (7 invs):
+1. -mc_i <= 0
+2. -cp1_off + mc_i <= 0
+3. -MAXDATA + cp1_off <= 0
+4. -cp1_off === 0 (mod 5318)
+5. -MAXDATA === 1142 (mod 3230)
+6. MAXDATA - cp1_off === 0 (mod 2088)
+7. MAXDATA + cp1_off === 2088 (mod 8548)

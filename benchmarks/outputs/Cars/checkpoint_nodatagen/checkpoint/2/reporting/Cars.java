@@ -24,7 +24,7 @@ public class Cars {
         // assert x2 + 5 * t >= 75 : "Assertion failed: x2 + 5*t >= 75";
         // assert v1 - 2 * v2 + v3 + 2 * t >= 0 : "Assertion failed: v1 - 2*v2 + v3 + 2*t >= 0";
         // assert v1 - v3 >= 0 : "Assertion failed: v1 - v3 >= 0";
-        Report.datagen_guard_instrument(18788, "entermethod", "unknown_int", unknown_int, "v1", v1, "v2", v2, "v3", v3);
+        Report.datagen_guard_instrument(11634, "entermethod", "unknown_int", unknown_int, "v1", v1, "v2", v2, "v3", v3);
         // Beginning assertions.
         // if these are false, we don't even enter the loop.
         if (cond1 && cond2 && cond3 && cond4 && cond5 && cond6) {
@@ -33,11 +33,11 @@ public class Cars {
                 boolean c2 = v2 <= 5;
                 if (!(c1 && c2))
                     break;
-                Report.datagen_instrument(18788, "loopinv", "v2", v2);
+                Report.datagen_instrument(11634, "loopinv", "v2", v2);
                 // assume(v2 + 5 >= 0);
                 // assume(v2 <= 5);
                 if (innerif) {
-                    Report.datagen_instrument(18788, "loopinvtrue", "x1", x1, "x2", x2, "x3", x3);
+                    Report.datagen_instrument(11634, "loopinvtrue", "x1", x1, "x2", x2, "x3", x3);
                     // assume(2 * x2 - x1 - x3 >= 0);
                     x1 = x1 + v1;
                     x3 = x3 + v3;
@@ -45,7 +45,7 @@ public class Cars {
                     v2 = v2 - 1;
                     t = t + 1;
                 } else {
-                    Report.datagen_instrument(18788, "loopinvfalse", "x1", x1, "x2", x2, "x3", x3);
+                    Report.datagen_instrument(11634, "loopinvfalse", "x1", x1, "x2", x2, "x3", x3);
                     // assume(2 * x2 - x1 - x3 <= 0);
                     x1 = x1 + v1;
                     x3 = x3 + v3;
@@ -56,6 +56,6 @@ public class Cars {
                 unknown_int -= 1;
             }
         }
-        Report.datagen_instrument(18788, "exitloop", "v1", v1, "v2", v2, "v3", v3, "t", t);
+        Report.datagen_instrument(11634, "exitloop", "v1", v1, "v2", v2, "v3", v3, "t", t);
     }
 }

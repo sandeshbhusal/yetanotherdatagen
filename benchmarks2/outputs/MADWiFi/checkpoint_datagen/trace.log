@@ -1,0 +1,83 @@
+Starting DataPointServer on port 16247
+DataPointServer bound on port 16247 as DataPointServer_16247
+16:29:06.319 INFO: Starting datagen.
+
+16:29:06.335 INFO: ---------------------- Starting iteration 1--------------------
+16:29:06.341 INFO: Instrumenting file: MADWiFi.java
+16:29:06.546 INFO: Augmenting input file MADWiFi.java
+16:29:06.546 INFO: Augmenting file: MADWiFi.java
+16:29:06.560 INFO: Compiling augmented file MADWiFi.java
+16:29:06.962 INFO: Running evosuite on augmented file MADWiFi.java
+16:30:12.822 DEBUG: Evosuite run took 66483 ms.
+16:30:12.823 INFO: Compiling reporting file MADWiFi.java
+16:30:13.546 INFO: Compiling evosuite test file for MADWiFi.java
+16:30:15.194 INFO: Running JUnit tests generated for MADWiFi.java
+16:30:16.014 INFO: Generating code.
+16:30:16.015 INFO: Generated 2 Daikon trace files for instrumentation data.
+16:30:17.198 INFO: Finished executing daikon and generating invariants.
+16:30:17.199 INFO: Generated 3 DiG trace files for instrumentation data.
+16:30:28.488 INFO: Finished first iteration. No stabilization checks will be done
+16:30:28.494 DEBUG: Iteration 1 took 82155 ms.
+
+16:30:28.494 INFO: ---------------------- Starting iteration 2--------------------
+16:30:28.494 INFO: Instrumenting file: MADWiFi.java
+16:30:28.507 INFO: Augmenting input file MADWiFi.java
+16:30:28.507 INFO: Augmenting file: MADWiFi.java
+16:30:28.524 INFO: Compiling augmented file MADWiFi.java
+16:30:28.940 INFO: Running evosuite on augmented file MADWiFi.java
+16:31:34.810 DEBUG: Evosuite run took 66316 ms.
+16:31:34.810 INFO: Compiling reporting file MADWiFi.java
+16:31:35.560 INFO: Compiling evosuite test file for MADWiFi.java
+16:31:37.193 INFO: Running JUnit tests generated for MADWiFi.java
+16:31:37.965 INFO: Generating code.
+16:31:37.966 INFO: Generated 2 Daikon trace files for instrumentation data.
+16:31:39.238 INFO: Finished executing daikon and generating invariants.
+16:31:39.239 INFO: Generated 3 DiG trace files for instrumentation data.
+16:31:51.808 DEBUG: Checking if all invariants have become stable or not.
+16:31:51.810 DEBUG: loop_o_lteq_p has changed for DIG between 2 and 1
+16:31:51.810 DEBUG: loop_p_bufsize0 has changed for daikon between 2 and 1
+16:31:51.810 DEBUG: Iteration 2 took 83316 ms.
+
+16:31:51.810 INFO: ---------------------- Starting iteration 3--------------------
+16:31:51.811 INFO: Instrumenting file: MADWiFi.java
+16:31:51.829 INFO: Augmenting input file MADWiFi.java
+16:31:51.829 INFO: Augmenting file: MADWiFi.java
+16:31:51.845 INFO: Compiling augmented file MADWiFi.java
+16:31:52.294 INFO: Running evosuite on augmented file MADWiFi.java
+16:32:58.493 DEBUG: Evosuite run took 66683 ms.
+16:32:58.493 INFO: Compiling reporting file MADWiFi.java
+16:32:59.313 INFO: Compiling evosuite test file for MADWiFi.java
+16:33:00.995 INFO: Running JUnit tests generated for MADWiFi.java
+16:33:02.704 INFO: Generating code.
+16:33:02.707 INFO: Generated 2 Daikon trace files for instrumentation data.
+16:33:04.048 INFO: Finished executing daikon and generating invariants.
+16:33:04.050 INFO: Generated 3 DiG trace files for instrumentation data.
+16:33:24.566 DEBUG: Checking if all invariants have become stable or not.
+16:33:24.566 DEBUG: loop_o_lteq_p has changed for DIG between 3 and 2
+16:33:24.567 DEBUG: loop_p_bufsize0 has changed for daikon between 3 and 2
+16:33:24.567 DEBUG: Iteration 3 took 92757 ms.
+
+16:33:24.567 INFO: ---------------------- Starting iteration 4--------------------
+16:33:24.567 INFO: Instrumenting file: MADWiFi.java
+16:33:24.577 INFO: Augmenting input file MADWiFi.java
+16:33:24.577 INFO: Augmenting file: MADWiFi.java
+16:33:24.586 INFO: Compiling augmented file MADWiFi.java
+16:33:24.997 INFO: Running evosuite on augmented file MADWiFi.java
+16:34:31.336 DEBUG: Evosuite run took 66768 ms.
+16:34:31.336 INFO: Compiling reporting file MADWiFi.java
+16:34:32.172 INFO: Compiling evosuite test file for MADWiFi.java
+16:34:33.885 INFO: Running JUnit tests generated for MADWiFi.java
+16:34:35.658 INFO: Generating code.
+16:34:35.668 INFO: Generated 2 Daikon trace files for instrumentation data.
+16:34:36.996 INFO: Finished executing daikon and generating invariants.
+16:34:36.999 INFO: Generated 3 DiG trace files for instrumentation data.
+16:35:00.206 DEBUG: Checking if all invariants have become stable or not.
+16:35:00.206 DEBUG: Invariants have stabilized for key: loop_o_lteq_p
+16:35:00.207 DEBUG: Invariants have stabilized for key: loop_p_bufsize0
+16:35:00.207 INFO: All invariants have stabilized at iteration 4
+----------------------------------------------------------
+The following iterations caused each key's stabilization:
+Key: loop_o_lteq_p, iteration: 4
+Key: loop_p_bufsize0, iteration: 4
+----------------------------------------------------------
+16:35:00.207 INFO: Processed 4 iterations.

@@ -40,7 +40,7 @@ public class MADWiFi {
             return;
         if (bufsize < leader_len)
             return;
-        if (true && !(ielen == 52) && !(ielen == 1) && !(ielen == 0) && !(ielen == 1549) && !(ielen == 1549)) {
+        if (true && !(ielen == 1) && !(ielen == 0) && !(ielen == 2) && !(ielen == 743) && !(ielen == 743)) {
             int p;
             int bufsize_0;
             p = 0;

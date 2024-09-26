@@ -20,39 +20,39 @@ Faker.fakemethod(int,\_int):::DATAGEN
 this_invocation_nonce
 1
 a
--1
+-789
 1
 b
-0
+1
 1
 
 Faker.fakemethod(int,\_int):::DATAGEN
 this_invocation_nonce
 1
 a
--1409
+-714
 1
 b
-290
+2815
 1
 
 Faker.fakemethod(int,\_int):::DATAGEN
 this_invocation_nonce
 1
 a
-1213
+-2221
 1
 b
-2670
+3460
 1
 
 Faker.fakemethod(int,\_int):::DATAGEN
 this_invocation_nonce
 1
 a
--752
+1
 1
 b
-0
+1978
 1
 

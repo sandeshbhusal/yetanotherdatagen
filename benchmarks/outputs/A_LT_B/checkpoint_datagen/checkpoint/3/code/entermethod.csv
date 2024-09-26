@@ -1,16 +1,12 @@
 vtrace1; I a; I b
-vtrace1; 0; -1
+vtrace1; -1; 0
+vtrace1; 1; -1
 vtrace1; 1; 1
-vtrace1; 2962; 2962
-vtrace1; -1; -1
+vtrace1; 0; 0
 vtrace1; 0; 1
-vtrace1; -2700; 0
-vtrace1; 2280; 0
-vtrace1; 0; 2962
-vtrace1; 2962; -192
-vtrace1; 0; 1722
-vtrace1; 0; 3864
-vtrace1; 1486; 1486
-vtrace1; 3864; 0
-vtrace1; -606; -606
-vtrace1; -606; 952
+vtrace1; -2414; 2913
+vtrace1; 0; 3572
+vtrace1; 1; -75
+vtrace1; 4936; 2611
+vtrace1; -15; -15
+vtrace1; 3171; -1

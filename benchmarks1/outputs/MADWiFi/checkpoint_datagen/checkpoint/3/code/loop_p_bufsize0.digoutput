@@ -1,0 +1,6 @@
+vtrace1 (5 invs):
+1. -p <= -2
+2. -bufsize_0 <= -8
+3. -bufsize_0 + p <= 0
+4. -bufsize_0 - p <= -12
+5. -bufsize_0 + p === 0 (mod 2)

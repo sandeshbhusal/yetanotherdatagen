@@ -3,10 +3,10 @@ Reading declaration files Processing trace data; reading 1 dtrace file:
 
 ===========================================================================
 Faker.fakemethod(int, int, int, int, int, int):::DATAGEN
-a one of { 0, 1, 684 }
-ab one of { -1515, -1224, 0 }
-bc one of { -1516, 0, 491 }
-b one of { -1908, -1516, 0 }
-ac one of { 0, 1, 3083 }
-c one of { 0, 2399 }
+a one of { -250, 0 }
+ab one of { -1017, 0, 1 }
+bc one of { 0, 1294, 2039 }
+b one of { -767, 0, 1 }
+ac one of { 0, 1811, 2038 }
+c one of { 0, 2038, 2061 }
 Exiting Daikon.

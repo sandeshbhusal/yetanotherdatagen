@@ -20,39 +20,29 @@ Faker.fakemethod(int,\_int):::DATAGEN
 this_invocation_nonce
 1
 ya
-2
+-823249412
 1
 xa
-0
+1777055296
 1
 
 Faker.fakemethod(int,\_int):::DATAGEN
 this_invocation_nonce
 1
 ya
-1929068027
+-1784
 1
 xa
-1569059067
+-976
 1
 
 Faker.fakemethod(int,\_int):::DATAGEN
 this_invocation_nonce
 1
 ya
--253914005
+64716444
 1
 xa
--441401636
-1
-
-Faker.fakemethod(int,\_int):::DATAGEN
-this_invocation_nonce
-1
-ya
-133984875
-1
-xa
--977067561
+-1791204030
 1
 

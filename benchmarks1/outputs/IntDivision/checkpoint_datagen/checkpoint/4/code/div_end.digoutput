@@ -1,0 +1,19 @@
+vtrace1 (18 invs):
+1. r == 0
+2. a - b - q + 1 == 0
+3. b*q - b - q + 1 == 0
+4. -r <= 0
+5. max(b, q) - a == 0
+6. min(b, 0) - r == 0
+7. r - min(q, 0) == 0
+8. r - min(a, 0) == 0
+9. max(b, q, 0) - a == 0
+10. r - min(a, b, 0) == 0
+11. max(b, q, r) - a == 0
+12. r - min(a, q, 0) == 0
+13. min(b, q, 0) - r == 0
+14. min(a, b, q, 0) - r == 0
+15. a - max(b, q, r, 0) == 0
+16. -b === 1 (mod 2)
+17. b - r === 1 (mod 2)
+18. -a - q === 0 (mod 2)

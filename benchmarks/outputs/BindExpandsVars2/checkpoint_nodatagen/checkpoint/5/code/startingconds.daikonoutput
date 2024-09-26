@@ -4,6 +4,7 @@ Reading declaration files Processing trace data; reading 1 dtrace file:
 ===========================================================================
 Faker.fakemethod(int, int, int, int):::DATAGEN
 cp1_off >= 0
+n2 >= 0
 cp1_off <= n1
 cp1_off <= MAXDATA
 n2 <= MAXDATA
