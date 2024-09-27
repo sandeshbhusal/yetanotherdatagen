@@ -1,0 +1,11 @@
+vtrace1 (10 invs):
+1. cp1_off*n2 - cp1_off - n1*n2 + n1 == 0
+2. cp1_off*n1 - 2*cp1_off - n1**2 + 2*n1 == 0
+3. cp1_off**2 - 2*cp1_off - n1**2 + 2*n1 == 0
+4. -n2 <= 0
+5. -cp1_off <= 0
+6. cp1_off - n1 <= 0
+7. -MAXDATA + n2 <= 0
+8. -MAXDATA + n1 <= 0
+9. -cp1_off + n1 <= 2
+10. MAXDATA - n2 === 0 (mod 2)

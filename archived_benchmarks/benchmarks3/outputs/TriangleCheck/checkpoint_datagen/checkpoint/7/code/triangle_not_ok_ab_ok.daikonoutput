@@ -1,0 +1,15 @@
+Daikon version 5.8.20, released May 14, 2024; http://plse.cs.washington.edu/daikon.
+Reading declaration files Processing trace data; reading 1 dtrace file:
+
+===========================================================================
+Faker.fakemethod(int, int, int, int, int, int):::DATAGEN
+a <= ab
+ab > ac
+ab > c
+bc >= c
+b >= ac
+b > c
+a - ab + b == 0
+a - ac + c == 0
+bc - b - c == 0
+Exiting Daikon.

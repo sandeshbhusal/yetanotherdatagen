@@ -1,0 +1,43 @@
+Starting DataPointServer on port 10058
+DataPointServer bound on port 10058 as DataPointServer_10058
+00:22:54.687 INFO: Starting datagen.
+
+00:22:54.702 INFO: ---------------------- Starting iteration 1--------------------
+00:22:54.709 INFO: Instrumenting file: DaggerEX1.java
+00:22:54.911 INFO: Augmenting input file DaggerEX1.java
+00:22:54.911 INFO: Augmenting file: DaggerEX1.java
+00:22:54.932 INFO: Compiling augmented file DaggerEX1.java
+00:22:55.335 INFO: Running evosuite on augmented file DaggerEX1.java
+00:23:07.816 DEBUG: Evosuite run took 13110 ms.
+00:23:07.816 INFO: Compiling reporting file DaggerEX1.java
+00:23:08.575 INFO: Compiling evosuite test file for DaggerEX1.java
+00:23:10.211 INFO: Running JUnit tests generated for DaggerEX1.java
+00:23:10.937 INFO: Generating code.
+00:23:10.937 INFO: Generated 1 Daikon trace files for instrumentation data.
+00:23:11.565 INFO: Finished executing daikon and generating invariants.
+00:23:11.566 INFO: Generated 2 DiG trace files for instrumentation data.
+00:23:18.470 INFO: Finished first iteration. No stabilization checks will be done
+00:23:18.477 DEBUG: Iteration 1 took 23770 ms.
+
+00:23:18.477 INFO: ---------------------- Starting iteration 2--------------------
+00:23:18.478 INFO: Instrumenting file: DaggerEX1.java
+00:23:18.493 INFO: Augmenting input file DaggerEX1.java
+00:23:18.493 INFO: Augmenting file: DaggerEX1.java
+00:23:18.509 INFO: Compiling augmented file DaggerEX1.java
+00:23:18.958 INFO: Running evosuite on augmented file DaggerEX1.java
+00:24:29.804 DEBUG: Evosuite run took 71327 ms.
+00:24:29.805 INFO: Compiling reporting file DaggerEX1.java
+00:24:30.532 INFO: Compiling evosuite test file for DaggerEX1.java
+00:24:32.118 INFO: Running JUnit tests generated for DaggerEX1.java
+00:24:32.855 INFO: Generating code.
+00:24:32.855 INFO: Generated 1 Daikon trace files for instrumentation data.
+00:24:33.428 INFO: Finished executing daikon and generating invariants.
+00:24:33.428 INFO: Generated 2 DiG trace files for instrumentation data.
+00:24:40.574 DEBUG: Checking if all invariants have become stable or not.
+00:24:40.576 DEBUG: Invariants have stabilized for key: endfunc
+00:24:40.576 INFO: All invariants have stabilized at iteration 2
+----------------------------------------------------------
+The following iterations caused each key's stabilization:
+Key: endfunc, iteration: 2
+----------------------------------------------------------
+00:24:40.576 INFO: Processed 2 iterations.

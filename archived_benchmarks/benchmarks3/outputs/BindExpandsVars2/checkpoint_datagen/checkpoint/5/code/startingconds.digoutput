@@ -1,0 +1,6 @@
+vtrace1 (5 invs):
+1. -n2 <= 0
+2. -cp1_off <= 0
+3. cp1_off - n1 <= 0
+4. -MAXDATA + n2 <= 0
+5. MAXDATA + n1 === 0 (mod 2)

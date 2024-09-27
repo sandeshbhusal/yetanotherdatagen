@@ -1,0 +1,5 @@
+instrumentation_point, invariants
+entermethod,
+exitmethod,
+a_lt_b_truebranch, a<b
+a_lt_b_falsebranch, a>=b

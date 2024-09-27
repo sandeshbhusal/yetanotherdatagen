@@ -1,0 +1,9 @@
+vtrace1; I cp1_off; I n1; I n2; I MAXDATA
+vtrace1; 0; 0; 0; 0
+vtrace1; 0; 0; 1; 1
+vtrace1; 1; 2036; 1; 2036
+vtrace1; 8842; 8842; 8842; 8842
+vtrace1; 1253; 1253; 10136; 10136
+vtrace1; 4594; 4594; 4594; 4594
+vtrace1; 0; 2002; 2002; 2002
+vtrace1; 0; 0; 0; 2002

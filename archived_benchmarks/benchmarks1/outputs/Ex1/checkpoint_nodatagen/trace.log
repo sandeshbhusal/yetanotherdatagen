@@ -1,0 +1,61 @@
+Starting DataPointServer on port 15781
+DataPointServer bound on port 15781 as DataPointServer_15781
+20:12:45.454 INFO: Starting datagen.
+
+20:12:45.481 INFO: ---------------------- Starting iteration 1--------------------
+20:12:45.491 INFO: Instrumenting file: Ex1.java
+20:12:45.731 INFO: Augmenting input file Ex1.java
+20:12:45.731 INFO: Augmenting file: Ex1.java
+20:12:45.747 INFO: Compiling augmented file Ex1.java
+20:12:46.174 INFO: Running evosuite on augmented file Ex1.java
+20:12:59.237 DEBUG: Evosuite run took 13754 ms.
+20:12:59.238 INFO: Compiling reporting file Ex1.java
+20:12:59.996 INFO: Compiling evosuite test file for Ex1.java
+20:13:01.746 INFO: Running JUnit tests generated for Ex1.java
+20:13:02.493 INFO: Generating code.
+20:13:02.493 INFO: Generated 1 Daikon trace files for instrumentation data.
+20:13:03.118 INFO: Finished executing daikon and generating invariants.
+20:13:03.118 INFO: Generated 2 DiG trace files for instrumentation data.
+20:13:10.459 INFO: Finished first iteration. No stabilization checks will be done
+20:13:10.467 DEBUG: Iteration 1 took 24980 ms.
+
+20:13:10.467 INFO: ---------------------- Starting iteration 2--------------------
+20:13:10.468 INFO: Instrumenting file: Ex1.java
+20:13:10.484 INFO: Augmenting input file Ex1.java
+20:13:10.484 INFO: Augmenting file: Ex1.java
+20:13:10.496 INFO: Compiling augmented file Ex1.java
+20:13:10.882 INFO: Running evosuite on augmented file Ex1.java
+20:13:18.707 DEBUG: Evosuite run took 8240 ms.
+20:13:18.708 INFO: Compiling reporting file Ex1.java
+20:13:19.466 INFO: Compiling evosuite test file for Ex1.java
+20:13:21.161 INFO: Running JUnit tests generated for Ex1.java
+20:13:21.852 INFO: Generating code.
+20:13:21.852 INFO: Generated 1 Daikon trace files for instrumentation data.
+20:13:22.430 INFO: Finished executing daikon and generating invariants.
+20:13:22.431 INFO: Generated 2 DiG trace files for instrumentation data.
+20:13:29.970 DEBUG: Checking if all invariants have become stable or not.
+20:13:29.972 DEBUG: exitmethod has changed for daikon between 2 and 1
+20:13:29.972 DEBUG: Iteration 2 took 19505 ms.
+
+20:13:29.972 INFO: ---------------------- Starting iteration 3--------------------
+20:13:29.972 INFO: Instrumenting file: Ex1.java
+20:13:29.984 INFO: Augmenting input file Ex1.java
+20:13:29.984 INFO: Augmenting file: Ex1.java
+20:13:29.993 INFO: Compiling augmented file Ex1.java
+20:13:30.423 INFO: Running evosuite on augmented file Ex1.java
+20:13:41.343 DEBUG: Evosuite run took 11371 ms.
+20:13:41.344 INFO: Compiling reporting file Ex1.java
+20:13:42.154 INFO: Compiling evosuite test file for Ex1.java
+20:13:43.815 INFO: Running JUnit tests generated for Ex1.java
+20:13:44.517 INFO: Generating code.
+20:13:44.518 INFO: Generated 1 Daikon trace files for instrumentation data.
+20:13:45.100 INFO: Finished executing daikon and generating invariants.
+20:13:45.100 INFO: Generated 2 DiG trace files for instrumentation data.
+20:13:52.673 DEBUG: Checking if all invariants have become stable or not.
+20:13:52.674 DEBUG: Invariants have stabilized for key: exitmethod
+20:13:52.674 INFO: All invariants have stabilized at iteration 3
+----------------------------------------------------------
+The following iterations caused each key's stabilization:
+Key: exitmethod, iteration: 3
+----------------------------------------------------------
+20:13:52.674 INFO: Processed 3 iterations.

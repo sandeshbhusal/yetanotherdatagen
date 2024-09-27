@@ -1,0 +1,6 @@
+vtrace1 (5 invs):
+1. v1 - max(v2, v3, 0) <= 0
+2. min(unknown_int, 0) - v1 <= 0
+3. min(unknown_int, v2) - v1 <= 0
+4. min(unknown_int, v3) - v1 <= 0
+5. v1 - max(unknown_int, v2, v3) <= 0

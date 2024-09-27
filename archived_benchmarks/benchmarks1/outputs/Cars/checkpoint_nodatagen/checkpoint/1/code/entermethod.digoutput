@@ -1,0 +1,11 @@
+vtrace1 (10 invs):
+1. -unknown_int*v1 + v1*v3 == 0
+2. v3 <= 5
+3. -v3 <= 1
+4. -v1 - v3 <= 1
+5. v3 - max(v2, 0) <= 0
+6. min(v1, v2) - v3 <= 0
+7. min(unknown_int, v2) - v1 <= 0
+8. v3 - max(unknown_int, v1) <= 0
+9. min(unknown_int, v1, 0) - v3 <= 0
+10. -unknown_int + v3 === 0 (mod 3)

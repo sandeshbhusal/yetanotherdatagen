@@ -1,0 +1,46 @@
+vtrace1 (45 invs):
+1. b - c == 0
+2. ab - ac == 0
+3. bc - 2*c == 0
+4. a - ac + c == 0
+5. ac*c - ac - c**2 + 1 == 0
+6. ac**2 - 5*ac - c**2 + 3*c + 4 == 0
+7. -a + bc <= 0
+8. min(a, c) - b == 0
+9. c - min(a, b) == 0
+10. min(ab, c) - b == 0
+11. min(ac, c) - b == 0
+12. min(ac, b) - c == 0
+13. c - min(ab, b) == 0
+14. ab - max(ac, b) == 0
+15. ac - max(ab, c) == 0
+16. ac - max(ab, b) == 0
+17. ab - max(ac, c) == 0
+18. ab - max(ac, bc) == 0
+19. ac - max(ab, bc) == 0
+20. min(a, ab, b) - c == 0
+21. min(a, ac, b) - c == 0
+22. b - min(a, ac, c) == 0
+23. a - 1 - max(c, 0) == 0
+24. max(b, 0) - a - 1 == 0
+25. b - min(a, ab, c) == 0
+26. min(ab, ac, b) - c == 0
+27. b - min(ab, ac, c) == 0
+28. max(ac, b, c) - ab == 0
+29. ac - max(ab, b, c) == 0
+30. ab - max(ac, bc, c) == 0
+31. ab - max(ac, b, bc) == 0
+32. ac - 1 - max(b, bc) == 0
+33. max(b, bc) - ab - 1 == 0
+34. max(ab, b, bc) - ac == 0
+35. max(bc, c) - ab - 1 == 0
+36. ac - 1 - max(bc, c) == 0
+37. max(ab, bc, c) - ac == 0
+38. a - 1 - max(b, c, 0) == 0
+39. min(a, ab, ac, b) - c == 0
+40. b - min(a, ab, ac, c) == 0
+41. max(ab, b, bc, c) - ac == 0
+42. ab - max(ac, b, bc, c) == 0
+43. max(b, bc, c) - ab - 1 == 0
+44. ac - 1 - max(b, bc, c) == 0
+45. c + 2 - max(a, ab, bc, 0) <= 0

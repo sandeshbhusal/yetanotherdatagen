@@ -1,0 +1,9 @@
+vtrace1 (8 invs):
+1. y == 0
+2. x == 0
+3. x <= 0
+4. min(y, 0) - x == 0
+5. x - max(y, 0) == 0
+6. min(x, 0) - y == 0
+7. max(x, 0) - y == 0
+8. x - 1 - max(condition, outerloop) <= 0

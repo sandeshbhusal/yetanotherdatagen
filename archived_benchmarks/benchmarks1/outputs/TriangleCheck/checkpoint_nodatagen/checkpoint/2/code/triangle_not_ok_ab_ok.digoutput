@@ -1,0 +1,14 @@
+vtrace1 (13 invs):
+1. a - ab + b == 0
+2. -a + ab - bc + c == 0
+3. -2*a + ab + ac - bc == 0
+4. a - b <= 0
+5. a - ac <= 1
+6. ac - b <= 0
+7. a - bc <= 0
+8. ac - bc <= 0
+9. -ac - c <= -1
+10. -ab + bc <= -1
+11. ac + b === 0 (mod 2)
+12. a + bc === 0 (mod 2)
+13. ab - c === 2 (mod 14)

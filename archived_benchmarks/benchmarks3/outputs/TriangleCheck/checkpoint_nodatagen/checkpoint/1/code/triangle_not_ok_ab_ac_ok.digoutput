@@ -1,0 +1,84 @@
+vtrace1 (83 invs):
+1. c - 1 == 0
+2. a - ac + 1 == 0
+3. ab - ac <= 0
+4. min(a, 0) - c - 1 == 0
+5. c - 1 - min(b, 0) == 0
+6. max(a, c) - ac - 1 == 0
+7. min(a, b) - bc - 1 == 0
+8. max(a, b) - ac - 1 == 0
+9. c - 1 - min(bc, 0) == 0
+10. min(b, c) - bc - 1 == 0
+11. c - 1 - min(ac, 0) == 0
+12. max(b, 0) - bc - 1 == 0
+13. ac - 1 - max(a, 0) == 0
+14. c - 1 - min(ab, 0) == 0
+15. bc - 1 - min(ab, b) == 0
+16. max(a, bc) - ac - 1 == 0
+17. bc - 1 - min(ac, b) == 0
+18. ac - 1 - min(a, ab) == 0
+19. min(a, b, 0) - c - 1 == 0
+20. c - 1 - min(a, ab, 0) == 0
+21. ac - 1 - max(a, c, 0) == 0
+22. max(a, b, 0) - ac - 1 == 0
+23. max(a, b, c) - ac - 1 == 0
+24. bc - 1 - min(a, b, c) == 0
+25. c - 1 - min(ac, b, 0) == 0
+26. c - 1 - min(b, bc, 0) == 0
+27. c - 1 - min(ab, b, 0) == 0
+28. min(a, ac, 0) - c - 1 == 0
+29. c - 1 - min(a, bc, 0) == 0
+30. ac - 1 - max(a, bc, 0) == 0
+31. ac - 1 - max(a, bc, c) == 0
+32. c - 1 - min(ac, bc, 0) == 0
+33. max(a, b, bc) - ac - 1 == 0
+34. bc - 1 - min(a, ac, b) == 0
+35. bc - 1 - min(a, ab, b) == 0
+36. min(ab, b, c) - bc - 1 == 0
+37. min(ab, ac, 0) - c - 1 == 0
+38. bc - 1 - min(ac, b, c) == 0
+39. min(ab, bc, 0) - c - 1 == 0
+40. min(ab, ac, b) - bc - 1 == 0
+41. min(a, ac, b, 0) - c - 1 == 0
+42. c - 1 - min(a, ab, b, 0) == 0
+43. max(a, b, c, 0) - ac - 1 == 0
+44. min(a, b, bc, 0) - c - 1 == 0
+45. bc - 1 - min(a, ab, b, c) == 0
+46. min(ab, ac, b, 0) - c - 1 == 0
+47. ac - 1 - max(a, bc, c, 0) == 0
+48. ac - 1 - max(a, b, bc, c) == 0
+49. c - 1 - min(ac, b, bc, 0) == 0
+50. c - 1 - min(a, ab, ac, 0) == 0
+51. min(a, ab, bc, 0) - c - 1 == 0
+52. max(a, b, bc, 0) - ac - 1 == 0
+53. c - 1 - min(ab, b, bc, 0) == 0
+54. min(a, ac, bc, 0) - c - 1 == 0
+55. bc - 1 - min(a, ac, b, c) == 0
+56. bc - 1 - min(ab, ac, b, c) == 0
+57. c - 1 - min(ab, ac, bc, 0) == 0
+58. bc - 1 - min(a, ab, ac, b) == 0
+59. min(a, ac, b, bc, 0) - c - 1 == 0
+60. ac - 1 - max(a, b, bc, c, 0) == 0
+61. min(a, ab, ac, b, 0) - c - 1 == 0
+62. c - 1 - min(a, ab, b, bc, 0) == 0
+63. min(a, ab, ac, bc, 0) - c - 1 == 0
+64. min(a, ab, ac, b, c) - bc - 1 == 0
+65. min(ab, ac, b, bc, 0) - c - 1 == 0
+66. min(a, ab, ac, b, bc, 0) - c - 1 == 0
+67. ab === 3 (mod 3582)
+68. a + b === 3 (mod 3582)
+69. ab - b === 2 (mod 3583)
+70. ac + c === 4 (mod 3583)
+71. -ac === 3580 (mod 3583)
+72. a + ab === 5 (mod 7165)
+73. a - bc === 0 (mod 3584)
+74. ac - b === 2 (mod 3584)
+75. ab + ac === 6 (mod 7165)
+76. -a - c === 3580 (mod 3583)
+77. -ac - b === 3578 (mod 3582)
+78. -ab - c === 3578 (mod 3582)
+79. -ab - b === 3577 (mod 3581)
+80. -ab - bc === 3576 (mod 3581)
+81. -ab + bc === 3582 (mod 3583)
+82. -ac + bc === 3583 (mod 3584)
+83. -ac - bc === 3577 (mod 3582)

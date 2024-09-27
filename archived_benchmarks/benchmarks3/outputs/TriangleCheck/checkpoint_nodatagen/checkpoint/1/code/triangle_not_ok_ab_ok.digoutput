@@ -1,0 +1,57 @@
+vtrace1 (56 invs):
+1. a - 1 == 0
+2. ab - b - 1 == 0
+3. -ac + bc <= 0
+4. min(b, bc, 0) - c <= 0
+5. a - 1 - max(c, 0) == 0
+6. b - max(ac, bc, 0) <= 0
+7. ac - max(bc, c, 0) <= 0
+8. min(b, c) - ac - 1 == 0
+9. max(b, c) - ab - 1 == 0
+10. ac - 1 - min(c, 0) == 0
+11. ac - 1 - min(a, c) == 0
+12. min(a, b) - ab - 1 == 0
+13. ab - 1 - max(ac, b) == 0
+14. ab - 1 - max(b, bc) == 0
+15. min(ab, c) - ac - 1 == 0
+16. min(a, ac, 0) - b - 1 <= 0
+17. min(a, b, c) - ac - 1 == 0
+18. ac - 1 - min(a, c, 0) == 0
+19. min(b, c, 0) - ac - 1 == 0
+20. ab - 1 - max(ac, b, c) == 0
+21. min(ab, c, 0) - ac - 1 == 0
+22. min(a, ab, c) - ac - 1 == 0
+23. min(ab, b, c) - ac - 1 == 0
+24. max(b, bc, c) - ab - 1 == 0
+25. max(ac, b, bc) - ab - 1 == 0
+26. ac - 1 - min(a, b, c, 0) == 0
+27. ac - 1 - min(a, ab, c, 0) == 0
+28. min(a, ab, b, c) - ac - 1 == 0
+29. min(ab, b, c, 0) - ac - 1 == 0
+30. max(ac, b, bc, c) - ab - 1 == 0
+31. ac - 1 - min(a, ab, b, c, 0) == 0
+32. -ab === 753 (mod 755)
+33. a + ab === 3 (mod 755)
+34. a + c === 1 (mod 2583)
+35. ac + b === 2 (mod 3338)
+36. ac + c === 1 (mod 5166)
+37. ac - b === 0 (mod 1828)
+38. a + ac === 2 (mod 2583)
+39. a - bc === 0 (mod 3338)
+40. -bc === 3337 (mod 3338)
+41. -a + ab === 1 (mod 755)
+42. -ac === 2582 (mod 2583)
+43. ab - c === 2 (mod 1828)
+44. ab + ac === 3 (mod 3338)
+45. -b + bc === 0 (mod 2583)
+46. ab - bc === 1 (mod 2583)
+47. -a + ac === 0 (mod 2583)
+48. ab + bc === 3 (mod 4093)
+49. -ac + bc === 0 (mod 755)
+50. ab - ac === 1 (mod 1828)
+51. -bc + c === 754 (mod 755)
+52. -b - c === 3337 (mod 3338)
+53. -bc - c === 5920 (mod 5921)
+54. -ab - b === 1507 (mod 1510)
+55. -b - bc === 4091 (mod 4093)
+56. -ac - bc === 5919 (mod 5921)

@@ -1,0 +1,158 @@
+decl-version 2.0
+var-comparability none
+
+ppt Faker.fakemethod(int,\_int,\_int,\_int):::DATAGEN
+ppt-type enter
+variable a
+  var-kind variable
+  dec-type int
+  rep-type int
+  flags is_param
+  comparability 22
+variable q
+  var-kind variable
+  dec-type int
+  rep-type int
+  flags is_param
+  comparability 22
+variable b
+  var-kind variable
+  dec-type int
+  rep-type int
+  flags is_param
+  comparability 22
+variable r
+  var-kind variable
+  dec-type int
+  rep-type int
+  flags is_param
+  comparability 22
+
+Faker.fakemethod(int,\_int,\_int,\_int):::DATAGEN
+this_invocation_nonce
+1
+a
+1504
+1
+q
+1
+1
+b
+1145
+1
+r
+359
+1
+
+Faker.fakemethod(int,\_int,\_int,\_int):::DATAGEN
+this_invocation_nonce
+1
+a
+880
+1
+q
+1
+1
+b
+880
+1
+r
+0
+1
+
+Faker.fakemethod(int,\_int,\_int,\_int):::DATAGEN
+this_invocation_nonce
+1
+a
+1145
+1
+q
+1
+1
+b
+1145
+1
+r
+0
+1
+
+Faker.fakemethod(int,\_int,\_int,\_int):::DATAGEN
+this_invocation_nonce
+1
+a
+880
+1
+q
+880
+1
+b
+1
+1
+r
+0
+1
+
+Faker.fakemethod(int,\_int,\_int,\_int):::DATAGEN
+this_invocation_nonce
+1
+a
+1208
+1
+q
+1208
+1
+b
+1
+1
+r
+0
+1
+
+Faker.fakemethod(int,\_int,\_int,\_int):::DATAGEN
+this_invocation_nonce
+1
+a
+1991
+1
+q
+5
+1
+b
+390
+1
+r
+41
+1
+
+Faker.fakemethod(int,\_int,\_int,\_int):::DATAGEN
+this_invocation_nonce
+1
+a
+1261
+1
+q
+1261
+1
+b
+1
+1
+r
+0
+1
+
+Faker.fakemethod(int,\_int,\_int,\_int):::DATAGEN
+this_invocation_nonce
+1
+a
+391
+1
+q
+1
+1
+b
+391
+1
+r
+0
+1
+

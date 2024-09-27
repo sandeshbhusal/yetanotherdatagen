@@ -1,0 +1,8 @@
+vtrace1 (7 invs):
+1. a - ac + c == 0
+2. b - bc + c == 0
+3. ab - ac - bc + 2*c == 0
+4. -a + bc <= 0
+5. -ab + c <= -1
+6. -ac + b <= -1
+7. min(a, ab, 0) - ac <= 0

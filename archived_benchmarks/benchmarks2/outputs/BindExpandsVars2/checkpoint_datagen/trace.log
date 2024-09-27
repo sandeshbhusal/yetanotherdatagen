@@ -1,0 +1,137 @@
+Starting DataPointServer on port 15916
+DataPointServer bound on port 15916 as DataPointServer_15916
+16:57:19.570 INFO: Starting datagen.
+
+16:57:19.586 INFO: ---------------------- Starting iteration 1--------------------
+16:57:19.592 INFO: Instrumenting file: BindExpandsVars2.java
+16:57:19.788 INFO: Augmenting input file BindExpandsVars2.java
+16:57:19.788 INFO: Augmenting file: BindExpandsVars2.java
+16:57:19.800 INFO: Compiling augmented file BindExpandsVars2.java
+16:57:20.199 INFO: Running evosuite on augmented file BindExpandsVars2.java
+16:58:26.412 DEBUG: Evosuite run took 66825 ms.
+16:58:26.413 INFO: Compiling reporting file BindExpandsVars2.java
+16:58:27.157 INFO: Compiling evosuite test file for BindExpandsVars2.java
+16:58:28.853 INFO: Running JUnit tests generated for BindExpandsVars2.java
+16:58:31.655 INFO: Generating code.
+16:58:31.670 INFO: Generated 2 Daikon trace files for instrumentation data.
+16:58:33.052 INFO: Finished executing daikon and generating invariants.
+16:58:33.060 INFO: Generated 3 DiG trace files for instrumentation data.
+16:58:54.641 INFO: Finished first iteration. No stabilization checks will be done
+16:58:54.648 DEBUG: Iteration 1 took 95057 ms.
+
+16:58:54.648 INFO: ---------------------- Starting iteration 2--------------------
+16:58:54.649 INFO: Instrumenting file: BindExpandsVars2.java
+16:58:54.662 INFO: Augmenting input file BindExpandsVars2.java
+16:58:54.662 INFO: Augmenting file: BindExpandsVars2.java
+16:58:54.684 INFO: Compiling augmented file BindExpandsVars2.java
+16:58:55.111 INFO: Running evosuite on augmented file BindExpandsVars2.java
+17:00:01.894 DEBUG: Evosuite run took 67246 ms.
+17:00:01.895 INFO: Compiling reporting file BindExpandsVars2.java
+17:00:02.657 INFO: Compiling evosuite test file for BindExpandsVars2.java
+17:00:04.293 INFO: Running JUnit tests generated for BindExpandsVars2.java
+17:00:06.405 INFO: Generating code.
+17:00:06.422 INFO: Generated 2 Daikon trace files for instrumentation data.
+17:00:07.874 INFO: Finished executing daikon and generating invariants.
+17:00:07.883 INFO: Generated 3 DiG trace files for instrumentation data.
+17:00:34.416 DEBUG: Checking if all invariants have become stable or not.
+17:00:34.418 DEBUG: loopinvariant has changed for daikon between 2 and 1
+17:00:34.419 DEBUG: startingconds has changed for daikon between 2 and 1
+17:00:34.419 DEBUG: Iteration 2 took 99771 ms.
+
+17:00:34.419 INFO: ---------------------- Starting iteration 3--------------------
+17:00:34.420 INFO: Instrumenting file: BindExpandsVars2.java
+17:00:34.435 INFO: Augmenting input file BindExpandsVars2.java
+17:00:34.435 INFO: Augmenting file: BindExpandsVars2.java
+17:00:34.451 INFO: Compiling augmented file BindExpandsVars2.java
+17:00:34.851 INFO: Running evosuite on augmented file BindExpandsVars2.java
+17:01:41.865 DEBUG: Evosuite run took 67446 ms.
+17:01:41.866 INFO: Compiling reporting file BindExpandsVars2.java
+17:01:42.661 INFO: Compiling evosuite test file for BindExpandsVars2.java
+17:01:44.294 INFO: Running JUnit tests generated for BindExpandsVars2.java
+17:01:49.030 INFO: Generating code.
+17:01:49.054 INFO: Generated 2 Daikon trace files for instrumentation data.
+17:01:50.569 INFO: Finished executing daikon and generating invariants.
+17:01:50.586 INFO: Generated 3 DiG trace files for instrumentation data.
+17:02:26.712 DEBUG: Checking if all invariants have become stable or not.
+17:02:26.712 DEBUG: loopinvariant has changed for daikon between 3 and 2
+17:02:26.713 DEBUG: startingconds has changed for daikon between 3 and 2
+17:02:26.713 DEBUG: Iteration 3 took 112294 ms.
+
+17:02:26.713 INFO: ---------------------- Starting iteration 4--------------------
+17:02:26.713 INFO: Instrumenting file: BindExpandsVars2.java
+17:02:26.724 INFO: Augmenting input file BindExpandsVars2.java
+17:02:26.724 INFO: Augmenting file: BindExpandsVars2.java
+17:02:26.737 INFO: Compiling augmented file BindExpandsVars2.java
+17:02:27.137 INFO: Running evosuite on augmented file BindExpandsVars2.java
+17:03:34.370 DEBUG: Evosuite run took 67657 ms.
+17:03:34.370 INFO: Compiling reporting file BindExpandsVars2.java
+17:03:35.144 INFO: Compiling evosuite test file for BindExpandsVars2.java
+17:03:36.859 INFO: Running JUnit tests generated for BindExpandsVars2.java
+17:03:40.483 INFO: Generating code.
+17:03:40.519 INFO: Generated 2 Daikon trace files for instrumentation data.
+17:03:42.076 INFO: Finished executing daikon and generating invariants.
+17:03:42.092 INFO: Generated 3 DiG trace files for instrumentation data.
+17:04:34.374 DEBUG: Checking if all invariants have become stable or not.
+17:04:34.375 DEBUG: Invariants have stabilized for key: loopinvariant
+17:04:34.375 DEBUG: startingconds has changed for DIG between 4 and 3
+17:04:34.375 DEBUG: Iteration 4 took 127662 ms.
+
+17:04:34.375 INFO: ---------------------- Starting iteration 5--------------------
+17:04:34.376 INFO: Instrumenting file: BindExpandsVars2.java
+17:04:34.387 INFO: Augmenting input file BindExpandsVars2.java
+17:04:34.387 INFO: Augmenting file: BindExpandsVars2.java
+17:04:34.398 INFO: Compiling augmented file BindExpandsVars2.java
+17:04:34.831 INFO: Running evosuite on augmented file BindExpandsVars2.java
+17:05:43.239 DEBUG: Evosuite run took 68864 ms.
+17:05:43.240 INFO: Compiling reporting file BindExpandsVars2.java
+17:05:44.024 INFO: Compiling evosuite test file for BindExpandsVars2.java
+17:05:45.616 INFO: Running JUnit tests generated for BindExpandsVars2.java
+17:05:49.829 INFO: Generating code.
+17:05:49.860 INFO: Generated 2 Daikon trace files for instrumentation data.
+17:05:51.552 INFO: Finished executing daikon and generating invariants.
+17:05:51.564 INFO: Generated 3 DiG trace files for instrumentation data.
+17:06:57.862 DEBUG: Checking if all invariants have become stable or not.
+17:06:57.862 DEBUG: startingconds has changed for DIG between 5 and 4
+17:06:57.862 DEBUG: Iteration 5 took 143487 ms.
+
+17:06:57.862 INFO: ---------------------- Starting iteration 6--------------------
+17:06:57.863 INFO: Instrumenting file: BindExpandsVars2.java
+17:06:57.873 INFO: Augmenting input file BindExpandsVars2.java
+17:06:57.873 INFO: Augmenting file: BindExpandsVars2.java
+17:06:57.882 INFO: Compiling augmented file BindExpandsVars2.java
+17:06:58.281 INFO: Running evosuite on augmented file BindExpandsVars2.java
+17:08:04.532 DEBUG: Evosuite run took 66670 ms.
+17:08:04.532 INFO: Compiling reporting file BindExpandsVars2.java
+17:08:05.282 INFO: Compiling evosuite test file for BindExpandsVars2.java
+17:08:06.996 INFO: Running JUnit tests generated for BindExpandsVars2.java
+17:08:10.249 INFO: Generating code.
+17:08:10.280 INFO: Generated 2 Daikon trace files for instrumentation data.
+17:08:12.052 INFO: Finished executing daikon and generating invariants.
+17:08:12.060 INFO: Generated 3 DiG trace files for instrumentation data.
+17:09:24.269 DEBUG: Checking if all invariants have become stable or not.
+17:09:24.269 DEBUG: startingconds has changed for DIG between 6 and 5
+17:09:24.269 DEBUG: Iteration 6 took 146407 ms.
+
+17:09:24.269 INFO: ---------------------- Starting iteration 7--------------------
+17:09:24.270 INFO: Instrumenting file: BindExpandsVars2.java
+17:09:24.279 INFO: Augmenting input file BindExpandsVars2.java
+17:09:24.280 INFO: Augmenting file: BindExpandsVars2.java
+17:09:24.292 INFO: Compiling augmented file BindExpandsVars2.java
+17:09:24.689 INFO: Running evosuite on augmented file BindExpandsVars2.java
+17:10:32.002 DEBUG: Evosuite run took 67733 ms.
+17:10:32.002 INFO: Compiling reporting file BindExpandsVars2.java
+17:10:32.777 INFO: Compiling evosuite test file for BindExpandsVars2.java
+17:10:34.378 INFO: Running JUnit tests generated for BindExpandsVars2.java
+17:10:39.347 INFO: Generating code.
+17:10:39.372 INFO: Generated 2 Daikon trace files for instrumentation data.
+17:10:41.206 INFO: Finished executing daikon and generating invariants.
+17:10:41.215 INFO: Generated 3 DiG trace files for instrumentation data.
+17:12:12.665 DEBUG: Checking if all invariants have become stable or not.
+17:12:12.666 DEBUG: Invariants have stabilized for key: startingconds
+17:12:12.666 INFO: All invariants have stabilized at iteration 7
+----------------------------------------------------------
+The following iterations caused each key's stabilization:
+Key: loopinvariant, iteration: 4
+Key: startingconds, iteration: 7
+----------------------------------------------------------
+17:12:12.666 INFO: Processed 7 iterations.

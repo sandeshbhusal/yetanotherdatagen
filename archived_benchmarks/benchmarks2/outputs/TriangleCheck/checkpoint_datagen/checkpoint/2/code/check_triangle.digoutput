@@ -1,0 +1,3 @@
+vtrace1 (2 invs):
+1. min(b, c) - a <= 0
+2. a - 1 - max(b, c, 0) <= 0

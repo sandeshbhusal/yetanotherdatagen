@@ -1,0 +1,4 @@
+vtrace1 (3 invs):
+1. -a + b <= 1
+2. min(b, 0) - a <= 0
+3. min(a, 0) - b <= 0

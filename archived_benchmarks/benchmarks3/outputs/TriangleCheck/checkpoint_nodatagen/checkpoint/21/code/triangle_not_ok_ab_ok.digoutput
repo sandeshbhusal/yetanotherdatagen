@@ -1,0 +1,12 @@
+vtrace1 (11 invs):
+1. b - bc + c == 0
+2. a - ac + c == 0
+3. ab - ac - bc + 2*c == 0
+4. ac - b <= 0
+5. -a + ac <= 1
+6. -ab + c <= -1
+7. ac - max(a, 0) <= 0
+8. ac - max(bc, 0) <= 0
+9. a - 1 - max(ab, 0) <= 0
+10. b - 1 - max(ab, ac, bc, 0) <= 0
+11. c + 2 - max(ab, ac, b, bc) <= 0

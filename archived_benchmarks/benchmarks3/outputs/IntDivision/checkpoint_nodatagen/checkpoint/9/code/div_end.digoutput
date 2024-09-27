@@ -1,0 +1,6 @@
+vtrace1 (5 invs):
+1. -a + b*q + r == 0
+2. -q <= -1
+3. -a + b <= 0
+4. max(b, q) - a <= 0
+5. q - 1 - min(b, r) <= 0

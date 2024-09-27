@@ -1,0 +1,227 @@
+vtrace1 (226 invs):
+1. b - c == 0
+2. a - c == 0
+3. bc - 2*c == 0
+4. ab - 2*c == 0
+5. ac - 2*c == 0
+6. -a + b <= 0
+7. -ac + c <= -1
+8. min(a, c) - b == 0
+9. c - max(a, 0) == 0
+10. c - max(b, 0) == 0
+11. max(b, c) - a == 0
+12. c - min(a, b) == 0
+13. max(c, 0) - a == 0
+14. min(b, c) - a == 0
+15. max(b, 0) - a == 0
+16. max(a, 0) - b == 0
+17. c - max(a, b) == 0
+18. max(c, 0) - b == 0
+19. b - max(a, c) == 0
+20. c - min(ab, b) == 0
+21. a - min(ab, c) == 0
+22. c - min(a, ab) == 0
+23. min(a, ab) - b == 0
+24. c - min(a, ac) == 0
+25. min(a, bc) - b == 0
+26. min(b, bc) - c == 0
+27. min(ab, c) - b == 0
+28. b - min(bc, c) == 0
+29. min(ac, b) - a == 0
+30. b - min(a, ac) == 0
+31. a - min(ac, c) == 0
+32. min(b, bc) - a == 0
+33. min(ab, b) - a == 0
+34. a - min(bc, c) == 0
+35. min(ac, c) - b == 0
+36. c - min(a, bc) == 0
+37. c - min(ac, b) == 0
+38. max(a, ac) - ab == 0
+39. bc - max(ab, 0) == 0
+40. bc - max(ac, b) == 0
+41. bc - max(ab, c) == 0
+42. bc - max(ac, c) == 0
+43. max(a, bc) - ac == 0
+44. max(ac, c) - ab == 0
+45. max(ac, 0) - bc == 0
+46. ab - max(b, bc) == 0
+47. max(a, bc) - ab == 0
+48. max(a, ab) - bc == 0
+49. max(ab, 0) - ac == 0
+50. ab - max(bc, 0) == 0
+51. max(ac, b) - ab == 0
+52. bc - max(a, ac) == 0
+53. ac - max(b, bc) == 0
+54. ac - max(ab, c) == 0
+55. ac - max(bc, 0) == 0
+56. bc - max(ab, b) == 0
+57. max(a, ab) - ac == 0
+58. ab - max(bc, c) == 0
+59. max(bc, c) - ac == 0
+60. ab - max(ac, 0) == 0
+61. max(ab, b) - ac == 0
+62. max(a, b, 0) - c == 0
+63. a - max(b, c, 0) == 0
+64. ab - min(ac, bc) == 0
+65. b - max(a, c, 0) == 0
+66. ac - min(ab, bc) == 0
+67. max(ab, ac) - bc == 0
+68. ab - max(ac, bc) == 0
+69. max(ab, bc) - ac == 0
+70. bc - min(ab, ac) == 0
+71. b - min(a, ac, c) == 0
+72. min(ac, b, c) - a == 0
+73. min(a, ac, b) - c == 0
+74. min(ab, b, c) - a == 0
+75. min(a, ab, c) - b == 0
+76. min(a, ab, b) - c == 0
+77. min(b, bc, c) - a == 0
+78. min(a, b, bc) - c == 0
+79. b - min(a, bc, c) == 0
+80. ab - max(a, bc, c) == 0
+81. min(ab, ac, b) - a == 0
+82. min(ac, b, bc) - a == 0
+83. max(a, ab, b) - bc == 0
+84. max(ac, b, 0) - ab == 0
+85. c - min(a, ab, ac) == 0
+86. max(b, bc, 0) - ab == 0
+87. c - min(a, ac, bc) == 0
+88. max(a, ac, 0) - ab == 0
+89. bc - max(ab, b, 0) == 0
+90. ac - max(ab, b, c) == 0
+91. bc - max(a, ac, b) == 0
+92. min(a, ab, bc) - b == 0
+93. bc - max(ac, b, 0) == 0
+94. max(a, ac, c) - bc == 0
+95. ac - max(bc, c, 0) == 0
+96. b - min(ab, bc, c) == 0
+97. ac - max(ab, c, 0) == 0
+98. max(a, ab, 0) - bc == 0
+99. b - min(a, ac, bc) == 0
+100. ab - max(b, bc, c) == 0
+101. ac - max(b, bc, 0) == 0
+102. ab - max(ac, b, c) == 0
+103. a - min(ac, bc, c) == 0
+104. ab - max(a, bc, 0) == 0
+105. a - min(ab, b, bc) == 0
+106. c - min(ab, b, bc) == 0
+107. ac - max(a, ab, b) == 0
+108. max(a, b, bc) - ac == 0
+109. c - min(ab, ac, b) == 0
+110. ab - max(bc, c, 0) == 0
+111. max(a, b, bc) - ab == 0
+112. b - min(ab, ac, c) == 0
+113. ac - max(b, bc, c) == 0
+114. min(a, ab, bc) - c == 0
+115. b - min(ac, bc, c) == 0
+116. max(ac, c, 0) - ab == 0
+117. max(a, ab, c) - bc == 0
+118. ac - max(a, ab, c) == 0
+119. max(a, ac, b) - ab == 0
+120. max(a, ac, c) - ab == 0
+121. max(ac, b, c) - bc == 0
+122. a - min(ab, ac, c) == 0
+123. bc - max(ac, c, 0) == 0
+124. max(ab, c, 0) - bc == 0
+125. max(a, ab, 0) - ac == 0
+126. ac - max(a, bc, c) == 0
+127. ac - max(a, bc, 0) == 0
+128. max(ab, b, 0) - ac == 0
+129. bc - max(a, ac, 0) == 0
+130. max(ab, b, c) - bc == 0
+131. b - min(a, ab, ac) == 0
+132. c - min(ac, b, bc) == 0
+133. min(ab, bc, c) - a == 0
+134. max(ab, b, bc) - ac == 0
+135. bc - max(ab, ac, 0) == 0
+136. bc - max(ab, ac, b) == 0
+137. ac - max(ab, bc, 0) == 0
+138. max(ac, b, bc) - ab == 0
+139. ac - max(a, ab, bc) == 0
+140. ab - max(ac, bc, c) == 0
+141. max(ac, bc, 0) - ab == 0
+142. max(ab, ac, c) - bc == 0
+143. bc - max(a, ab, ac) == 0
+144. max(ab, bc, c) - ac == 0
+145. max(a, ac, bc) - ab == 0
+146. min(a, ab, ac, b) - c == 0
+147. ac - max(a, bc, c, 0) == 0
+148. max(a, b, bc, c) - ac == 0
+149. ab - max(a, b, bc, c) == 0
+150. bc - max(a, ab, c, 0) == 0
+151. b - min(a, ac, bc, c) == 0
+152. bc - max(a, ac, c, 0) == 0
+153. min(ab, ac, b, c) - a == 0
+154. ac - max(a, ab, b, c) == 0
+155. max(a, ab, c, 0) - ac == 0
+156. bc - max(ac, b, c, 0) == 0
+157. min(ac, b, bc, c) - a == 0
+158. bc - max(ab, b, c, 0) == 0
+159. b - min(a, ab, bc, c) == 0
+160. max(a, ac, b, c) - bc == 0
+161. ab - max(a, b, bc, 0) == 0
+162. ab - max(a, ac, b, 0) == 0
+163. max(a, b, bc, 0) - ac == 0
+164. max(ab, b, c, 0) - ac == 0
+165. ab - max(a, ac, c, 0) == 0
+166. max(ac, b, c, 0) - ab == 0
+167. max(b, bc, c, 0) - ac == 0
+168. ab - max(a, ac, b, c) == 0
+169. max(a, ab, b, 0) - bc == 0
+170. bc - max(a, ac, b, 0) == 0
+171. ab - max(a, bc, c, 0) == 0
+172. min(a, ab, b, bc) - c == 0
+173. max(b, bc, c, 0) - ab == 0
+174. min(a, ab, ac, c) - b == 0
+175. min(ab, b, bc, c) - a == 0
+176. c - min(a, ac, b, bc) == 0
+177. max(a, ab, b, 0) - ac == 0
+178. bc - max(a, ab, b, c) == 0
+179. bc - max(a, ab, ac, b) == 0
+180. min(ab, ac, bc, c) - a == 0
+181. b - min(ab, ac, bc, c) == 0
+182. max(a, ab, bc, c) - ac == 0
+183. max(ab, bc, c, 0) - ac == 0
+184. ab - max(a, ac, bc, 0) == 0
+185. max(a, ab, bc, 0) - ac == 0
+186. max(a, ab, ac, c) - bc == 0
+187. bc - max(a, ab, ac, 0) == 0
+188. ab - max(ac, bc, c, 0) == 0
+189. max(ab, ac, c, 0) - bc == 0
+190. b - min(a, ab, ac, bc) == 0
+191. max(ac, b, bc, 0) - ab == 0
+192. c - min(ab, ac, b, bc) == 0
+193. ab - max(a, ac, bc, c) == 0
+194. ab - max(ac, b, bc, c) == 0
+195. min(ab, ac, b, bc) - a == 0
+196. max(ab, b, bc, c) - ac == 0
+197. ac - max(a, ab, b, bc) == 0
+198. max(ab, ac, b, 0) - bc == 0
+199. bc - max(ab, ac, b, c) == 0
+200. c - min(a, ab, ac, bc) == 0
+201. max(a, ac, b, bc) - ab == 0
+202. max(ab, b, bc, 0) - ac == 0
+203. max(a, b, bc, c, 0) - ab == 0
+204. max(a, ac, b, c, 0) - bc == 0
+205. max(a, ab, b, c, 0) - ac == 0
+206. max(a, b, bc, c, 0) - ac == 0
+207. max(a, ab, b, c, 0) - bc == 0
+208. max(a, ac, b, c, 0) - ab == 0
+209. max(ab, b, bc, c, 0) - ac == 0
+210. min(ab, ac, b, bc, c) - a == 0
+211. max(ac, b, bc, c, 0) - ab == 0
+212. b - min(a, ab, ac, bc, c) == 0
+213. max(a, ac, bc, c, 0) - ab == 0
+214. max(a, ab, ac, b, 0) - bc == 0
+215. ac - max(a, ab, b, bc, 0) == 0
+216. ab - max(a, ac, b, bc, c) == 0
+217. max(a, ab, ac, c, 0) - bc == 0
+218. max(ab, ac, b, c, 0) - bc == 0
+219. ac - max(a, ab, bc, c, 0) == 0
+220. bc - max(a, ab, ac, b, c) == 0
+221. max(a, ac, b, bc, 0) - ab == 0
+222. max(a, ab, b, bc, c) - ac == 0
+223. c - min(a, ab, ac, b, bc) == 0
+224. max(a, ac, b, bc, c, 0) - ab == 0
+225. bc - max(a, ab, ac, b, c, 0) == 0
+226. ac - max(a, ab, b, bc, c, 0) == 0

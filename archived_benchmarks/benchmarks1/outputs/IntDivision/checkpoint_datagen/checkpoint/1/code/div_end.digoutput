@@ -1,0 +1,79 @@
+vtrace1 (78 invs):
+1. r == 0
+2. a - 1 == 0
+3. q - 1 == 0
+4. b - 1 == 0
+5. -a + b <= 0
+6. b - max(q, r) == 0
+7. min(a, 0) - r == 0
+8. max(a, r) - q == 0
+9. min(a, q) - b == 0
+10. max(a, r) - b == 0
+11. min(a, b) - q == 0
+12. q - max(b, r) == 0
+13. min(q, 0) - r == 0
+14. q - max(a, 0) == 0
+15. a - max(q, 0) == 0
+16. max(b, q) - a == 0
+17. min(b, 0) - r == 0
+18. b - max(a, 0) == 0
+19. max(b, 0) - a == 0
+20. max(b, 0) - q == 0
+21. b - max(q, 0) == 0
+22. max(a, q) - b == 0
+23. max(a, b) - q == 0
+24. max(b, r) - a == 0
+25. a - min(b, q) == 0
+26. max(q, r) - a == 0
+27. min(b, q, 0) - r == 0
+28. q - max(a, b, 0) == 0
+29. b - max(a, q, 0) == 0
+30. max(b, q, r) - a == 0
+31. max(b, q, 0) - a == 0
+32. b - max(a, q, r) == 0
+33. max(b, r, 0) - a == 0
+34. b - max(q, r, 0) == 0
+35. r - min(a, b, 0) == 0
+36. b - max(a, r, 0) == 0
+37. a - max(q, r, 0) == 0
+38. max(b, r, 0) - q == 0
+39. q - max(a, b, r) == 0
+40. min(a, q, 0) - r == 0
+41. max(a, r, 0) - q == 0
+42. min(a, 0) - b - 1 == 0
+43. max(r, 0) - b - 1 == 0
+44. min(q, r) - b - 1 == 0
+45. q - 1 - min(b, 0) == 0
+46. a - 1 - min(q, 0) == 0
+47. q - 1 - min(a, 0) == 0
+48. min(b, 0) - a - 1 == 0
+49. b - 1 - min(q, 0) == 0
+50. a - 1 - max(r, 0) == 0
+51. max(r, 0) - q - 1 == 0
+52. q - 1 - min(b, r) == 0
+53. min(q, r) - a - 1 == 0
+54. a - 1 - min(b, r) == 0
+55. b - 1 - min(a, r) == 0
+56. b - 1 - min(r, 0) == 0
+57. a - 1 - min(r, 0) == 0
+58. min(r, 0) - q - 1 == 0
+59. min(a, r) - q - 1 == 0
+60. b - max(a, q, r, 0) == 0
+61. a - max(b, q, r, 0) == 0
+62. max(a, b, r, 0) - q == 0
+63. r - min(a, b, q, 0) == 0
+64. min(b, r, 0) - q - 1 == 0
+65. min(a, b, 0) - q - 1 == 0
+66. q - 1 - min(a, b, r) == 0
+67. b - 1 - min(q, r, 0) == 0
+68. a - 1 - min(b, r, 0) == 0
+69. a - 1 - min(b, q, 0) == 0
+70. min(a, r, 0) - b - 1 == 0
+71. min(a, r, 0) - q - 1 == 0
+72. b - 1 - min(a, q, 0) == 0
+73. min(a, q, r) - b - 1 == 0
+74. min(q, r, 0) - a - 1 == 0
+75. a - 1 - min(b, q, r) == 0
+76. min(b, q, r, 0) - a - 1 == 0
+77. b - 1 - min(a, q, r, 0) == 0
+78. min(a, b, r, 0) - q - 1 == 0
