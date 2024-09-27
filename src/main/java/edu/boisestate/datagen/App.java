@@ -347,6 +347,7 @@ public class App {
                         "docker",
                         "run",
                         "--rm",
+			"--cpuset-cpus", "0-3", 
                         "--platform", "linux/amd64",
                         "-v", String.format("%s/:/sources", codePath.getAbsolutePath()),
                         "dig",

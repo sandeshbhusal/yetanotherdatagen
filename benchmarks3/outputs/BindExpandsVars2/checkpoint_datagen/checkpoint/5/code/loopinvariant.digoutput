@@ -1,4 +1,0 @@
-vtrace1 (3 invs):
-1. -mc_i <= 0
-2. -cp1_off <= 0
-3. -MAXDATA + mc_i <= -1

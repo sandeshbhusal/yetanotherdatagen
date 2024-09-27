@@ -1,4 +1,0 @@
-vtrace1 (3 invs):
-1. -a + b <= 0
-2. min(a, 0) - b <= 0
-3. a - b === 0 (mod 2)
