@@ -14,10 +14,14 @@ aug_target() {
     local BENCH_TARGET="$1"
     local TARGET_DIR="${BENCHMARK_DIR}/inputs/${BENCH_TARGET}"
     local WORKDIR="${BENCHMARK_DIR}/outputs/${BENCH_TARGET}/checkpoint_datagen"
+ 
     # Delete the workdir if it exists
     rm -rf "${WORKDIR}"
     mkdir -p "${WORKDIR}"
-    
+ 
+    # Copy the smtgen file.
+    cp "smtgen.py" "${WORKDIR}/smtgen.py"
+   
     cd "${WORKDIR}" || exit
     java -cp "${CWD}/target/classes:${CWD}/libs/*" edu.boisestate.datagen.App -s "${TARGET_DIR}" -w "${WORKDIR}" | tee -a "${WORKDIR}/trace.log"
     if [ ${PIPESTATUS[0]} -ne 0 ]; then
@@ -30,10 +34,14 @@ noaug_target() {
     local BENCH_TARGET="$1"
     local TARGET_DIR="${BENCHMARK_DIR}/inputs/${BENCH_TARGET}"
     local WORKDIR="${BENCHMARK_DIR}/outputs/${BENCH_TARGET}/checkpoint_nodatagen"
+
     # Delete workdir if exists.
     rm -rf "${WORKDIR}"
     mkdir -p "${WORKDIR}"
-    
+ 
+    # Copy the smtgen file.
+    cp "smtgen.py" "${WORKDIR}/smtgen.py"
+   
     cd "${WORKDIR}" || exit
     java -cp "${CWD}/target/classes:${CWD}/libs/*" edu.boisestate.datagen.App -s "${TARGET_DIR}" -w "${WORKDIR}" -k true | tee -a "${WORKDIR}/trace.log"
     if [ ${PIPESTATUS[0]} -ne 0 ]; then
@@ -59,10 +67,10 @@ run_all() {
 }
 
 run_all "A_LT_B"
-run_all "MADWiFi"
-run_all "BindExpandsVars2"
-run_all "DaggerEX1"
-run_all "Ex1"
-run_all "TriangleCheck"
-run_all "IntDivision"
-run_all "Cars"
+#run_all "MADWiFi"
+#run_all "BindExpandsVars2"
+#run_all "DaggerEX1"
+#run_all "Ex1"
+#run_all "TriangleCheck"
+#run_all "IntDivision"
+#run_all "Cars"

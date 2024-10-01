@@ -83,8 +83,9 @@ public class Cache {
         }
 
         // We have the variable with the least SD. Now we return a random sample of
-        // that variable, including half the datapoinnts we saw previously. If the 
-        // dataset size is too small, we return the entire dataset, when n <= 4. (Heuristics later)
+        // that variable, including half the datapoinnts we saw previously. If the
+        // dataset size is too small, we return the entire dataset, when n <= 4.
+        // (Heuristics later)
         int n = observations.get(minsdVariable).size();
         ArrayList<HashMap<String, Object>> sampled = new ArrayList<>();
         Iterator<Object> it = observations.get(minsdVariable).iterator();
@@ -135,10 +136,6 @@ public class Cache {
     public HashMap<String, String> generate_daikon_dtraces() {
         // Start with every key, in the instrumentation cache hashmap.
         HashMap<String, String> traceFilesInstru = getTraceFilesForCache(this.instrumentation_cache);
-        HashMap<String, String> traceFilesGuard = getTraceFilesForCache(this.guard_cache);
-
-        // Return both, combined.
-        traceFilesInstru.putAll(traceFilesGuard);
         Logger.info("Generated " + traceFilesInstru.size() + " Daikon trace files for instrumentation data.");
         return traceFilesInstru;
     }
@@ -146,10 +143,6 @@ public class Cache {
     public HashMap<String, String> generate_dig_traces() {
         // Start with every key, in the instrumentation cache hashmap.
         HashMap<String, String> traceFiles = generate_dig_files(this.instrumentation_cache);
-        HashMap<String, String> traceFilesGuard = generate_dig_files(this.guard_cache);
-
-        // Return both, combined.
-        traceFiles.putAll(traceFilesGuard);
         Logger.info("Generated " + traceFiles.size() + " DiG trace files for instrumentation data.");
         return traceFiles;
     }
