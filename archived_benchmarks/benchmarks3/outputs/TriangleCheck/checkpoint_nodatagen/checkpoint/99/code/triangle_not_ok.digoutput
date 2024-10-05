@@ -1,9 +1,0 @@
-vtrace1 (8 invs):
-1. b - bc + c == 0
-2. a - ac + c == 0
-3. ab - ac - bc + 2*c == 0
-4. ab - c <= 0
-5. ab - max(ac, 0) <= 0
-6. ab - max(ac, bc) <= 0
-7. b - 2 - max(c, 0) <= 0
-8. ab - max(b, bc, 0) <= 0

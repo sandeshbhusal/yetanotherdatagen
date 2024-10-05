@@ -1,4 +1,0 @@
-vtrace1 (3 invs):
-1. -p <= -2
-2. bufsize_0 === 0 (mod 2)
-3. -bufsize_0 + p === 0 (mod 2)

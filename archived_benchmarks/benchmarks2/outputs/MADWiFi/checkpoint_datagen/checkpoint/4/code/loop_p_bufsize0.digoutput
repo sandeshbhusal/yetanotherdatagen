@@ -1,5 +1,0 @@
-vtrace1 (4 invs):
-1. -p <= -2
-2. -bufsize_0 <= -15
-3. -bufsize_0 + p <= -9
-4. -bufsize_0 - p <= -19
