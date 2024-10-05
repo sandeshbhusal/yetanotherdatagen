@@ -1,6 +1,0 @@
-vtrace1 (5 invs):
-1. leader_len**2 - 40*leader_len == 0
-2. ielen*leader_len - 40*leader_len == 0
-3. -leader_len <= 0
-4. -bufsize + ielen <= 0
-5. -ielen + leader_len <= 0

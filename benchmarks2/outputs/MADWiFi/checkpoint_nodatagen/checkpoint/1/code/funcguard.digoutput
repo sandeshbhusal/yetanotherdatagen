@@ -1,9 +1,0 @@
-vtrace1 (8 invs):
-1. leader_len**2 - leader_len == 0
-2. ielen*leader_len - leader_len == 0
-3. bufsize*leader_len - 3*leader_len == 0
-4. leader_len <= 1
-5. -leader_len <= 0
-6. -bufsize + ielen <= 0
-7. -ielen + leader_len <= 0
-8. bufsize - ielen === 0 (mod 2)

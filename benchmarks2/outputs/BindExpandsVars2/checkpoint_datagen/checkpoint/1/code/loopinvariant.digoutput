@@ -1,8 +1,0 @@
-vtrace1 (7 invs):
-1. -mc_i <= 0
-2. -cp1_off <= 0
-3. cp1_off <= 13
-4. -MAXDATA <= -13
-5. -MAXDATA + mc_i <= -1
-6. cp1_off === 0 (mod 13)
-7. -MAXDATA - cp1_off === 4 (mod 5)
