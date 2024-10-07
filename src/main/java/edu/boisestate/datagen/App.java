@@ -639,14 +639,8 @@ public class App {
         throw new IllegalArgumentException("Should not be reachable.");
     }
 
-    // Check and return if there are differences between a file.
+    // Semantic diff for invariants.
     public static boolean hasFileChanged(File file1, File file2) {
-        // Dig and Daikon generate invariants differently.
-        // DIG files start with "vtrace1", and followed by a numbered list of
-        // invariants,
-        // while daikon files start with "Daikon", followed by some lines, and
-        // invariants
-        // are a list enclosed between lines Faker.fakmethod.+\n and "Exiting Daikon."
 
         boolean isDigFile = file1.getName().endsWith(".digoutput");
         InvCompiler compiler = new InvCompiler();
@@ -657,13 +651,29 @@ public class App {
                     compiler.digFileToInvariantsConjunction(
                         new FileReader(file1)
                     );
+
                 CompiledExpression ce2 =
                     compiler.digFileToInvariantsConjunction(
                         new FileReader(file2)
                     );
 
                 return (!ce1.equals(ce2));
+
             } else {
+                // Daikon does not stabilize invariants very quickly. It
+                // produces a bunch of "one of {x, y, z}" templates towards
+                // the beginning, so if that is the case, we will skip comparing
+                // invariants, as there are _no_ invariants generated at all.
+
+                // Check if either file contains "one of".
+                String file1contents = new String(Files.readAllBytes(file1.toPath()));
+                String file2contents = new String(Files.readAllBytes(file2.toPath()));
+
+                if (file1contents.contains("one of") || file2contents.contains("one of")) {
+                    // Invariants have not changed.
+                    return false;
+                }
+
                 CompiledExpression ce1 =
                     compiler.daikonFileToInvariantsConjunction(
                         new FileReader(file1)
