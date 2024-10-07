@@ -57,7 +57,6 @@ public class AppTest {
         JavaParser parser = new JavaParser();
         CompilationUnit cu = parser.parse(code).getResult().get();
         cc.instrument(cu);
-        System.out.println(cu.toString());
     }
 
     @Test
