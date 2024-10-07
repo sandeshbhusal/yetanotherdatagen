@@ -1,7 +1,19 @@
 package edu.boisestate.datagen;
 
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import edu.boisestate.datagen.exprcompiler.CompiledExpression;
+import edu.boisestate.datagen.exprcompiler.InvCompiler;
+import edu.boisestate.datagen.instrumenters.CommentChangingInstrumenter;
+import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
+import edu.boisestate.datagen.instrumenters.InstrumentationMode;
+import edu.boisestate.datagen.reporting.Cache;
+import edu.boisestate.datagen.rmi.DataPointServerImpl;
+import edu.boisestate.datagen.utils.FileOps;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
@@ -10,25 +22,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-import org.tinylog.Logger;
-
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ast.CompilationUnit;
-
-import edu.boisestate.datagen.instrumenters.CommentChangingInstrumenter;
-import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
-import edu.boisestate.datagen.instrumenters.InstrumentationMode;
-import edu.boisestate.datagen.reporting.Cache;
-import edu.boisestate.datagen.rmi.DataPointServerImpl;
-import edu.boisestate.datagen.utils.FileOps;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.tinylog.Logger;
 
 public class App {
+
     private static String workdir;
     private static String source;
     private static String compiledPath;
@@ -49,39 +50,52 @@ public class App {
         // data to our lib.
         // - A {{workdir}}/compiled/ contains the compiled instrumented code.
 
-        ArgumentParser argParser = ArgumentParsers.newFor("datagen").build()
-                .description("DataGen is a tool for generating data-driven tests for Java programs.");
+        ArgumentParser argParser = ArgumentParsers.newFor("datagen")
+            .build()
+            .description(
+                "DataGen is a tool for generating data-driven tests for Java programs."
+            );
 
-        argParser.addArgument("-s", "--source")
-                .help("The path to the source code file(s), This is a folder.")
-                .required(true)
-                .type(String.class);
+        argParser
+            .addArgument("-s", "--source")
+            .help("The path to the source code file(s), This is a folder.")
+            .required(true)
+            .type(String.class);
 
-        argParser.addArgument("-w", "--workdir")
-                .help("Working directory for datagen.")
-                .required(true)
-                .type(String.class);
+        argParser
+            .addArgument("-w", "--workdir")
+            .help("Working directory for datagen.")
+            .required(true)
+            .type(String.class);
 
-        argParser.addArgument("-e", "--evosuite")
-                .help("Evosuite jar file.")
-                .required(false)
-                .type(String.class);
+        argParser
+            .addArgument("-e", "--evosuite")
+            .help("Evosuite jar file.")
+            .required(false)
+            .type(String.class);
 
-        argParser.addArgument("-j", "--junit")
-                .help("JUnit jar file path. This should also contain the hamcrest jar.")
-                .required(false)
-                .type(String.class);
+        argParser
+            .addArgument("-j", "--junit")
+            .help(
+                "JUnit jar file path. This should also contain the hamcrest jar."
+            )
+            .required(false)
+            .type(String.class);
 
-        argParser.addArgument("-d", "--daikon")
-                .help("Daikon jar file path.")
-                .required(false)
-                .type(String.class);
+        argParser
+            .addArgument("-d", "--daikon")
+            .help("Daikon jar file path.")
+            .required(false)
+            .type(String.class);
 
-        argParser.addArgument("-k", "--skip_augmentation")
-                .help("Skip augmentation. This means we will run the tests on code without augmenting the branches.")
-                .required(false)
-                .setDefault(false)
-                .type(Boolean.class);
+        argParser
+            .addArgument("-k", "--skip_augmentation")
+            .help(
+                "Skip augmentation. This means we will run the tests on code without augmenting the branches."
+            )
+            .required(false)
+            .setDefault(false)
+            .type(Boolean.class);
 
         boolean skipAugmentation = false;
 
@@ -90,11 +104,16 @@ public class App {
             Namespace ns = argParser.parseArgs(args);
             source = ns.getString("source");
             workdir = ns.getString("workdir");
-            evosuiteJarPath = getJarFromClassPath("evosuite").orElse(ns.getString("evosuite"));
-            junitJarPath = getJarFromClassPath("junit").orElse(ns.getString("junit"));
-            daikonJarPath = getJarFromClassPath("daikon").orElse(ns.getString("daikon"));
+            evosuiteJarPath = getJarFromClassPath("evosuite").orElse(
+                ns.getString("evosuite")
+            );
+            junitJarPath = getJarFromClassPath("junit").orElse(
+                ns.getString("junit")
+            );
+            daikonJarPath = getJarFromClassPath("daikon").orElse(
+                ns.getString("daikon")
+            );
             skipAugmentation = ns.getBoolean("skip_augmentation");
-
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
             System.exit(1);
@@ -108,30 +127,45 @@ public class App {
             System.err.println("Could not start datapointserverimpl.");
             e.printStackTrace();
         } catch (RemoteException e) {
-            System.err.println("Could not start datapointserverimpl - RemoteException.");
+            System.err.println(
+                "Could not start datapointserverimpl - RemoteException."
+            );
             e.printStackTrace();
         }
 
         // Check classpaths for evosuite and junit.
-        if (evosuiteJarPath == null || junitJarPath == null || daikonJarPath == null) {
+        if (
+            evosuiteJarPath == null ||
+            junitJarPath == null ||
+            daikonJarPath == null
+        ) {
             System.err.println(
-                    "Evosuite, JUnit, or Daikon jar file not provided, and evosuite, junit, or daikon is not present in the classpath.");
+                "Evosuite, JUnit, or Daikon jar file not provided, and evosuite, junit, or daikon is not present in the classpath."
+            );
             // Print out the status of the jars.
-            if (!(evosuiteJarPath == null))
-                System.err.println("Evosuite jar: " + evosuiteJarPath);
-            if (!(junitJarPath == null))
-                System.err.println("JUnit jar: " + junitJarPath);
-            if (!(daikonJarPath == null))
-                System.err.println("Daikon jar: " + daikonJarPath);
+            if (!(evosuiteJarPath == null)) System.err.println(
+                "Evosuite jar: " + evosuiteJarPath
+            );
+            if (!(junitJarPath == null)) System.err.println(
+                "JUnit jar: " + junitJarPath
+            );
+            if (!(daikonJarPath == null)) System.err.println(
+                "Daikon jar: " + daikonJarPath
+            );
             System.err.println(
-                    "Use the -e, -j, and -d flags to provide the evosuite, junit, and daikon jar paths respectively.");
+                "Use the -e, -j, and -d flags to provide the evosuite, junit, and daikon jar paths respectively."
+            );
             System.exit(1);
         }
 
         // Ensure the source path is a directory, and it exists.
         File sourceDir = new File(source);
         if (!sourceDir.exists() || !sourceDir.isDirectory()) {
-            Logger.error("Source path " + sourceDir.getAbsolutePath() + " does not exist or is not a directory.");
+            Logger.error(
+                "Source path " +
+                sourceDir.getAbsolutePath() +
+                " does not exist or is not a directory."
+            );
             System.exit(1);
         }
 
@@ -164,9 +198,13 @@ public class App {
 
         int iterations = 0;
         CommentChangingInstrumenter augmenter = new CommentChangingInstrumenter(
-                InstrumentationMode.AUGMENTATION, skipAugmentation);
+            InstrumentationMode.AUGMENTATION,
+            skipAugmentation
+        );
         CommentChangingInstrumenter reporter = new CommentChangingInstrumenter(
-                InstrumentationMode.INSTRUMENTATION, skipAugmentation);
+            InstrumentationMode.INSTRUMENTATION,
+            skipAugmentation
+        );
         ImportInstrumenter importer = new ImportInstrumenter();
 
         /*
@@ -184,7 +222,11 @@ public class App {
         do {
             long startTime = System.currentTimeMillis();
             System.out.println();
-            Logger.info("---------------------- Starting iteration " + ++iterations + "--------------------");
+            Logger.info(
+                "---------------------- Starting iteration " +
+                ++iterations +
+                "--------------------"
+            );
             // Make a checkpoint directory.
             File checkpointDir = new File(checkpointPath + "/" + iterations);
             FileOps.createDirectory(checkpointDir.getAbsolutePath());
@@ -230,27 +272,36 @@ public class App {
 
                 Logger.info("Compiling augmented file " + file.getName());
                 // Compile and execute the augmented file.
-                String[] command = { "javac", file.getAbsolutePath(), "-d", compiledPath };
+                String[] command = {
+                    "javac",
+                    file.getAbsolutePath(),
+                    "-d",
+                    compiledPath,
+                };
                 runProcess(command);
 
-                Logger.info("Running evosuite on augmented file " + file.getName());
+                Logger.info(
+                    "Running evosuite on augmented file " + file.getName()
+                );
                 // Run evosuite on the file, but from the compiled directory.
                 String compiledFilePath = compiledPath;
                 String[] evoruncommand = {
-                        "java",
-                        "-cp",
-                        String.join(":", classpaths),
-                        "-jar",
-                        evosuiteJarPath,
-                        String.format("-projectCP=%s", compiledFilePath),
-                        String.format("-class=%s", className),
-                        String.format("-Dassertions=false"),
+                    "java",
+                    "-cp",
+                    String.join(":", classpaths),
+                    "-jar",
+                    evosuiteJarPath,
+                    String.format("-projectCP=%s", compiledFilePath),
+                    String.format("-class=%s", className),
+                    String.format("-Dassertions=false"),
                 };
 
                 runProcess(evoruncommand);
             }
             long endEvoTime = System.currentTimeMillis();
-            Logger.debug("Evosuite run took " + (endEvoTime - startTime) + " ms.");
+            Logger.debug(
+                "Evosuite run took " + (endEvoTime - startTime) + " ms."
+            );
 
             // Now that evosuite run has finished, our tests are generated in
             // $PWD/evosuite-tests. They need to be compiled alongside our reporting
@@ -263,8 +314,14 @@ public class App {
 
                 Logger.info("Compiling reporting file " + file.getName());
                 String className = file.getName().replace(".java", "");
-                String[] compile_reportingfiles = { "javac", "-cp", String.join(":", classpaths),
-                        file.getAbsolutePath(), "-d", compiledPath };
+                String[] compile_reportingfiles = {
+                    "javac",
+                    "-cp",
+                    String.join(":", classpaths),
+                    file.getAbsolutePath(),
+                    "-d",
+                    compiledPath,
+                };
                 runProcess(compile_reportingfiles);
 
                 // Also compile the respective evosuite test. The two files
@@ -272,102 +329,138 @@ public class App {
                 // className_ESTest.java
                 // className_ESTest_scaffolding.java
 
-                Logger.info("Compiling evosuite test file for " + file.getName());
+                Logger.info(
+                    "Compiling evosuite test file for " + file.getName()
+                );
                 // Now compile all files in evosuite-tests folder.
                 File evosuiteTestFileName = new File(
-                        evosuiteTests.getAbsolutePath() + "/" + className + "_ESTest.java");
+                    evosuiteTests.getAbsolutePath() +
+                    "/" +
+                    className +
+                    "_ESTest.java"
+                );
                 File scaffoldingFileName = new File(
-                        evosuiteTests.getAbsolutePath() + "/" + className + "_ESTest_scaffolding.java");
+                    evosuiteTests.getAbsolutePath() +
+                    "/" +
+                    className +
+                    "_ESTest_scaffolding.java"
+                );
 
                 String[] compile_esfiles = {
-                        "javac",
-                        "-d", compiledPath,
-                        "-cp", String.join(":", classpaths),
-                        evosuiteTestFileName.getAbsolutePath()
+                    "javac",
+                    "-d",
+                    compiledPath,
+                    "-cp",
+                    String.join(":", classpaths),
+                    evosuiteTestFileName.getAbsolutePath(),
                 };
 
                 runProcess(compile_esfiles);
 
                 String[] compile_scaffolding = {
-                        "javac",
-                        "-d", compiledPath,
-                        "-cp", String.join(":", classpaths),
-                        scaffoldingFileName.getAbsolutePath()
+                    "javac",
+                    "-d",
+                    compiledPath,
+                    "-cp",
+                    String.join(":", classpaths),
+                    scaffoldingFileName.getAbsolutePath(),
                 };
                 runProcess(compile_scaffolding);
 
-                Logger.info("Running JUnit tests generated for " + file.getName());
+                Logger.info(
+                    "Running JUnit tests generated for " + file.getName()
+                );
                 // Run the compiled junit tests on junit.
                 String[] junitcommand = {
-                        "java",
-                        "-cp",
-                        String.join(":", classpaths),
-                        "org.junit.runner.JUnitCore",
-                        className + "_ESTest"
+                    "java",
+                    "-cp",
+                    String.join(":", classpaths),
+                    "org.junit.runner.JUnitCore",
+                    className + "_ESTest",
                 };
                 runProcess(junitcommand);
             }
 
             // Now that everything is done, we will dump the data to the "code" directory,
             // Alongside generated evosuite tests, augmented code, and reporting code.
-            FileOps.recursivelyCopyFolder(new File(reportingPath),
-                    new File(checkpointDir.getAbsolutePath() + "/reporting"));
-            FileOps.recursivelyCopyFolder(new File(augmentedPath),
-                    new File(checkpointDir.getAbsolutePath() + "/augmented"));
-            FileOps.recursivelyCopyFolder(evosuiteTests, new File(checkpointDir.getAbsolutePath() + "/evosuite-tests"));
+            FileOps.recursivelyCopyFolder(
+                new File(reportingPath),
+                new File(checkpointDir.getAbsolutePath() + "/reporting")
+            );
+            FileOps.recursivelyCopyFolder(
+                new File(augmentedPath),
+                new File(checkpointDir.getAbsolutePath() + "/augmented")
+            );
+            FileOps.recursivelyCopyFolder(
+                evosuiteTests,
+                new File(checkpointDir.getAbsolutePath() + "/evosuite-tests")
+            );
 
             // Generate our code.
             Logger.info("Generating code.");
-            HashMap<String, String> traces = Cache.getInstance().generate_daikon_dtraces();
+            HashMap<String, String> traces = Cache.getInstance()
+                .generate_daikon_dtraces();
             for (String key : traces.keySet()) {
-                FileOps.writeFile(new File(codePath + "/" + key + ".dtrace"), traces.get(key));
+                FileOps.writeFile(
+                    new File(codePath + "/" + key + ".dtrace"),
+                    traces.get(key)
+                );
 
                 // Run daikon on the dtrace file.
                 String[] daikonCommand = {
-                        "java",
-                        "-cp",
-                        String.join(":", classpaths),
-                        "daikon.Daikon",
-                        codePath + "/" + key + ".dtrace",
+                    "java",
+                    "-cp",
+                    String.join(":", classpaths),
+                    "daikon.Daikon",
+                    codePath + "/" + key + ".dtrace",
                 };
 
                 String daikonOutput = runProcess(daikonCommand);
                 // Store the file in the code path with daikonoutput extension.
-                FileOps.writeFile(new File(codePath + "/" + key + ".daikonoutput"), daikonOutput);
+                FileOps.writeFile(
+                    new File(codePath + "/" + key + ".daikonoutput"),
+                    daikonOutput
+                );
             }
             Logger.info("Finished executing daikon and generating invariants.");
 
-            HashMap<String, String> dig_traces = Cache.getInstance().generate_dig_traces();
+            HashMap<String, String> dig_traces = Cache.getInstance()
+                .generate_dig_traces();
             for (String key : dig_traces.keySet()) {
                 Logger.debug("Dig working with key " + key);
-                FileOps.writeFile(new File(codePath + "/" + key + ".csv"), dig_traces.get(key));
+                FileOps.writeFile(
+                    new File(codePath + "/" + key + ".csv"),
+                    dig_traces.get(key)
+                );
 
                 // Run Dig on the trace csv file.
+                // TODO: This is a SUPER hacky way to do this. Fix this.
                 String[] digCommand = {
-                        "python3", "-O",
-                        "../../../../dig/src/dig.py",
-                        "--seed", "12345", // Help for debugging later.
-                        String.format("%s/%s.csv", codePath.getAbsolutePath(), key)
+                    "python3",
+                    "-O",
+                    "../../../../../dig/src/dig.py",
+                    "--seed",
+                    "12345", // Help for debugging later.
+                    String.format("%s/%s.csv", codePath.getAbsolutePath(), key),
                 };
 
                 /*
                  * Here is the issue with this - unlike Daikon, dig prints out the file names
                  * in the output, and also prints the minimization count, trace count, etc. So
-                 * the
-                 * output of DIG will ALWAYS change between iterations, and fixed point will
-                 * never be
-                 * reached in the output string. So we strip all metadata from dig output, and
-                 * just
-                 * store the line starting at vtrace ({count} invs):, and following invariants.
+                 * the output of DIG will ALWAYS change between iterations, and fixed point will
+                 * never be reached in the output string. So we strip all metadata from dig output,
+                 * and just store the line starting at vtrace ({count} invs):, and following
+                 * invariants.
                  */
 
                 String digOutput = runProcess(digCommand);
                 StringBuilder sb = new StringBuilder();
-                String[] digOutputLines = digOutput.split(System.lineSeparator());
+                String[] digOutputLines = digOutput.split(
+                    System.lineSeparator()
+                );
                 boolean vtraceLineFound = false;
                 for (String line : digOutputLines) {
-                    if (line.startsWith("vtrace"))
-                        vtraceLineFound = true;
+                    if (line.startsWith("vtrace")) vtraceLineFound = true;
                     if (vtraceLineFound) {
                         sb.append(line);
                         sb.append("\n");
@@ -376,7 +469,10 @@ public class App {
                 String toSaveString = sb.toString();
 
                 // Store the dig invariants generated with digoutput extension.
-                FileOps.writeFile(new File(codePath + "/" + key + ".digoutput"), toSaveString);
+                FileOps.writeFile(
+                    new File(codePath + "/" + key + ".digoutput"),
+                    toSaveString
+                );
             }
 
             // Check if all of the files have stabilized. For this, we need to recursively
@@ -385,14 +481,21 @@ public class App {
             // folder, and check
             // if the file content has changed.
             if (iterations == 1) {
-                Logger.info("Finished first iteration. No stabilization checks will be done");
+                Logger.info(
+                    "Finished first iteration. No stabilization checks will be done"
+                );
             } else {
-                Logger.debug("Checking if all invariants have become stable or not.");
+                Logger.debug(
+                    "Checking if all invariants have become stable or not."
+                );
 
                 // Get all keys from cache we can compare.
-                List<String> cacheKeys = Cache.getInstance().getInstrumentationCacheKeys();
+                List<String> cacheKeys = Cache.getInstance()
+                    .getInstrumentationCacheKeys();
                 int changedInvariantsCount = 0;
-                File checkpointDirOld = new File(String.format("%s/%d", checkpointPath, iterations - 1));
+                File checkpointDirOld = new File(
+                    String.format("%s/%d", checkpointPath, iterations - 1)
+                );
                 File codePathOld = new File(checkpointDirOld + "/code");
 
                 for (String key : cacheKeys) {
@@ -403,51 +506,100 @@ public class App {
 
                     // Generate two file names each, for daikon and DIG.
                     // Then check if contents have changed from previous iteration.
-                    File oldDaikonFile = new File(codePathOld + "/" + key + ".daikonoutput");
-                    File currentDaikonFile = new File(codePath + "/" + key + ".daikonoutput");
+                    File oldDaikonFile = new File(
+                        codePathOld + "/" + key + ".daikonoutput"
+                    );
+                    File currentDaikonFile = new File(
+                        codePath + "/" + key + ".daikonoutput"
+                    );
 
-                    File oldDIGFile = new File(codePathOld + "/" + key + ".digoutput");
-                    File currentDIGFile = new File(codePath + "/" + key + ".digoutput");
+                    File oldDIGFile = new File(
+                        codePathOld + "/" + key + ".digoutput"
+                    );
+                    File currentDIGFile = new File(
+                        codePath + "/" + key + ".digoutput"
+                    );
 
-                    boolean daikonchanged = (hasFileChanged(oldDaikonFile, currentDaikonFile));
-                    boolean digchanged = (hasFileChanged(oldDIGFile, currentDIGFile));
+                    boolean daikonchanged =
+                        (hasFileChanged(oldDaikonFile, currentDaikonFile));
+                    boolean digchanged =
+                        (hasFileChanged(oldDIGFile, currentDIGFile));
 
                     // previously, we were checking only for daikonchanged OR digchanged, but
                     // now we check for both.
                     if (daikonchanged) {
-                        Logger.debug(String.format("%s has changed for daikon between %d and %d", key, iterations,
-                                iterations - 1));
+                        Logger.debug(
+                            String.format(
+                                "%s has changed for daikon between %d and %d",
+                                key,
+                                iterations,
+                                iterations - 1
+                            )
+                        );
                         changedInvariantsCount += 1;
                     }
 
                     if (digchanged) {
-                        Logger.debug(String.format("%s has changed for DIG between %d and %d", key, iterations,
-                                iterations - 1));
+                        Logger.debug(
+                            String.format(
+                                "%s has changed for DIG between %d and %d",
+                                key,
+                                iterations,
+                                iterations - 1
+                            )
+                        );
                         changedInvariantsCount += 1;
                     }
 
                     if (!daikonchanged && !digchanged) {
                         Logger.debug(
-                                String.format("%s has stabilized between %d and %d", key, iterations, iterations - 1));
+                            String.format(
+                                "%s has stabilized between %d and %d",
+                                key,
+                                iterations,
+                                iterations - 1
+                            )
+                        );
                         stableKeys.put(key, iterations);
                     }
                 }
 
                 if (changedInvariantsCount == 0) {
-                    Logger.info("All invariants have stabilized at iteration " + iterations);
-                    System.out.println("----------------------------------------------------------");
-                    System.out.println("The following iterations caused each key's stabilization:");
+                    Logger.info(
+                        "All invariants have stabilized at iteration " +
+                        iterations
+                    );
+                    System.out.println(
+                        "----------------------------------------------------------"
+                    );
+                    System.out.println(
+                        "The following iterations caused each key's stabilization:"
+                    );
                     for (String key : stableKeys.keySet()) {
-                        System.out.println(String.format("Key: %s, iteration: %d", key, stableKeys.get(key)));
+                        System.out.println(
+                            String.format(
+                                "Key: %s, iteration: %d",
+                                key,
+                                stableKeys.get(key)
+                            )
+                        );
                     }
-                    System.out.println("----------------------------------------------------------");
+                    System.out.println(
+                        "----------------------------------------------------------"
+                    );
                     Logger.info("Processed " + iterations + " iterations.");
                     System.exit(0);
                 }
             }
 
             long endTime = System.currentTimeMillis();
-            Logger.debug("Iteration " + iterations + " took " + (endTime - startTime) + " ms.");
+            Logger.debug(
+                "Iteration " +
+                iterations +
+                " took " +
+                (endTime - startTime) +
+                " ms."
+            );
         } while (true);
     }
 
@@ -460,7 +612,9 @@ public class App {
             pb.directory(new File(System.getProperty("user.dir")));
             pb.redirectErrorStream(true);
             Process p = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(p.getInputStream())
+            );
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -495,222 +649,39 @@ public class App {
         // are a list enclosed between lines Faker.fakmethod.+\n and "Exiting Daikon."
 
         boolean isDigFile = file1.getName().endsWith(".digoutput");
-
-        // We can read just one file to figure this out.
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(file1.toURI().toURL().openStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.matches("vtrace.+\n")) {
-                    isDigFile = true;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("HasFaileChanged crashed with exception: " + e);
-            System.exit(1);
-        }
-
-        ArrayList<String> invariantsInFile1 = new ArrayList<>();
-        ArrayList<String> invariantsInFile2 = new ArrayList<>();
-        File tempfile1 = null, tempfile2 = null;
+        InvCompiler compiler = new InvCompiler();
 
         try {
-            tempfile1 = new File(String.format("inv-tempfile1"));
-            tempfile2 = new File(String.format("inv-tempfile2"));
+            if (isDigFile) {
+                CompiledExpression ce1 =
+                    compiler.digFileToInvariantsConjunction(
+                        new FileReader(file1)
+                    );
+                CompiledExpression ce2 =
+                    compiler.digFileToInvariantsConjunction(
+                        new FileReader(file2)
+                    );
 
-            // Create both files.
-            tempfile1.createNewFile();
-            tempfile2.createNewFile();
-        } catch (Exception e) {
+                return (!ce1.equals(ce2));
+            } else {
+                CompiledExpression ce1 =
+                    compiler.daikonFileToInvariantsConjunction(
+                        new FileReader(file1)
+                    );
+                CompiledExpression ce2 =
+                    compiler.daikonFileToInvariantsConjunction(
+                        new FileReader(file2)
+                    );
+
+                return (!ce1.equals(ce2));
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("HasFaileChanged crashed with exception while creating tempfiles: " + e);
+            System.out.println("Error reading invariant files for comparison.");
             System.exit(1);
+
+            return false;
         }
-
-        if (isDigFile) {
-            // Split the invariant strings into a list, and pass them to a python
-            // script that checks if invariant is the same.
-
-            // First, generate the list of invariants.
-            boolean invstart = false;
-
-            // read file1 line by line.
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(file1.toURI().toURL().openStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (invstart && !line.contains("invs")) { // Sometimes, lines contain "invs". we skip them. Ugh.
-                                                              // there are too many corner cases.
-
-                        String[] elems = line.split(" ");
-                        // We skip the first number, like "1. a < b" to get "a < b" only
-                        String ineq = String.join(" ", Arrays.copyOfRange(elems, 1, elems.length));
-                        invariantsInFile1.add(ineq);
-                        System.err.println("Line: " + ineq);
-                    }
-
-                    if (line.contains("vtrace")) {
-                        invstart = true;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.err.println("HasFaileChanged crashed with exception while reading file1: " + e);
-                System.exit(1);
-            }
-
-            // Do the same for file2.
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(file2.toURI().toURL().openStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (invstart && !line.contains("invs")) {
-                        String[] elems = line.split(" ");
-                        // We skip the first number, like "1. a < b" to get "a < b" only
-                        String ineq = String.join(" ", Arrays.copyOfRange(elems, 1, elems.length));
-                        System.out.println("Line: " + ineq);
-                        invariantsInFile2.add(ineq);
-                    }
-
-                    if (line.contains("vtrace")) {
-                        invstart = true;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.err.println("HasFaileChanged crashed with exception while reading file2: " + e);
-                System.exit(1);
-            }
-        } else {
-            // This is a daikon file.
-            boolean invstart = false;
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(file1.toURI().toURL().openStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.matches("Faker.+\n")) {
-                        invstart = true;
-                        continue;
-                    }
-                    if (line.startsWith("Exiting Daikon.")) {
-                        break;
-                    }
-                    if (invstart) {
-                        // ++Bonus. Daikon contains "one of" lines, which means the invariants
-                        // are not stable yet. If we find such a line, return early from here --
-                        // the invariants are NOT the same.
-                        if (line.contains("one of")) {
-                            Logger.debug("Too early to say if Daikon generated anything");
-                            return true;
-                        }
-                        // This is much more straightforward.
-                        invariantsInFile1.add(line);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.err.println("HasFaileChanged crashed with exception while reading file1 (daikon): " + e);
-                System.exit(1);
-            }
-
-            // Do the same for file2.
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(file2.toURI().toURL().openStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.matches("Faker.+\n")) {
-                        invstart = true;
-                        continue;
-                    }
-                    if (line.startsWith("Exiting Daikon.")) {
-                        break;
-                    }
-                    if (invstart) {
-                        // Same reason as above.
-                        if (line.contains("one of")) {
-                            Logger.debug("Too early to say if Daikon generated anything");
-                            return true;
-                        }
-                        // This is much more straightforward.
-                        invariantsInFile2.add(line);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.err.println("HasFaileChanged crashed with exception while reading file2 (daikon): " + e);
-                System.exit(1);
-            }
-        }
-
-        // Now we have the invariants in both files, we can compare them.
-        // Generate two temporary files, and write to them the invariants.
-        FileOps.writeFile(tempfile1, String.join("\n", invariantsInFile1));
-        FileOps.writeFile(tempfile2, String.join("\n", invariantsInFile2));
-
-        // Execute the external python file (inv2smt)
-        // First, check if we have the 'z3' solver in our binpath.
-        String[] z3check = { "which", "z3" };
-        String z3path = runProcess(z3check).trim();
-        if (z3path.isEmpty()) {
-            System.err.println("z3 solver not found in PATH. Please install z3 solver.");
-            System.exit(1);
-        } else {
-            Logger.debug("Using z3 solver found at: " + z3path + "for " + file1.getName());
-        }
-
-        // Next, check if we have the "smtgen.py" file in the current directory.
-        File smtgenFile = new File("smtgen.py");
-        if (!smtgenFile.exists()) {
-            System.err.println(
-                    "smtgen.py file not found in current directory. Please provide it. (You may be running from an internal directory). PWD is: "
-                            + System.getProperty("user.dir"));
-            System.exit(1);
-        }
-
-        // Run the python script on the two files.
-        String[] smtgenCommand = {
-                "python3",
-                "smtgen.py", // TODO: This is getting out of hand - the code is becoming too messy.
-                tempfile1.getAbsolutePath(),
-                tempfile2.getAbsolutePath()
-        };
-
-        // Run smtgen.
-        String smtfilename = StringUtils.chomp(runProcess(smtgenCommand).trim());
-
-        Logger.debug("Generated SMT file: " + smtfilename + " for " + file1.getName());
-
-        // Run z3 on smtfilename.
-        String[] z3Command = {
-                "z3",
-                smtfilename
-        };
-
-        String z3output = "";
-        ProcessBuilder pb = new ProcessBuilder(z3Command);
-        pb.redirectErrorStream();
-        try {
-            Process p = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                z3output += line;
-                z3output += "\n";
-            }
-            p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e);
-            System.exit(1);
-        }
-
-        // Print the output of z3 to stdout for now, see if everything is setup the way
-        // we want it to be.
-        System.out.println("Z3 Output: " + z3output);
-
-        return true;
     }
 
     private static Optional<CompilationUnit> parseJavaFile(File file) {
@@ -737,7 +708,9 @@ public class App {
 
         for (String classpathEntry : classpathEntries) {
             if (classpathEntry.contains(jarName)) {
-                String classPathAbsolute = new File(classpathEntry).getAbsolutePath();
+                String classPathAbsolute = new File(
+                    classpathEntry
+                ).getAbsolutePath();
                 return Optional.of(classPathAbsolute);
             }
         }
