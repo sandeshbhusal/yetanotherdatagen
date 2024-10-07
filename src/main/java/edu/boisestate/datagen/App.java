@@ -1,18 +1,17 @@
 package edu.boisestate.datagen;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Arrays;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
+import org.apache.commons.lang3.StringUtils;
 import org.tinylog.Logger;
 
 import com.github.javaparser.JavaParser;
@@ -85,7 +84,7 @@ public class App {
                 .type(Boolean.class);
 
         boolean skipAugmentation = false;
-        
+
         // Parse arguments.
         try {
             Namespace ns = argParser.parseArgs(args);
@@ -340,20 +339,15 @@ public class App {
 
             HashMap<String, String> dig_traces = Cache.getInstance().generate_dig_traces();
             for (String key : dig_traces.keySet()) {
+                Logger.debug("Dig working with key " + key);
                 FileOps.writeFile(new File(codePath + "/" + key + ".csv"), dig_traces.get(key));
 
                 // Run Dig on the trace csv file.
                 String[] digCommand = {
-                        "docker",
-                        "run",
-                        "--rm",
-			"--cpuset-cpus", "0-3", 
-                        "--platform", "linux/amd64",
-                        "-v", String.format("%s/:/sources", codePath.getAbsolutePath()),
-                        "dig",
-                        "/bin/bash",
-                        "-c",
-                        String.format("/root/miniconda3/bin/python -O dig.py /sources/%s.csv", key)
+                        "python3", "-O",
+                        "../../../../dig/src/dig.py",
+                        "--seed", "12345", // Help for debugging later.
+                        String.format("%s/%s.csv", codePath.getAbsolutePath(), key)
                 };
 
                 /*
@@ -415,19 +409,28 @@ public class App {
                     File oldDIGFile = new File(codePathOld + "/" + key + ".digoutput");
                     File currentDIGFile = new File(codePath + "/" + key + ".digoutput");
 
-                    if (hasFileChanged(oldDaikonFile, currentDaikonFile)) {
+                    boolean daikonchanged = (hasFileChanged(oldDaikonFile, currentDaikonFile));
+                    boolean digchanged = (hasFileChanged(oldDIGFile, currentDIGFile));
+
+                    // previously, we were checking only for daikonchanged OR digchanged, but
+                    // now we check for both.
+                    if (daikonchanged) {
                         Logger.debug(String.format("%s has changed for daikon between %d and %d", key, iterations,
                                 iterations - 1));
                         changedInvariantsCount += 1;
-                    } else if (hasFileChanged(oldDIGFile, currentDIGFile)) {
+                    }
+
+                    if (digchanged) {
                         Logger.debug(String.format("%s has changed for DIG between %d and %d", key, iterations,
                                 iterations - 1));
                         changedInvariantsCount += 1;
-                    } else {
-                        Logger.debug("Invariants have stabilized for key: " + key);
-                        stableKeys.put(key, iterations);
                     }
 
+                    if (!daikonchanged && !digchanged) {
+                        Logger.debug(
+                                String.format("%s has stabilized between %d and %d", key, iterations, iterations - 1));
+                        stableKeys.put(key, iterations);
+                    }
                 }
 
                 if (changedInvariantsCount == 0) {
@@ -483,37 +486,232 @@ public class App {
     }
 
     // Check and return if there are differences between a file.
-    private static boolean hasFileChanged(File file1, File file2) {
-        String content1 = FileOps.readFile(file1);
-        String content2 = FileOps.readFile(file2);
-    
-        // Quick check: if the contents are exactly the same, return false
-        if (content1.equals(content2)) {
-            return false;
+    public static boolean hasFileChanged(File file1, File file2) {
+        // Dig and Daikon generate invariants differently.
+        // DIG files start with "vtrace1", and followed by a numbered list of
+        // invariants,
+        // while daikon files start with "Daikon", followed by some lines, and
+        // invariants
+        // are a list enclosed between lines Faker.fakmethod.+\n and "Exiting Daikon."
+
+        boolean isDigFile = file1.getName().endsWith(".digoutput");
+
+        // We can read just one file to figure this out.
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(file1.toURI().toURL().openStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.matches("vtrace.+\n")) {
+                    isDigFile = true;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("HasFaileChanged crashed with exception: " + e);
+            System.exit(1);
         }
-    
-        // Split the contents into lines
-        Set<String> lines1 = new HashSet<>(Arrays.asList(content1.split("\n")));
-        Set<String> lines2 = new HashSet<>(Arrays.asList(content2.split("\n")));
-    
-        // Check for lines in file1 that are not in file2
-        for (String line : lines1) {
-            if (!lines2.contains(line)) {
-                return true;
+
+        ArrayList<String> invariantsInFile1 = new ArrayList<>();
+        ArrayList<String> invariantsInFile2 = new ArrayList<>();
+        File tempfile1 = null, tempfile2 = null;
+
+        try {
+            tempfile1 = new File(String.format("inv-tempfile1"));
+            tempfile2 = new File(String.format("inv-tempfile2"));
+
+            // Create both files.
+            tempfile1.createNewFile();
+            tempfile2.createNewFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("HasFaileChanged crashed with exception while creating tempfiles: " + e);
+            System.exit(1);
+        }
+
+        if (isDigFile) {
+            // Split the invariant strings into a list, and pass them to a python
+            // script that checks if invariant is the same.
+
+            // First, generate the list of invariants.
+            boolean invstart = false;
+
+            // read file1 line by line.
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(file1.toURI().toURL().openStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (invstart && !line.contains("invs")) { // Sometimes, lines contain "invs". we skip them. Ugh.
+                                                              // there are too many corner cases.
+
+                        String[] elems = line.split(" ");
+                        // We skip the first number, like "1. a < b" to get "a < b" only
+                        String ineq = String.join(" ", Arrays.copyOfRange(elems, 1, elems.length));
+                        invariantsInFile1.add(ineq);
+                        System.err.println("Line: " + ineq);
+                    }
+
+                    if (line.contains("vtrace")) {
+                        invstart = true;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("HasFaileChanged crashed with exception while reading file1: " + e);
+                System.exit(1);
+            }
+
+            // Do the same for file2.
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(file2.toURI().toURL().openStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (invstart && !line.contains("invs")) {
+                        String[] elems = line.split(" ");
+                        // We skip the first number, like "1. a < b" to get "a < b" only
+                        String ineq = String.join(" ", Arrays.copyOfRange(elems, 1, elems.length));
+                        System.out.println("Line: " + ineq);
+                        invariantsInFile2.add(ineq);
+                    }
+
+                    if (line.contains("vtrace")) {
+                        invstart = true;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("HasFaileChanged crashed with exception while reading file2: " + e);
+                System.exit(1);
+            }
+        } else {
+            // This is a daikon file.
+            boolean invstart = false;
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(file1.toURI().toURL().openStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.matches("Faker.+\n")) {
+                        invstart = true;
+                        continue;
+                    }
+                    if (line.startsWith("Exiting Daikon.")) {
+                        break;
+                    }
+                    if (invstart) {
+                        // ++Bonus. Daikon contains "one of" lines, which means the invariants
+                        // are not stable yet. If we find such a line, return early from here --
+                        // the invariants are NOT the same.
+                        if (line.contains("one of")) {
+                            Logger.debug("Too early to say if Daikon generated anything");
+                            return true;
+                        }
+                        // This is much more straightforward.
+                        invariantsInFile1.add(line);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("HasFaileChanged crashed with exception while reading file1 (daikon): " + e);
+                System.exit(1);
+            }
+
+            // Do the same for file2.
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(file2.toURI().toURL().openStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.matches("Faker.+\n")) {
+                        invstart = true;
+                        continue;
+                    }
+                    if (line.startsWith("Exiting Daikon.")) {
+                        break;
+                    }
+                    if (invstart) {
+                        // Same reason as above.
+                        if (line.contains("one of")) {
+                            Logger.debug("Too early to say if Daikon generated anything");
+                            return true;
+                        }
+                        // This is much more straightforward.
+                        invariantsInFile2.add(line);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("HasFaileChanged crashed with exception while reading file2 (daikon): " + e);
+                System.exit(1);
             }
         }
-    
-        // Check for lines in file2 that are not in file1
-        for (String line : lines2) {
-            if (!lines1.contains(line)) {
-                return true;
-            }
+
+        // Now we have the invariants in both files, we can compare them.
+        // Generate two temporary files, and write to them the invariants.
+        FileOps.writeFile(tempfile1, String.join("\n", invariantsInFile1));
+        FileOps.writeFile(tempfile2, String.join("\n", invariantsInFile2));
+
+        // Execute the external python file (inv2smt)
+        // First, check if we have the 'z3' solver in our binpath.
+        String[] z3check = { "which", "z3" };
+        String z3path = runProcess(z3check).trim();
+        if (z3path.isEmpty()) {
+            System.err.println("z3 solver not found in PATH. Please install z3 solver.");
+            System.exit(1);
+        } else {
+            Logger.debug("Using z3 solver found at: " + z3path + "for " + file1.getName());
         }
-    
-        // If we've made it this far, the files have the same content (possibly in a different order)
-        return false;
+
+        // Next, check if we have the "smtgen.py" file in the current directory.
+        File smtgenFile = new File("smtgen.py");
+        if (!smtgenFile.exists()) {
+            System.err.println(
+                    "smtgen.py file not found in current directory. Please provide it. (You may be running from an internal directory). PWD is: "
+                            + System.getProperty("user.dir"));
+            System.exit(1);
+        }
+
+        // Run the python script on the two files.
+        String[] smtgenCommand = {
+                "python3",
+                "smtgen.py", // TODO: This is getting out of hand - the code is becoming too messy.
+                tempfile1.getAbsolutePath(),
+                tempfile2.getAbsolutePath()
+        };
+
+        // Run smtgen.
+        String smtfilename = StringUtils.chomp(runProcess(smtgenCommand).trim());
+
+        Logger.debug("Generated SMT file: " + smtfilename + " for " + file1.getName());
+
+        // Run z3 on smtfilename.
+        String[] z3Command = {
+                "z3",
+                smtfilename
+        };
+
+        String z3output = "";
+        ProcessBuilder pb = new ProcessBuilder(z3Command);
+        pb.redirectErrorStream();
+        try {
+            Process p = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                z3output += line;
+                z3output += "\n";
+            }
+            p.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e);
+            System.exit(1);
+        }
+
+        // Print the output of z3 to stdout for now, see if everything is setup the way
+        // we want it to be.
+        System.out.println("Z3 Output: " + z3output);
+
+        return true;
     }
-    
 
     private static Optional<CompilationUnit> parseJavaFile(File file) {
         JavaParser parser = new JavaParser();
