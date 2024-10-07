@@ -407,7 +407,7 @@ public class App {
                     traces.get(key)
                 );
 
-                if (stableKeys.contains(key)) {
+                if (stableKeys.containsKey(key)) {
                     Logger.debug("Skipping key " + key + " for Daikon but the CSV file is written.");
                     continue;
                 }
@@ -438,7 +438,7 @@ public class App {
                     dig_traces.get(key)
                 );
 
-                if (stableKeys.contains(key)) {
+                if (stableKeys.containsKey(key)) {
                     Logger.debug("Skipping key " + key + " for DIG but the CSV file is written.");
                     continue;
                 }
