@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -406,6 +407,10 @@ public class App {
                     traces.get(key)
                 );
 
+                if (stableKeys.contains(key)) {
+                    Logger.debug("Skipping key " + key + " for Daikon but the CSV file is written.");
+                    continue;
+                }
                 // Run daikon on the dtrace file.
                 String[] daikonCommand = {
                     "java",
@@ -433,6 +438,10 @@ public class App {
                     dig_traces.get(key)
                 );
 
+                if (stableKeys.contains(key)) {
+                    Logger.debug("Skipping key " + key + " for DIG but the CSV file is written.");
+                    continue;
+                }
                 // Run Dig on the trace csv file.
                 // TODO: This is a SUPER hacky way to do this. Fix this.
                 String[] digCommand = {
@@ -670,8 +679,9 @@ public class App {
                 String file2contents = new String(Files.readAllBytes(file2.toPath()));
 
                 if (file1contents.contains("one of") || file2contents.contains("one of")) {
-                    // Invariants have not changed.
-                    return false;
+                    Logger.debug("Daikon invariants are too unstable to compare for " + file1.getName());
+                    // Invariants have not changed. Assume the file changed.
+                    return true;
                 }
 
                 CompiledExpression ce1 =
