@@ -438,7 +438,7 @@ public class App {
                 String[] digCommand = {
                     "python3",
                     "-O",
-                    "../../../../../dig/src/dig.py",
+                    "../../../../dig/src/dig.py",
                     "--seed",
                     "12345", // Help for debugging later.
                     String.format("%s/%s.csv", codePath.getAbsolutePath(), key),
