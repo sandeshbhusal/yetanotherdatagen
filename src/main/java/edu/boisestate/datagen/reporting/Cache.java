@@ -17,6 +17,9 @@ public class Cache {
     public HashMap<String, HashSet<HashMap<String, Object>>> guard_cache = new HashMap<>();
     public HashMap<String, HashMap<String, Object>> seen_sent = new HashMap<>();
 
+    // Keep track of which code paths were actually exercised in the last run.
+    public HashMap<String, Integer> wasTargeted = new HashMap<>();
+
     public static Cache getInstance() {
         if (instance == null) {
             instance = new Cache();
@@ -30,9 +33,27 @@ public class Cache {
         return rval;
     }
 
+    // Reset information about which branches were targeted.
+    public void resetTargetedInformation() {
+        this.wasTargeted.clear();
+    }
+
+    public HashMap<String, Integer>  getAllTargetsVisited() {
+        return this.wasTargeted;
+    }
+
+    // Check if this key was targeted in the last iteration.
+    public boolean wasTargeted(String key) {
+        int hitcount = this.wasTargeted.getOrDefault(key, 0);
+        return hitcount > 0;
+    }
+
     public void add_instrumentation_data(InstrumentationRecord record) {
         // Get key.
         String key = record.getRecordId();
+
+        // This key was targeted.
+        wasTargeted.put(key, wasTargeted.getOrDefault(key, 0) + 1);
 
         // Logger.debug("Adding data point to cache " + record.toString());
         if (record.getRecordType() == InstrumentationRecord.RecordType.INSTRUMENTATION) {
