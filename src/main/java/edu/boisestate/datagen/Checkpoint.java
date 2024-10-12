@@ -63,9 +63,6 @@ public class Checkpoint {
             int firstIterationDig = firstIterationForDig.get(key);
             int firstIterationDaikon = firstIterationForDaikon.get(key);
 
-            boolean changedDig = false;
-            boolean changedDaikon = false;
-
             // Need to do SMT checks.
             // We only need to check if the current iteration equals the firstIteration.
             // If it does, then the invariant is stable. Else, the firstIteration is reset
@@ -90,7 +87,6 @@ public class Checkpoint {
             );
 
             if (hasFileChanged(firstDaikonFile, currentDaikonFile)) {
-                changedDaikon = true;
                 Logger.debug(
                     "Daikon has changed invariants between " +
                     firstIterationDaikon +
@@ -116,7 +112,6 @@ public class Checkpoint {
             );
 
             if (hasFileChanged(firstDigFile, currentDigFile)) {
-                changedDig = true;
                 Logger.debug(
                     "DIG has changed invariants between " +
                     firstIterationDig +
@@ -126,23 +121,23 @@ public class Checkpoint {
                 firstIterationForDig.put(key, currentIteration);
             }
 
-            boolean digStable = false;
-            boolean daikonStable = false;
+            // If either file has changed, we can return true.
+            boolean changed =
+                (firstIterationForDig.get(key) == currentIteration &&
+                    firstIterationForDaikon.get(key) == currentIteration);
 
-            if (!changedDig && currentIteration - firstIterationDig >= WINDOW_SIZE) {
-                // Dig is stable now.
-                Logger.debug("DIG is stable now for key " + key);
-                digStable = true;
+            if (changed) {
+                Logger.debug(
+                    "Invariants have stabilized for " +
+                    key +
+                    " at iteration " +
+                    currentIteration
+                );
+                return false;
+
+            } else {
+                return true;
             }
-
-            if (!changedDaikon && currentIteration - firstIterationDaikon >= WINDOW_SIZE) {
-                // Daikon is stable now.
-                Logger.debug("Daikon is stable now for key " + key);
-                daikonStable = true;
-            }
-
-            return digStable && daikonStable;
-
         } else {
             // In the first iteration, there are no keys.
             firstIterationForDig.put(key, currentIteration);
