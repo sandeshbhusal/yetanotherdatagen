@@ -428,17 +428,13 @@ public class App {
                     Logger.debug(
                         "Skipping key " +
                         key +
-                        " for Daikon but the DTrace file is written."
+                        " for Daikon, it's stable already."
                     );
                     continue;
                 }
 
                 if (!Cache.getInstance().wasTargeted(key)) {
-                    Logger.debug(
-                        "Skipping key " +
-                        key +
-                        " even though it's not stable, because it was not visited."
-                    );
+                    continue;
                 }
 
                 runDaikonOnDtraceFile(
@@ -462,19 +458,13 @@ public class App {
 
                 if (stableKeys.containsKey(key)) {
                     Logger.debug(
-                        "Skipping key " +
-                        key +
-                        " for DIG but the CSV file is written."
+                        "Skipping key " + key + " for Dig, it's stable already."
                     );
                     continue;
                 }
 
                 if (!Cache.getInstance().wasTargeted(key)) {
-                    Logger.debug(
-                        "Skipping key " +
-                        key +
-                        " even though it's not stable, because it was not visited."
-                    );
+                    continue;
                 }
 
                 runDigOnCSVFile(
@@ -499,10 +489,6 @@ public class App {
                     "Finished first iteration. No stabilization checks will be done"
                 );
             } else {
-                Logger.debug(
-                    "Checking if all invariants have become stable or not."
-                );
-
                 // Get all keys from cache we can compare.
                 List<String> cacheKeys = Cache.getInstance()
                     .getInstrumentationCacheKeys();
@@ -521,7 +507,6 @@ public class App {
                         continue;
                     }
 
-                    Logger.debug("Checking if " + key + " has changed");
                     if (
                         Checkpoint.getInstance()
                             .checkChangeInWindow(
@@ -532,6 +517,9 @@ public class App {
                     ) {
                         changedInvariantsCount += 1;
                     } else {
+                        Logger.debug(
+                            key + " is stable at iteration " + iterations
+                        );
                         stableKeys.put(key, iterations);
                     }
                 }

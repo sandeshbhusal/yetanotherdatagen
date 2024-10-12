@@ -21,7 +21,7 @@ public class Checkpoint {
     private static HashMap<String, Integer> firstIterationForDaikon;
 
     // The window size to consider while checking for invariants' stability.
-    private static final int WINDOW_SIZE = 3;
+    private static final int WINDOW_SIZE = 5;
 
     public static Checkpoint getInstance() {
         if (cp == null) {
@@ -91,6 +91,8 @@ public class Checkpoint {
                     "Daikon has changed invariants between " +
                     firstIterationDaikon +
                     " and " +
+                    currentIteration +
+                    " reset to current iteration: " +
                     currentIteration
                 );
                 firstIterationForDaikon.put(key, currentIteration);
@@ -116,6 +118,8 @@ public class Checkpoint {
                     "DIG has changed invariants between " +
                     firstIterationDig +
                     " and " +
+                    currentIteration +
+                    " reset to current iteration: " +
                     currentIteration
                 );
                 firstIterationForDig.put(key, currentIteration);
@@ -134,7 +138,6 @@ public class Checkpoint {
                     currentIteration
                 );
                 return false;
-
             } else {
                 return true;
             }
