@@ -123,7 +123,7 @@ public class Checkpoint {
 
             // If either file has changed, we can return true.
             boolean changed =
-                (firstIterationForDig.get(key) == currentIteration &&
+                (firstIterationForDig.get(key) == currentIteration ||
                     firstIterationForDaikon.get(key) == currentIteration);
 
             if (!changed) {
