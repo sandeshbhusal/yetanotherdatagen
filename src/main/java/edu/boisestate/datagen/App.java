@@ -532,7 +532,7 @@ public class App {
                     ) {
                         changedInvariantsCount += 1;
                     } else {
-                        stableKeys.put(key, true);
+                        stableKeys.put(key, iterations);
                     }
                 }
 
