@@ -529,6 +529,7 @@ public class App {
                         continue;
                     }
 
+                    Logger.debug("Checking if " + key + " has changed");
                     if (
                         Checkpoint.getInstance()
                             .checkChangeInWindow(

@@ -147,7 +147,9 @@ public class Checkpoint {
             // In the first iteration, there are no keys.
             firstIterationForDig.put(key, currentIteration);
             firstIterationForDaikon.put(key, currentIteration);
-            return false;
+
+            // We always assume it has changed.
+            return true;
         }
     }
 
