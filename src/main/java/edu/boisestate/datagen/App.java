@@ -515,15 +515,7 @@ public class App {
                     }
 
                     if (!Cache.getInstance().wasTargeted(key)) {
-                        Logger.debug(
-                            "Since " +
-                            key +
-                            " was not visited, we will try to target it again."
-                        );
-                        Logger.debug(
-                            key + " will be considered to have been changed"
-                        );
-
+                        Logger.debug(key + " was not visited.");
                         // let's consider this to have changed for both DIG and Daikon.
                         changedInvariantsCount += 2;
                         continue;
@@ -539,6 +531,8 @@ public class App {
                             )
                     ) {
                         changedInvariantsCount += 1;
+                    } else {
+                        stableKeys.put(key, true);
                     }
                 }
 
