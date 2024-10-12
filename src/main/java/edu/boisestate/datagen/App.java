@@ -298,6 +298,7 @@ public class App {
                     String.format("-projectCP=%s", compiledFilePath),
                     String.format("-class=%s", className),
                     String.format("-Dassertions=false"),
+                    "-Dcriterion=BRANCH",
                 };
 
                 runProcess(evoruncommand);
@@ -506,10 +507,6 @@ public class App {
                 List<String> cacheKeys = Cache.getInstance()
                     .getInstrumentationCacheKeys();
                 int changedInvariantsCount = 0;
-                File checkpointDirOld = new File(
-                    String.format("%s/%d", checkpointPath, iterations - 1)
-                );
-                File codePathOld = new File(checkpointDirOld + "/code");
 
                 for (String key : cacheKeys) {
                     if (stableKeys.containsKey(key)) {
@@ -532,63 +529,15 @@ public class App {
                         continue;
                     }
 
-                    // Generate two file names each, for daikon and DIG.
-                    // Then check if contents have changed from previous iteration.
-                    File oldDaikonFile = new File(
-                        codePathOld + "/" + key + ".daikonoutput"
-                    );
-                    File currentDaikonFile = new File(
-                        codePath + "/" + key + ".daikonoutput"
-                    );
-
-                    File oldDIGFile = new File(
-                        codePathOld + "/" + key + ".digoutput"
-                    );
-                    File currentDIGFile = new File(
-                        codePath + "/" + key + ".digoutput"
-                    );
-
-                    boolean daikonchanged =
-                        (hasFileChanged(oldDaikonFile, currentDaikonFile));
-                    boolean digchanged =
-                        (hasFileChanged(oldDIGFile, currentDIGFile));
-
-                    // previously, we were checking only for daikonchanged OR digchanged, but
-                    // now we check for both.
-                    if (daikonchanged) {
-                        Logger.debug(
-                            String.format(
-                                "%s has changed for daikon between %d and %d",
+                    if (
+                        Checkpoint.getInstance()
+                            .checkChangeInWindow(
+                                checkpointPath,
                                 key,
-                                iterations,
-                                iterations - 1
+                                iterations
                             )
-                        );
+                    ) {
                         changedInvariantsCount += 1;
-                    }
-
-                    if (digchanged) {
-                        Logger.debug(
-                            String.format(
-                                "%s has changed for DIG between %d and %d",
-                                key,
-                                iterations,
-                                iterations - 1
-                            )
-                        );
-                        changedInvariantsCount += 1;
-                    }
-
-                    if (!daikonchanged && !digchanged) {
-                        Logger.debug(
-                            String.format(
-                                "%s has stabilized between %d and %d",
-                                key,
-                                iterations,
-                                iterations - 1
-                            )
-                        );
-                        stableKeys.put(key, iterations);
                     }
                 }
 
@@ -748,70 +697,6 @@ public class App {
 
         // This should be an unreachable path.
         throw new IllegalArgumentException("Should not be reachable.");
-    }
-
-    // Semantic diff for invariants.
-    public static boolean hasFileChanged(File file1, File file2) {
-        boolean isDigFile = file1.getName().endsWith(".digoutput");
-        InvCompiler compiler = new InvCompiler();
-
-        try {
-            if (isDigFile) {
-                CompiledExpression ce1 =
-                    compiler.digFileToInvariantsConjunction(
-                        new FileReader(file1)
-                    );
-
-                CompiledExpression ce2 =
-                    compiler.digFileToInvariantsConjunction(
-                        new FileReader(file2)
-                    );
-
-                return (!ce1.equals(ce2));
-            } else {
-                // Daikon does not stabilize invariants very quickly. It
-                // produces a bunch of "one of {x, y, z}" templates towards
-                // the beginning, so if that is the case, we will skip comparing
-                // invariants, as there are _no_ invariants generated at all.
-
-                // Check if either file contains "one of".
-                String file1contents = new String(
-                    Files.readAllBytes(file1.toPath())
-                );
-                String file2contents = new String(
-                    Files.readAllBytes(file2.toPath())
-                );
-
-                if (
-                    file1contents.contains("one of") ||
-                    file2contents.contains("one of")
-                ) {
-                    Logger.debug(
-                        "Daikon invariants are too unstable to compare for " +
-                        file1.getName()
-                    );
-                    // Invariants have not changed. Assume the file changed.
-                    return true;
-                }
-
-                CompiledExpression ce1 =
-                    compiler.daikonFileToInvariantsConjunction(
-                        new FileReader(file1)
-                    );
-                CompiledExpression ce2 =
-                    compiler.daikonFileToInvariantsConjunction(
-                        new FileReader(file2)
-                    );
-
-                return (!ce1.equals(ce2));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error reading invariant files for comparison.");
-            System.exit(1);
-
-            return false;
-        }
     }
 
     private static Optional<CompilationUnit> parseJavaFile(File file) {
