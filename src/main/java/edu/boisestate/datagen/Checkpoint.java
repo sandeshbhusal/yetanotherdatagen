@@ -126,7 +126,7 @@ public class Checkpoint {
                 (firstIterationForDig.get(key) == currentIteration &&
                     firstIterationForDaikon.get(key) == currentIteration);
 
-            if (changed) {
+            if (!changed) {
                 Logger.debug(
                     "Invariants have stabilized for " +
                     key +
