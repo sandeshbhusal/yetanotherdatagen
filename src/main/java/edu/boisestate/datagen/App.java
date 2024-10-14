@@ -92,7 +92,7 @@ public class App {
 
         argParser.addArgument("-m", "--max_iterations")
                 .help("Max iteration count for a key")
-                .required(true).setDefault(25).type(Integer.class);
+                .required(false).setDefault(25).type(Integer.class);
 
         boolean skipAugmentation = false;
         int maxIterationCount = 0;
