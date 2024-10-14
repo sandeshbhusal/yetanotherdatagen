@@ -90,7 +90,12 @@ public class App {
                 .setDefault(false)
                 .type(Boolean.class);
 
+        argParser.addArgument("-m", "--max_iterations")
+                .help("Max iteration count for a key")
+                .required(true).setDefault(100).type(Integer.class);
+
         boolean skipAugmentation = false;
+        int maxIterationCount = 0;
 
         // Parse arguments.
         try {
@@ -104,6 +109,7 @@ public class App {
             daikonJarPath = getJarFromClassPath("daikon").orElse(
                     ns.getString("daikon"));
             skipAugmentation = ns.getBoolean("skip_augmentation");
+            maxIterationCount = ns.getInt("max_iterations");
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
             System.exit(1);
@@ -393,7 +399,7 @@ public class App {
                     continue;
                 }
 
-                iterationCounts.put(instrumentationPoint, iterationCounts.getOrDefault(instrumentationPoint, 3));
+                iterationCounts.put(instrumentationPoint, iterationCounts.getOrDefault(instrumentationPoint, maxIterationCount) - 1);
                 if (iterationCounts.get(instrumentationPoint) == 0) {
                     Logger.warn("Key " + instrumentationPoint + " did not stabilize within 100 iterations.");
                     stableKeys.put(instrumentationPoint, iterations);
