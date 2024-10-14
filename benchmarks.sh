@@ -73,7 +73,4 @@ run_all "A_LT_B"
 #run_all "TriangleCheck"
 #run_all "IntDivision"
 #run_all "Cars"
-<<<<<<< Updated upstream
-=======
 #run_all "BindExpandsVars2"
->>>>>>> Stashed changes

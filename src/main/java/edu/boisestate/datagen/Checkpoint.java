@@ -1,106 +1,95 @@
 package edu.boisestate.datagen;
 
-import edu.boisestate.datagen.exprcompiler.*;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.LinkedList;
+
 import org.tinylog.Logger;
 
+import java.io.StringReader;
+
+import edu.boisestate.datagen.exprcompiler.CompiledExpression;
+import edu.boisestate.datagen.exprcompiler.InvCompiler;
+
 public class Checkpoint {
-    private static HashMap<String, LinkedList<Integer>> digIterations;
-    private static HashMap<String, LinkedList<Integer>> daikonIterations;
+    public static class CheckpointInformation {
+        String content;
+        int iteration;
 
-    private static final int WINDOW_SIZE = 5;
-
-    public Checkpoint(String className) {
-        digIterations = new HashMap<>();
-        daikonIterations = new HashMap<>();
+        public CheckpointInformation(String content, int iteration) {
+            this.content = content;
+            this.iteration = iteration;
+        }
     }
 
-    public boolean checkChangeInWindow(String checkpointPath, String key, int currentIteration) {
-        digIterations.putIfAbsent(key, new LinkedList<>());
-        daikonIterations.putIfAbsent(key, new LinkedList<>());
+    private int windowSize;
 
-        LinkedList<Integer> digList = digIterations.get(key);
-        LinkedList<Integer> daikonList = daikonIterations.get(key);
+    private HashMap<String, CheckpointInformation> compareForDig = new HashMap<>();
+    private HashMap<String, CheckpointInformation> compareForDaikon = new HashMap<>();
 
-        boolean digChanged = checkToolChange(checkpointPath, key, currentIteration, digList, "dig");
-        boolean daikonChanged = checkToolChange(checkpointPath, key, currentIteration, daikonList, "daikon");
-
-        if (digChanged || daikonChanged) {
-            return true;
-        }
-
-        if (digList.size() >= WINDOW_SIZE && daikonList.size() >= WINDOW_SIZE) {
-            Logger.debug("Invariants have stabilized for " + key + " at iteration " + currentIteration);
-            return false;
-        }
-
-        return true;
+    public Checkpoint(int windowSize) {
+        this.windowSize = windowSize;
     }
 
-    private boolean checkToolChange(String checkpointPath, String key, int currentIteration,
-                                    LinkedList<Integer> iterationList, String tool) {
-        File currentFile = getToolFile(checkpointPath, currentIteration, key, tool);
+    public int getConsideredIterationDaikon(String key) {
+        CheckpointInformation cpi = this.compareForDaikon.get(key);
+        if (cpi == null)
+            return 0;
+        return cpi.iteration;
+    }
 
-        if (iterationList.isEmpty()) {
-            iterationList.add(currentIteration);
+    // Returns if daikon content is different from the one we have stored.
+    public boolean hasChangedDaikon(String key, int iteration, String content) {
+        // If the content contains "one of", then the daikon invariant is not stable yet
+        // so we do a early return.
+        if (content.contains("one of")
+                || (compareForDaikon.get(key) != null && compareForDaikon.get(key).content.contains("one of"))) {
+            Logger.warn("Unstable key " + key + " for Daikon will be skipped.");
+            CheckpointInformation resetInfo = new CheckpointInformation(content, iteration);
+            this.compareForDaikon.put(key, resetInfo);
             return true;
-        }
 
-        File previousFile = getToolFile(checkpointPath, iterationList.getLast(), key, tool);
-
-        if (hasFileChanged(previousFile, currentFile)) {
-            Logger.debug(tool.toUpperCase() + " has changed invariants between " +
-                         iterationList.getLast() + " and " + currentIteration +
-                         " for " + key + " reset to current iteration: " + currentIteration);
-            iterationList.clear();
-            iterationList.add(currentIteration);
-            return true;
         } else {
-            iterationList.add(currentIteration);
-            if (iterationList.size() > WINDOW_SIZE) {
-                iterationList.removeFirst();
+            CheckpointInformation storedInfo = compareForDaikon.get(key);
+            // If we have nothing here, then return early.
+            if (storedInfo == null) {
+                CheckpointInformation resetInfo = new CheckpointInformation(content, iteration);
+                this.compareForDaikon.put(key, resetInfo);
+                return true;
             }
-            return false;
-        }
-    }
+            String storedContents = compareForDaikon.get(key).content;
 
-    private File getToolFile(String checkpointPath, int iteration, String key, String tool) {
-        File iterationDir = new File(String.format("%s/%d", checkpointPath, iteration));
-        File codePath = new File(iterationDir, "code");
-        return new File(codePath, key + "." + tool + "output");
-    }
-
-    public static boolean hasFileChanged(File file1, File file2) {
-        boolean isDigFile = file1.getName().endsWith(".digoutput");
-        InvCompiler compiler = new InvCompiler();
-
-        try {
-            if (isDigFile) {
-                CompiledExpression ce1 = compiler.digFileToInvariantsConjunction(new FileReader(file1));
-                CompiledExpression ce2 = compiler.digFileToInvariantsConjunction(new FileReader(file2));
-                return (!ce1.equals(ce2));
+            // Check if the content is _exactly_ the same, i.e. text diff. If so,
+            // these are the same (we do this to avoid doing expensive z3 analyses).
+            if (content.equals(storedContents)) {
+                // If content is the same, we leave the map as-is, since no change is
+                // required, and return that the invariants have not changed at all.
+                int windowSize = iteration - this.compareForDaikon.get(key).iteration;
+                // If window is smaller, then the invariants have changed.
+                return windowSize < this.windowSize;
             } else {
-                String file1contents = new String(Files.readAllBytes(file1.toPath()));
-                String file2contents = new String(Files.readAllBytes(file2.toPath()));
+                // If the content is not exactly the same, we require a compiler
+                InvCompiler compiler = new InvCompiler();
 
-                if (file1contents.contains("one of") || file2contents.contains("one of")) {
+                CompiledExpression newExpr = compiler.daikonFileToInvariantsConjunction(new StringReader(content));
+                CompiledExpression oldExpr = compiler
+                        .daikonFileToInvariantsConjunction(new StringReader(storedContents));
+
+                // If the expressions are different, that means our invariants have changed.
+                // so we return early.
+                if (!newExpr.equals(oldExpr)) {
+                    // Store this as a new checkpoint, and return early.
+                    CheckpointInformation resetInfo = new CheckpointInformation(content, iteration);
+                    this.compareForDaikon.put(key, resetInfo);
                     return true;
                 }
-
-                CompiledExpression ce1 = compiler.daikonFileToInvariantsConjunction(new FileReader(file1));
-                CompiledExpression ce2 = compiler.daikonFileToInvariantsConjunction(new FileReader(file2));
-                return (!ce1.equals(ce2));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error reading invariant files for comparison.");
-            System.exit(1);
-            return false;
         }
+
+        // At this point, since we did not return early, the invariants generated
+        // are exactly the same. So, we just need to check window size, i.e. if stored
+        // iteration
+        // exceeds the iteration # by window size.
+        int windowSize = iteration - this.compareForDaikon.get(key).iteration;
+        // if the window is smaller, then the invariants have changed.
+        return windowSize < this.windowSize;
     }
 }

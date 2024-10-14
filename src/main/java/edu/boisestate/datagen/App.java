@@ -10,7 +10,6 @@ import edu.boisestate.datagen.rmi.DataPointServerImpl;
 import edu.boisestate.datagen.utils.FileOps;
 import java.io.BufferedReader;
 import java.io.File;
-import java.util.Set;
 import java.util.HashSet;
 import java.io.InputStreamReader;
 import java.rmi.AlreadyBoundException;
@@ -193,6 +192,7 @@ public class App {
         // Keys that have stabilized across checks.
         HashMap<String, Integer> stableKeys = new HashMap<>();
         boolean stop = false;
+        Checkpoint checkpoint = new Checkpoint(3);
 
         // Main loop.
         do {
@@ -385,13 +385,14 @@ public class App {
             Cache.getInstance().writeTracesTo(codePath);
 
             // Now run DIG/Daikon on the files.
-            for (String instrumentationPoint : Cache.getInstance().instrumentation_cache.keySet()) {
+            for (String instrumentationPoint : instrumentationPoints) {
                 if (stableKeys.containsKey(instrumentationPoint)) {
                     Logger.debug("Skipping generation for stable key " + instrumentationPoint);
                     continue;
                 }
 
-                Logger.debug("Working on unstable key: " + instrumentationPoint);
+                Logger.debug(String.format("Working on unstable key: %s (%d)", instrumentationPoint,
+                        checkpoint.getConsideredIterationDaikon(instrumentationPoint) - iterations));
 
                 // Run Dig and Daikon on the path.
                 runDaikonOnDtraceFile(
@@ -400,10 +401,32 @@ public class App {
                         new File(
                                 String.format("%s/%s.daikonoutput", codePath.getAbsolutePath(), instrumentationPoint)));
 
-                runDigOnCSVFile(
-                        new File(String.format("%s/%s.csv", codePath.getAbsolutePath(), instrumentationPoint)),
-                        new File(String.format("%s/%s.digoutput", codePath.getAbsolutePath(), instrumentationPoint)));
+                // runDigOnCSVFile(
+                // new File(String.format("%s/%s.csv", codePath.getAbsolutePath(),
+                // instrumentationPoint)),
+                // new File(String.format("%s/%s.digoutput", codePath.getAbsolutePath(),
+                // instrumentationPoint)));
             }
+
+            // For each Daikon and DIG file, check if it has changed from the last iteration
+            // using our checkpoint.
+            int totalChangedInvariants = 0;
+            for (String key : instrumentationPoints) {
+                // No need to compare stable keys.
+                if (stableKeys.containsKey(key))
+                    continue;
+
+                String thisIterationDaikonFileContents = FileOps
+                        .readFile(new File(String.format("%s/%s.daikonoutput", codePath.getAbsolutePath(), key)));
+
+                if (checkpoint.hasChangedDaikon(key, iterations, thisIterationDaikonFileContents)) {
+                    totalChangedInvariants += 1;
+                } else {
+                    stableKeys.put(key, iterations);
+                }
+            }
+
+            stop = totalChangedInvariants == 0;
 
             long endTime = System.currentTimeMillis();
             Logger.debug(
@@ -413,9 +436,23 @@ public class App {
                             (endTime - startTime) +
                             " ms.");
 
+            if (stop) {
+                Logger.info("Running the final invariant generation for all instrumentation points");
+                for (String key : instrumentationPoints) {
+                    // Put all generated invariants directly in the workdir, like
+                    // "checkpoint_datagen/a_lt_b_truebranch.daikonoutput". Makes it
+                    // easier to see what the final invariants were.
+                    runDaikonOnDtraceFile(
+                            new File(
+                                    String.format(
+                                            "%s/%s.dtrace",
+                                            codePath.getAbsolutePath(),
+                                            key)),
+                            classpaths,
+                            new File(String.format("%s/%s.daikonoutput", workdir, key)));
+                }
+            }
         } while (!stop);
-
-        // TODO: Run final invariant generation.
 
         System.out.println(
                 "----------------------------------------------------------");
@@ -429,6 +466,9 @@ public class App {
                             stableKeys.get(key)));
         }
 
+        // Required to shutdown the RMI server, etc. TODO: Find a better way to do this
+        // later.
+        System.exit(0);
     }
 
     private static void runDaikonOnDtraceFile(

@@ -17,4 +17,12 @@ echo ""
 ## Run the program
 #module load borah-base openmpi/4.1.3/gcc/12.1.0
 #mpirun -n 48 ./hello_world
-./benchmarks.sh
+for i in $(seq 1 20); 
+do 
+    # Run the benchmark.
+    ./benchmarks.sh
+    # Copy to the n-th benchmark folder.
+    cp -r benchmarks "benchmarks${i}"
+    # Remove the generated artifacts.
+    rm -rf benchmarks/outputs
+done
