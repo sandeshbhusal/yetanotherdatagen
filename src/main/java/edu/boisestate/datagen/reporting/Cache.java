@@ -1,6 +1,7 @@
 package edu.boisestate.datagen.reporting;
 
 import java.util.HashMap;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.tinylog.Logger;
+
+import edu.boisestate.datagen.utils.FileOps;
 
 import java.util.Random;
 
@@ -33,12 +36,19 @@ public class Cache {
         return rval;
     }
 
+    // A run of evosuite might not target all instrumentation points.
+    // as such, it is essential that we store all the instrumentation points
+    // from the source program, and not the evosuite run.
     // Reset information about which branches were targeted.
-    public void resetTargetedInformation() {
-        this.wasTargeted.clear();
+    public void resetTargetedInformation(HashSet<String> keys) {
+        for (String key: keys) {
+            this.wasTargeted.put(key, 0);
+            // Also insert the key to the instrumentation cache.
+            instrumentation_cache.putIfAbsent(key, new HashSet<>());
+        }
     }
 
-    public HashMap<String, Integer>  getAllTargetsVisited() {
+    public HashMap<String, Integer> getAllTargetsVisited() {
         return this.wasTargeted;
     }
 
@@ -161,6 +171,18 @@ public class Cache {
         return traceFilesInstru;
     }
 
+    public void writeTracesTo(File path) {
+        HashMap<String, String> daikonTraces = generate_daikon_dtraces();
+        HashMap<String, String> digTraces = generate_dig_traces();
+
+        for (String key : daikonTraces.keySet()) {
+            String daikonPath = String.format("%s/%s.dtrace", path.getAbsolutePath(), key);
+            String digPath = String.format("%s/%s.csv", path.getAbsolutePath(), key);
+            FileOps.writeFile(new File(daikonPath), daikonTraces.getOrDefault(key, ""));
+            FileOps.writeFile(new File(digPath), digTraces.getOrDefault(key, ""));
+        }
+    }
+
     public HashMap<String, String> generate_dig_traces() {
         // Start with every key, in the instrumentation cache hashmap.
         HashMap<String, String> traceFiles = generate_dig_files(this.instrumentation_cache);
@@ -221,7 +243,7 @@ public class Cache {
             StringBuilder sb = new StringBuilder();
             sb.append("decl-version 2.0\n");
             sb.append("var-comparability none\n\n");
-            sb.append("ppt Faker.fakemethod(int");
+            sb.append(String.format("ppt Faker.%s(int", key));
             // At least one int required.
             for (int k = 0; k < variableNames.size() - 1; k++) {
                 sb.append(",\\_int");
@@ -243,7 +265,7 @@ public class Cache {
             sb.append("\n");
 
             for (HashMap<String, Object> dat : data) {
-                sb.append("Faker.fakemethod(int");
+                sb.append(String.format("Faker.%s(int", key));
                 for (int _k = 0; _k < variableNames.size() - 1; _k++) {
                     sb.append(",\\_int");
                 }

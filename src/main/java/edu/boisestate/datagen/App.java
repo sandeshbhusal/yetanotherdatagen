@@ -2,8 +2,6 @@ package edu.boisestate.datagen;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
-import edu.boisestate.datagen.exprcompiler.CompiledExpression;
-import edu.boisestate.datagen.exprcompiler.InvCompiler;
 import edu.boisestate.datagen.instrumenters.CommentChangingInstrumenter;
 import edu.boisestate.datagen.instrumenters.ImportInstrumenter;
 import edu.boisestate.datagen.instrumenters.InstrumentationMode;
@@ -12,16 +10,14 @@ import edu.boisestate.datagen.rmi.DataPointServerImpl;
 import edu.boisestate.datagen.utils.FileOps;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.Set;
+import java.util.HashSet;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -52,51 +48,48 @@ public class App {
         // - A {{workdir}}/compiled/ contains the compiled instrumented code.
 
         ArgumentParser argParser = ArgumentParsers.newFor("datagen")
-            .build()
-            .description(
-                "DataGen is a tool for generating data-driven tests for Java programs."
-            );
+                .build()
+                .description(
+                        "DataGen is a tool for generating data-driven tests for Java programs.");
 
         argParser
-            .addArgument("-s", "--source")
-            .help("The path to the source code file(s), This is a folder.")
-            .required(true)
-            .type(String.class);
+                .addArgument("-s", "--source")
+                .help("The path to the source code file(s), This is a folder.")
+                .required(true)
+                .type(String.class);
 
         argParser
-            .addArgument("-w", "--workdir")
-            .help("Working directory for datagen.")
-            .required(true)
-            .type(String.class);
+                .addArgument("-w", "--workdir")
+                .help("Working directory for datagen.")
+                .required(true)
+                .type(String.class);
 
         argParser
-            .addArgument("-e", "--evosuite")
-            .help("Evosuite jar file.")
-            .required(false)
-            .type(String.class);
+                .addArgument("-e", "--evosuite")
+                .help("Evosuite jar file.")
+                .required(false)
+                .type(String.class);
 
         argParser
-            .addArgument("-j", "--junit")
-            .help(
-                "JUnit jar file path. This should also contain the hamcrest jar."
-            )
-            .required(false)
-            .type(String.class);
+                .addArgument("-j", "--junit")
+                .help(
+                        "JUnit jar file path. This should also contain the hamcrest jar.")
+                .required(false)
+                .type(String.class);
 
         argParser
-            .addArgument("-d", "--daikon")
-            .help("Daikon jar file path.")
-            .required(false)
-            .type(String.class);
+                .addArgument("-d", "--daikon")
+                .help("Daikon jar file path.")
+                .required(false)
+                .type(String.class);
 
         argParser
-            .addArgument("-k", "--skip_augmentation")
-            .help(
-                "Skip augmentation. This means we will run the tests on code without augmenting the branches."
-            )
-            .required(false)
-            .setDefault(false)
-            .type(Boolean.class);
+                .addArgument("-k", "--skip_augmentation")
+                .help(
+                        "Skip augmentation. This means we will run the tests on code without augmenting the branches.")
+                .required(false)
+                .setDefault(false)
+                .type(Boolean.class);
 
         boolean skipAugmentation = false;
 
@@ -106,14 +99,11 @@ public class App {
             source = ns.getString("source");
             workdir = ns.getString("workdir");
             evosuiteJarPath = getJarFromClassPath("evosuite").orElse(
-                ns.getString("evosuite")
-            );
+                    ns.getString("evosuite"));
             junitJarPath = getJarFromClassPath("junit").orElse(
-                ns.getString("junit")
-            );
+                    ns.getString("junit"));
             daikonJarPath = getJarFromClassPath("daikon").orElse(
-                ns.getString("daikon")
-            );
+                    ns.getString("daikon"));
             skipAugmentation = ns.getBoolean("skip_augmentation");
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
@@ -129,33 +119,28 @@ public class App {
             e.printStackTrace();
         } catch (RemoteException e) {
             System.err.println(
-                "Could not start datapointserverimpl - RemoteException."
-            );
+                    "Could not start datapointserverimpl - RemoteException.");
             e.printStackTrace();
         }
 
         // Check classpaths for evosuite and junit.
-        if (
-            evosuiteJarPath == null ||
-            junitJarPath == null ||
-            daikonJarPath == null
-        ) {
+        if (evosuiteJarPath == null ||
+                junitJarPath == null ||
+                daikonJarPath == null) {
             System.err.println(
-                "Evosuite, JUnit, or Daikon jar file not provided, and evosuite, junit, or daikon is not present in the classpath."
-            );
+                    "Evosuite, JUnit, or Daikon jar file not provided, and evosuite, junit, or daikon is not present in the classpath.");
             // Print out the status of the jars.
-            if (!(evosuiteJarPath == null)) System.err.println(
-                "Evosuite jar: " + evosuiteJarPath
-            );
-            if (!(junitJarPath == null)) System.err.println(
-                "JUnit jar: " + junitJarPath
-            );
-            if (!(daikonJarPath == null)) System.err.println(
-                "Daikon jar: " + daikonJarPath
-            );
+            if (!(evosuiteJarPath == null))
+                System.err.println(
+                        "Evosuite jar: " + evosuiteJarPath);
+            if (!(junitJarPath == null))
+                System.err.println(
+                        "JUnit jar: " + junitJarPath);
+            if (!(daikonJarPath == null))
+                System.err.println(
+                        "Daikon jar: " + daikonJarPath);
             System.err.println(
-                "Use the -e, -j, and -d flags to provide the evosuite, junit, and daikon jar paths respectively."
-            );
+                    "Use the -e, -j, and -d flags to provide the evosuite, junit, and daikon jar paths respectively.");
             System.exit(1);
         }
 
@@ -163,10 +148,9 @@ public class App {
         File sourceDir = new File(source);
         if (!sourceDir.exists() || !sourceDir.isDirectory()) {
             Logger.error(
-                "Source path " +
-                sourceDir.getAbsolutePath() +
-                " does not exist or is not a directory."
-            );
+                    "Source path " +
+                            sourceDir.getAbsolutePath() +
+                            " does not exist or is not a directory.");
             System.exit(1);
         }
 
@@ -199,38 +183,27 @@ public class App {
 
         int iterations = 0;
         CommentChangingInstrumenter augmenter = new CommentChangingInstrumenter(
-            InstrumentationMode.AUGMENTATION,
-            skipAugmentation
-        );
+                InstrumentationMode.AUGMENTATION,
+                skipAugmentation);
         CommentChangingInstrumenter reporter = new CommentChangingInstrumenter(
-            InstrumentationMode.INSTRUMENTATION,
-            skipAugmentation
-        );
+                InstrumentationMode.INSTRUMENTATION,
+                skipAugmentation);
         ImportInstrumenter importer = new ImportInstrumenter();
 
-        /*
-         * We do not check a instrumentation key, once it has stabilized between two
-         * runs, because there's always a probability in later future, where a new data
-         * point can cause it to change. So the threshold for now is 2 consecutive
-         * iterations.
-         * If between two iterations the invariants generated for a ppt do not change
-         * for both
-         * dig and daikon, then we consider that ppt invariant generated to be stable.
-         */
+        // Keys that have stabilized across checks.
         HashMap<String, Integer> stableKeys = new HashMap<>();
+        boolean stop = false;
 
         // Main loop.
         do {
             // Reset targeted information.
-            Cache.getInstance().resetTargetedInformation();
-
             long startTime = System.currentTimeMillis();
+
             System.out.println();
             Logger.info(
-                "---------------------- Starting iteration " +
-                ++iterations +
-                "--------------------"
-            );
+                    "---------------------- Starting iteration " +
+                            ++iterations +
+                            "--------------------");
             // Make a checkpoint directory.
             File checkpointDir = new File(checkpointPath + "/" + iterations);
             FileOps.createDirectory(checkpointDir.getAbsolutePath());
@@ -247,15 +220,21 @@ public class App {
             FileOps.recursivelyCopyFolder(sourceDir, new File(reportingPath));
 
             // Code in the reporting directory is instrumented with reporting code.
+            HashSet<String> instrumentationPoints = new HashSet<>();
             for (File file : new File(reportingPath).listFiles()) {
                 if (file.getName().endsWith(".java")) {
                     Logger.info("Instrumenting file: " + file.getName());
                     CompilationUnit cu = parseJavaFile(file).orElseThrow();
                     reporter.instrument(cu);
                     importer.instrument(cu);
+
+                    instrumentationPoints = reporter.getInstrumentationPoints();
+
                     FileOps.writeFile(file, cu.toString());
                 }
             }
+
+            Cache.getInstance().resetTargetedInformation(instrumentationPoints);
 
             // Code in the augmented directory is augmented with data we have seen
             // in new NewCache. Then, it is compiled and executed on evosuite.
@@ -277,36 +256,34 @@ public class App {
                 Logger.info("Compiling augmented file " + file.getName());
                 // Compile and execute the augmented file.
                 String[] command = {
-                    "javac",
-                    file.getAbsolutePath(),
-                    "-d",
-                    compiledPath,
+                        "javac",
+                        file.getAbsolutePath(),
+                        "-d",
+                        compiledPath,
                 };
                 runProcess(command);
 
                 Logger.info(
-                    "Running evosuite on augmented file " + file.getName()
-                );
+                        "Running evosuite on augmented file " + file.getName());
                 // Run evosuite on the file, but from the compiled directory.
                 String compiledFilePath = compiledPath;
                 String[] evoruncommand = {
-                    "java",
-                    "-cp",
-                    String.join(":", classpaths),
-                    "-jar",
-                    evosuiteJarPath,
-                    String.format("-projectCP=%s", compiledFilePath),
-                    String.format("-class=%s", className),
-                    String.format("-Dassertions=false"),
-                    "-Dcriterion=BRANCH",
+                        "java",
+                        "-cp",
+                        String.join(":", classpaths),
+                        "-jar",
+                        evosuiteJarPath,
+                        String.format("-projectCP=%s", compiledFilePath),
+                        String.format("-class=%s", className),
+                        String.format("-Dassertions=false"),
+                        "-Dcriterion=BRANCH",
                 };
 
                 runProcess(evoruncommand);
             }
             long endEvoTime = System.currentTimeMillis();
             Logger.debug(
-                "Evosuite run took " + (endEvoTime - startTime) + " ms."
-            );
+                    "Evosuite run took " + (endEvoTime - startTime) + " ms.");
 
             // Now that evosuite run has finished, our tests are generated in
             // $PWD/evosuite-tests. They need to be compiled alongside our reporting
@@ -320,12 +297,12 @@ public class App {
                 Logger.info("Compiling reporting file " + file.getName());
                 String className = file.getName().replace(".java", "");
                 String[] compile_reportingfiles = {
-                    "javac",
-                    "-cp",
-                    String.join(":", classpaths),
-                    file.getAbsolutePath(),
-                    "-d",
-                    compiledPath,
+                        "javac",
+                        "-cp",
+                        String.join(":", classpaths),
+                        file.getAbsolutePath(),
+                        "-d",
+                        compiledPath,
                 };
                 runProcess(compile_reportingfiles);
 
@@ -335,53 +312,49 @@ public class App {
                 // className_ESTest_scaffolding.java
 
                 Logger.info(
-                    "Compiling evosuite test file for " + file.getName()
-                );
+                        "Compiling evosuite test file for " + file.getName());
                 // Now compile all files in evosuite-tests folder.
                 File evosuiteTestFileName = new File(
-                    evosuiteTests.getAbsolutePath() +
-                    "/" +
-                    className +
-                    "_ESTest.java"
-                );
+                        evosuiteTests.getAbsolutePath() +
+                                "/" +
+                                className +
+                                "_ESTest.java");
                 File scaffoldingFileName = new File(
-                    evosuiteTests.getAbsolutePath() +
-                    "/" +
-                    className +
-                    "_ESTest_scaffolding.java"
-                );
+                        evosuiteTests.getAbsolutePath() +
+                                "/" +
+                                className +
+                                "_ESTest_scaffolding.java");
 
                 String[] compile_esfiles = {
-                    "javac",
-                    "-d",
-                    compiledPath,
-                    "-cp",
-                    String.join(":", classpaths),
-                    evosuiteTestFileName.getAbsolutePath(),
+                        "javac",
+                        "-d",
+                        compiledPath,
+                        "-cp",
+                        String.join(":", classpaths),
+                        evosuiteTestFileName.getAbsolutePath(),
                 };
 
                 runProcess(compile_esfiles);
 
                 String[] compile_scaffolding = {
-                    "javac",
-                    "-d",
-                    compiledPath,
-                    "-cp",
-                    String.join(":", classpaths),
-                    scaffoldingFileName.getAbsolutePath(),
+                        "javac",
+                        "-d",
+                        compiledPath,
+                        "-cp",
+                        String.join(":", classpaths),
+                        scaffoldingFileName.getAbsolutePath(),
                 };
                 runProcess(compile_scaffolding);
 
                 Logger.info(
-                    "Running JUnit tests generated for " + file.getName()
-                );
+                        "Running JUnit tests generated for " + file.getName());
                 // Run the compiled junit tests on junit.
                 String[] junitcommand = {
-                    "java",
-                    "-cp",
-                    String.join(":", classpaths),
-                    "org.junit.runner.JUnitCore",
-                    className + "_ESTest",
+                        "java",
+                        "-cp",
+                        String.join(":", classpaths),
+                        "org.junit.runner.JUnitCore",
+                        className + "_ESTest",
                 };
                 runProcess(junitcommand);
             }
@@ -389,218 +362,87 @@ public class App {
             // Dump all "targeted" information - i.e. all code paths that were actually
             // visited.
             Logger.info(
-                "The following instrumentation points were hit in this run:"
-            );
+                    "The following instrumentation points were hit in this run:");
             Logger.info(
-                String.join(
-                    ", ",
-                    Cache.getInstance().getAllTargetsVisited().toString()
-                )
-            );
+                    String.join(
+                            ", ",
+                            Cache.getInstance().getAllTargetsVisited().toString()));
 
             // Now that everything is done, we will dump the data to the "code" directory,
             // Alongside generated evosuite tests, augmented code, and reporting code.
             FileOps.recursivelyCopyFolder(
-                new File(reportingPath),
-                new File(checkpointDir.getAbsolutePath() + "/reporting")
-            );
+                    new File(reportingPath),
+                    new File(checkpointDir.getAbsolutePath() + "/reporting"));
             FileOps.recursivelyCopyFolder(
-                new File(augmentedPath),
-                new File(checkpointDir.getAbsolutePath() + "/augmented")
-            );
+                    new File(augmentedPath),
+                    new File(checkpointDir.getAbsolutePath() + "/augmented"));
             FileOps.recursivelyCopyFolder(
-                evosuiteTests,
-                new File(checkpointDir.getAbsolutePath() + "/evosuite-tests")
-            );
+                    evosuiteTests,
+                    new File(checkpointDir.getAbsolutePath() + "/evosuite-tests"));
 
             // Generate our code.
-            Logger.info("Generating code.");
-            HashMap<String, String> traces = Cache.getInstance()
-                .generate_daikon_dtraces();
+            Logger.info("Generating code for Daikon and DIG.");
+            Cache.getInstance().writeTracesTo(codePath);
 
-            for (String key : traces.keySet()) {
-                FileOps.writeFile(
-                    new File(codePath + "/" + key + ".dtrace"),
-                    traces.get(key)
-                );
-
-                if (stableKeys.containsKey(key)) {
-                    Logger.debug(
-                        "Skipping key " +
-                        key +
-                        " for Daikon, it's stable already."
-                    );
+            // Now run DIG/Daikon on the files.
+            for (String instrumentationPoint : Cache.getInstance().instrumentation_cache.keySet()) {
+                if (stableKeys.containsKey(instrumentationPoint)) {
+                    Logger.debug("Skipping generation for stable key " + instrumentationPoint);
                     continue;
                 }
 
-                if (!Cache.getInstance().wasTargeted(key)) {
-                    continue;
-                }
+                Logger.debug("Working on unstable key: " + instrumentationPoint);
 
+                // Run Dig and Daikon on the path.
                 runDaikonOnDtraceFile(
-                    new File(codePath + "/" + key + ".dtrace"),
-                    classpaths,
-                    new File(codePath + "/" + key + ".daikonoutput")
-                );
-            }
-
-            Logger.info("Finished executing daikon and generating invariants.");
-
-            HashMap<String, String> dig_traces = Cache.getInstance()
-                .generate_dig_traces();
-
-            for (String key : dig_traces.keySet()) {
-                Logger.debug("Dig working with key " + key);
-                FileOps.writeFile(
-                    new File(codePath + "/" + key + ".csv"),
-                    dig_traces.get(key)
-                );
-
-                if (stableKeys.containsKey(key)) {
-                    Logger.debug(
-                        "Skipping key " + key + " for Dig, it's stable already."
-                    );
-                    continue;
-                }
-
-                if (!Cache.getInstance().wasTargeted(key)) {
-                    continue;
-                }
+                        new File(String.format("%s/%s.dtrace", codePath.getAbsolutePath(), instrumentationPoint)),
+                        classpaths,
+                        new File(
+                                String.format("%s/%s.daikonoutput", codePath.getAbsolutePath(), instrumentationPoint)));
 
                 runDigOnCSVFile(
-                    new File(
-                        String.format(
-                            "%s/%s.csv",
-                            codePath.getAbsolutePath(),
-                            key
-                        )
-                    ),
-                    new File(codePath + "/" + key + ".digoutput")
-                );
-            }
-
-            // Check if all of the files have stabilized. For this, we need to recursively
-            // descend into the
-            // checkpoint folder, list all files from previous iteration inside the 'code'
-            // folder, and check
-            // if the file content has changed.
-            if (iterations == 1) {
-                Logger.info(
-                    "Finished first iteration. No stabilization checks will be done"
-                );
-            } else {
-                // Get all keys from cache we can compare.
-                List<String> cacheKeys = Cache.getInstance()
-                    .getInstrumentationCacheKeys();
-                int changedInvariantsCount = 0;
-
-                for (String key : cacheKeys) {
-                    if (stableKeys.containsKey(key)) {
-                        // We do not care what dig produced at this point, we will skip it.
-                        continue;
-                    }
-
-                    if (!Cache.getInstance().wasTargeted(key)) {
-                        Logger.debug(key + " was not visited.");
-                        // let's consider this to have changed for both DIG and Daikon.
-                        changedInvariantsCount += 2;
-                        continue;
-                    }
-
-                    if (
-                        Checkpoint.getInstance()
-                            .checkChangeInWindow(
-                                checkpointPath,
-                                key,
-                                iterations
-                            )
-                    ) {
-                        changedInvariantsCount += 1;
-                    } else {
-                        Logger.debug(
-                            key + " is stable at iteration " + iterations
-                        );
-                        stableKeys.put(key, iterations);
-                    }
-                }
-
-                if (changedInvariantsCount == 0) {
-                    Logger.info(
-                        "All invariants have stabilized at iteration " +
-                        iterations
-                    );
-
-                    Logger.info(
-                        "Running final invariant generation for each point"
-                    );
-                    for (String key : stableKeys.keySet()) {
-                        Logger.debug("Running Daikon for key " + key);
-                        runDaikonOnDtraceFile(
-                            new File(codePath + "/" + key + ".dtrace"),
-                            classpaths,
-                            new File(codePath + "/" + key + ".daikonoutput")
-                        );
-
-                        Logger.debug("Running DIG for key " + key);
-                        runDigOnCSVFile(
-                            new File(
-                                String.format(
-                                    "%s/%s.csv",
-                                    codePath.getAbsolutePath(),
-                                    key
-                                )
-                            ),
-                            new File(codePath + "/" + key + ".digoutput")
-                        );
-                    }
-
-                    System.out.println(
-                        "----------------------------------------------------------"
-                    );
-                    System.out.println(
-                        "The following iterations caused each key's stabilization:"
-                    );
-                    for (String key : stableKeys.keySet()) {
-                        System.out.println(
-                            String.format(
-                                "Key: %s, iteration: %d",
-                                key,
-                                stableKeys.get(key)
-                            )
-                        );
-                    }
-                    System.out.println(
-                        "----------------------------------------------------------"
-                    );
-                    Logger.info("Processed " + iterations + " iterations.");
-                    System.exit(0);
-                }
+                        new File(String.format("%s/%s.csv", codePath.getAbsolutePath(), instrumentationPoint)),
+                        new File(String.format("%s/%s.digoutput", codePath.getAbsolutePath(), instrumentationPoint)));
             }
 
             long endTime = System.currentTimeMillis();
             Logger.debug(
-                "Iteration " +
-                iterations +
-                " took " +
-                (endTime - startTime) +
-                " ms."
-            );
-        } while (true);
+                    "Iteration " +
+                            iterations +
+                            " took " +
+                            (endTime - startTime) +
+                            " ms.");
+
+        } while (!stop);
+
+        // TODO: Run final invariant generation.
+
+        System.out.println(
+                "----------------------------------------------------------");
+        System.out.println(
+                "The following iterations caused each key's stabilization:");
+        for (String key : stableKeys.keySet()) {
+            System.out.println(
+                    String.format(
+                            "Key: %s, iteration: %d",
+                            key,
+                            stableKeys.get(key)));
+        }
+
     }
 
     private static void runDaikonOnDtraceFile(
-        File DTraceFile,
-        String[] classpaths,
-        File outputFile
-    ) {
+            File DTraceFile,
+            String[] classpaths,
+            File outputFile) {
         // Run daikon on the dtrace file.
         String[] daikonCommand = {
-            "java",
-            "-cp",
-            String.join(":", classpaths),
-            "daikon.Daikon",
-            DTraceFile.getAbsolutePath(),
-            // codePath + "/" + key + ".dtrace",
+                "java",
+                "-cp",
+                String.join(":", classpaths),
+                "daikon.Daikon",
+                DTraceFile.getAbsolutePath(),
+                // codePath + "/" + key + ".dtrace",
         };
 
         String daikonOutput = runProcess(daikonCommand);
@@ -611,12 +453,12 @@ public class App {
     private static void runDigOnCSVFile(File CSVFile, File outputFile) {
         // Run Dig on the trace csv file.
         String[] digCommand = {
-            "python3",
-            "-O",
-            "../../../../dig/src/dig.py",
-            "--seed",
-            "12345", // Help for debugging later.
-            CSVFile.getAbsolutePath(),
+                "python3",
+                "-O",
+                "../../../../dig/src/dig.py",
+                "--seed",
+                "12345", // Help for debugging later.
+                CSVFile.getAbsolutePath(),
         };
 
         /*
@@ -634,7 +476,8 @@ public class App {
         String[] digOutputLines = digOutput.split(System.lineSeparator());
         boolean vtraceLineFound = false;
         for (String line : digOutputLines) {
-            if (line.startsWith("vtrace")) vtraceLineFound = true;
+            if (line.startsWith("vtrace"))
+                vtraceLineFound = true;
             if (vtraceLineFound) {
                 sb.append(line);
                 sb.append("\n");
@@ -656,8 +499,7 @@ public class App {
             pb.redirectErrorStream(true);
             Process p = pb.start();
             BufferedReader reader = new BufferedReader(
-                new InputStreamReader(p.getInputStream())
-            );
+                    new InputStreamReader(p.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -707,8 +549,7 @@ public class App {
         for (String classpathEntry : classpathEntries) {
             if (classpathEntry.contains(jarName)) {
                 String classPathAbsolute = new File(
-                    classpathEntry
-                ).getAbsolutePath();
+                        classpathEntry).getAbsolutePath();
                 return Optional.of(classPathAbsolute);
             }
         }

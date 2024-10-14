@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.crypto.Data;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.javaparser.ast.CompilationUnit;
@@ -36,6 +34,7 @@ import edu.boisestate.datagen.rmi.DataPointServerImpl;
 public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
     private InstrumentationMode mode;
     private boolean skipAugmentation;
+    private HashSet<String> instrumentationPoints = new HashSet<>();
 
     @Override
     public void visit(BlockStmt block, Void arg) {
@@ -143,6 +142,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
                 if (iter.hasNext()) {
                     String instrumentationId = iter.next();
                     methodCall.addArgument(new StringLiteralExpr(instrumentationId));
+                    instrumentationPoints.add(instrumentationId);
                     // Add port.
 
                     while (iter.hasNext()) {
@@ -312,6 +312,10 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
         }
 
         return methodCallExpr;
+    }
+
+    public HashSet<String> getInstrumentationPoints() {
+        return this.instrumentationPoints;
     }
 
     @Override

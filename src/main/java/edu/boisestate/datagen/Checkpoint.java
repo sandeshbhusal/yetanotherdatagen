@@ -6,214 +6,100 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.LinkedList;
 import org.tinylog.Logger;
 
-/* Checkpoint.java
- *
- * This class is used to store the checkpoint information for each program
- * instrumentation point to check if it is stable or not.
- */
-
 public class Checkpoint {
+    private static HashMap<String, LinkedList<Integer>> digIterations;
+    private static HashMap<String, LinkedList<Integer>> daikonIterations;
 
-    private static Checkpoint cp;
-    private static HashMap<String, Integer> firstIterationForDig;
-    private static HashMap<String, Integer> firstIterationForDaikon;
-
-    // The window size to consider while checking for invariants' stability.
     private static final int WINDOW_SIZE = 5;
 
-    public static Checkpoint getInstance() {
-        if (cp == null) {
-            cp = new Checkpoint();
-        }
-        return cp;
+    public Checkpoint(String className) {
+        digIterations = new HashMap<>();
+        daikonIterations = new HashMap<>();
     }
 
-    private Checkpoint() {
-        firstIterationForDig = new HashMap<String, Integer>();
-        firstIterationForDaikon = new HashMap<String, Integer>();
-    }
+    public boolean checkChangeInWindow(String checkpointPath, String key, int currentIteration) {
+        digIterations.putIfAbsent(key, new LinkedList<>());
+        daikonIterations.putIfAbsent(key, new LinkedList<>());
 
-    public void setFirstIterationForDig(String key, int value) {
-        firstIterationForDig.put(key, value);
-    }
+        LinkedList<Integer> digList = digIterations.get(key);
+        LinkedList<Integer> daikonList = daikonIterations.get(key);
 
-    public void setFirstIterationForDaikon(String key, int value) {
-        firstIterationForDaikon.put(key, value);
-    }
+        boolean digChanged = checkToolChange(checkpointPath, key, currentIteration, digList, "dig");
+        boolean daikonChanged = checkToolChange(checkpointPath, key, currentIteration, daikonList, "daikon");
 
-    public int getFirstIterationForDig(String key) {
-        return firstIterationForDig.get(key);
-    }
-
-    public int getFirstIterationForDaikon(String key) {
-        return firstIterationForDaikon.get(key);
-    }
-
-    public boolean checkChangeInWindow(
-        String checkpointPath,
-        String key,
-        int currentIteration
-    ) {
-        if (
-            firstIterationForDig.containsKey(key) &&
-            firstIterationForDaikon.containsKey(key)
-        ) {
-            int firstIterationDig = firstIterationForDig.get(key);
-            int firstIterationDaikon = firstIterationForDaikon.get(key);
-
-            // Need to do SMT checks.
-            // We only need to check if the current iteration equals the firstIteration.
-            // If it does, then the invariant is stable. Else, the firstIteration is reset
-            // to the currentIteration.
-            File firstCheckpointDirDaikon = new File(
-                String.format("%s/%d", checkpointPath, firstIterationDig)
-            );
-            File firstCodePathDaikon = new File(
-                firstCheckpointDirDaikon + "/code"
-            );
-
-            File iterationCheckpointDir = new File(
-                String.format("%s/%d", checkpointPath, currentIteration)
-            );
-            File currentCodePath = new File(iterationCheckpointDir + "/code");
-
-            File firstDaikonFile = new File(
-                firstCodePathDaikon + "/" + key + ".daikonoutput"
-            );
-            File currentDaikonFile = new File(
-                currentCodePath + "/" + key + ".daikonoutput"
-            );
-
-            if (hasFileChanged(firstDaikonFile, currentDaikonFile)) {
-                Logger.debug(
-                    "Daikon has changed invariants between " +
-                    firstIterationDaikon +
-                    " and " +
-                    currentIteration +
-                    " reset to current iteration: " +
-                    currentIteration
-                );
-                firstIterationForDaikon.put(key, currentIteration);
-            }
-
-            // Do the same for DIG.
-            File firstCheckpointDirDig = new File(
-                String.format("%s/%d", checkpointPath, firstIterationDig)
-            );
-
-            File firstCodePathDig = new File(firstCheckpointDirDig + "/code");
-
-            File firstDigFile = new File(
-                firstCodePathDig + "/" + key + ".digoutput"
-            );
-
-            File currentDigFile = new File(
-                currentCodePath + "/" + key + ".digoutput"
-            );
-
-            if (hasFileChanged(firstDigFile, currentDigFile)) {
-                Logger.debug(
-                    "DIG has changed invariants between " +
-                    firstIterationDig +
-                    " and " +
-                    currentIteration +
-                    " reset to current iteration: " +
-                    currentIteration
-                );
-                firstIterationForDig.put(key, currentIteration);
-            }
-
-            // If either file has changed, we can return true.
-            boolean changed =
-                (firstIterationForDig.get(key) == currentIteration ||
-                    firstIterationForDaikon.get(key) == currentIteration);
-
-            if (!changed) {
-                Logger.debug(
-                    "Invariants have stabilized for " +
-                    key +
-                    " at iteration " +
-                    currentIteration
-                );
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            // In the first iteration, there are no keys.
-            firstIterationForDig.put(key, currentIteration);
-            firstIterationForDaikon.put(key, currentIteration);
-
-            // We always assume it has changed.
+        if (digChanged || daikonChanged) {
             return true;
         }
+
+        if (digList.size() >= WINDOW_SIZE && daikonList.size() >= WINDOW_SIZE) {
+            Logger.debug("Invariants have stabilized for " + key + " at iteration " + currentIteration);
+            return false;
+        }
+
+        return true;
     }
 
-    // private static boolean checkChangeInWindow(String key, int currentIteration) {}
-    //
+    private boolean checkToolChange(String checkpointPath, String key, int currentIteration,
+                                    LinkedList<Integer> iterationList, String tool) {
+        File currentFile = getToolFile(checkpointPath, currentIteration, key, tool);
 
-    // Semantic diff for invariants.
+        if (iterationList.isEmpty()) {
+            iterationList.add(currentIteration);
+            return true;
+        }
+
+        File previousFile = getToolFile(checkpointPath, iterationList.getLast(), key, tool);
+
+        if (hasFileChanged(previousFile, currentFile)) {
+            Logger.debug(tool.toUpperCase() + " has changed invariants between " +
+                         iterationList.getLast() + " and " + currentIteration +
+                         " for " + key + " reset to current iteration: " + currentIteration);
+            iterationList.clear();
+            iterationList.add(currentIteration);
+            return true;
+        } else {
+            iterationList.add(currentIteration);
+            if (iterationList.size() > WINDOW_SIZE) {
+                iterationList.removeFirst();
+            }
+            return false;
+        }
+    }
+
+    private File getToolFile(String checkpointPath, int iteration, String key, String tool) {
+        File iterationDir = new File(String.format("%s/%d", checkpointPath, iteration));
+        File codePath = new File(iterationDir, "code");
+        return new File(codePath, key + "." + tool + "output");
+    }
+
     public static boolean hasFileChanged(File file1, File file2) {
         boolean isDigFile = file1.getName().endsWith(".digoutput");
         InvCompiler compiler = new InvCompiler();
 
         try {
             if (isDigFile) {
-                CompiledExpression ce1 =
-                    compiler.digFileToInvariantsConjunction(
-                        new FileReader(file1)
-                    );
-
-                CompiledExpression ce2 =
-                    compiler.digFileToInvariantsConjunction(
-                        new FileReader(file2)
-                    );
-
+                CompiledExpression ce1 = compiler.digFileToInvariantsConjunction(new FileReader(file1));
+                CompiledExpression ce2 = compiler.digFileToInvariantsConjunction(new FileReader(file2));
                 return (!ce1.equals(ce2));
             } else {
-                // Daikon does not stabilize invariants very quickly. It
-                // produces a bunch of "one of {x, y, z}" templates towards
-                // the beginning, so if that is the case, we will skip comparing
-                // invariants, as there are _no_ invariants generated at all.
+                String file1contents = new String(Files.readAllBytes(file1.toPath()));
+                String file2contents = new String(Files.readAllBytes(file2.toPath()));
 
-                // Check if either file contains "one of".
-                String file1contents = new String(
-                    Files.readAllBytes(file1.toPath())
-                );
-                String file2contents = new String(
-                    Files.readAllBytes(file2.toPath())
-                );
-
-                if (
-                    file1contents.contains("one of") ||
-                    file2contents.contains("one of")
-                ) {
-                    Logger.debug(
-                        "Daikon invariants are too unstable to compare for " +
-                        file1.getName()
-                    );
-                    // Invariants have not changed. Assume the file changed.
+                if (file1contents.contains("one of") || file2contents.contains("one of")) {
                     return true;
                 }
 
-                CompiledExpression ce1 =
-                    compiler.daikonFileToInvariantsConjunction(
-                        new FileReader(file1)
-                    );
-                CompiledExpression ce2 =
-                    compiler.daikonFileToInvariantsConjunction(
-                        new FileReader(file2)
-                    );
-
+                CompiledExpression ce1 = compiler.daikonFileToInvariantsConjunction(new FileReader(file1));
+                CompiledExpression ce2 = compiler.daikonFileToInvariantsConjunction(new FileReader(file2));
                 return (!ce1.equals(ce2));
             }
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error reading invariant files for comparison.");
             System.exit(1);
-
             return false;
         }
     }
