@@ -42,19 +42,12 @@ public class BindExpandsVars2 {
         if (n2 > MAXDATA * 2 - n1)
             return;
         
-        // datagen_instrument startingconds cp1_off n1 n2 MAXDATA
-        ;
-
-        // datagen_guard_start funcguard cp1_off n1 n2 MAXDATA
-        ;
-
+        ; // datagen_instrument startingconds cp1_off n1 n2 MAXDATA
+        ; // datagen_guard_start funcguard cp1_off n1 n2 MAXDATA
         int mc_i;
         for (mc_i = 0; mc_i < n2; mc_i++) {
-            // datagen_instrument loopinvariant mc_i cp1_off MAXDATA
-            ;
+            ; // datagen_instrument loopinvariant mc_i cp1_off MAXDATA
         }
-
-        // datagen_guard_end funcguard
-        ;
+        ; // datagen_guard_end funcguard
     }
 }

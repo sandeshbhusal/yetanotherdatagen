@@ -15,8 +15,7 @@ public class Cars {
         // Beginning assertions.
         // if these are false, we don't even enter the loop.
         
-        // datagen_guard_start entermethod unknown_int v1 v2 v3
-        ;
+        ; // datagen_guard_start entermethod unknown_int v1 v2 v3
         
         if (cond1 && cond2 && cond3 && cond4 && cond5 && cond6) {
             while (unknown_int > 0) {
@@ -27,14 +26,12 @@ public class Cars {
                 // assume(v2 + 5 >= 0);
                 // assume(v2 <= 5);
 
-                // datagen_instrument loopinv v2
-                ;
+                ; // datagen_instrument loopinv v2
 
                 if (innerif) {
                     //assume(2 * x2 - x1 - x3 >= 0);
                     
-                    // datagen_instrument loopinvtrue x1 x2 x3
-                    ;
+                    ; // datagen_instrument loopinvtrue x1 x2 x3
 
                     x1 = x1 + v1;
                     x3 = x3 + v3;
@@ -44,8 +41,7 @@ public class Cars {
                 } else {
                     //assume(2 * x2 - x1 - x3 <= 0);
                     
-                    // datagen_instrument loopinvfalse x1 x2 x3
-                    ;
+                    ; // datagen_instrument loopinvfalse x1 x2 x3
 
                     x1 = x1 + v1;
                     x3 = x3 + v3;
@@ -58,13 +54,11 @@ public class Cars {
             }
         }
 
-        // datagen_guard_end
-        ;
+        ; // datagen_guard_end
 
         // Run instrumentation at the end, and in the loop for v2.
 
-        // datagen_instrument exitloop v1 v2 v3 t
-        ;
+        ; // datagen_instrument exitloop v1 v2 v3 t
 
         // Original Assertions
         // assert v1 <= 5 : "Assertion failed: v1 <= 5";

@@ -3,8 +3,7 @@ public class Ex1 {
         int x = 0;
         int y = 0;
         
-        // datagen_guard_start entermethod outerloop condition x y
-        ;
+        ; // datagen_guard_start entermethod outerloop condition x y
 
         while (outerloop > 0) {
             x = xa + 2 * ya;
@@ -23,11 +22,9 @@ public class Ex1 {
             outerloop -= 1;
         }
 
-        // datagen_guard_end entermethod
-        ;
+        ; // datagen_guard_end entermethod
 
-        // datagen_instrument exitmethod xa ya
-        ;
+        ; // datagen_instrument exitmethod xa ya
 
         // Original Assertion
         // assert xa + 2 * ya >= 0 : "Assertion failed: xa + 2*ya >= 0";

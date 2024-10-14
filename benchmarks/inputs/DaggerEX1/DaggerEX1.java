@@ -38,8 +38,7 @@ public class DaggerEX1 {
         int xa = 0;
         int ya = 0;
 
-        // datagen_guard_start funcguard a b
-        ;
+        ; // datagen_guard_start funcguard a b
         while (a > 0) {
             x = xa + 2*ya;
             y = -2*xa + ya;
@@ -53,10 +52,7 @@ public class DaggerEX1 {
 
             a--;
         }
-        // datagen_guard_end funcguard
-        ;
-
-        // datagen_instrument endfunc xa ya
-        ;
+        ; // datagen_guard_end funcguard
+        ; // datagen_instrument endfunc xa ya
    }    
 }
