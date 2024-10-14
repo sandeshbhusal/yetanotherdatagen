@@ -191,6 +191,8 @@ public class App {
 
         // Keys that have stabilized across checks.
         HashMap<String, Integer> stableKeys = new HashMap<>();
+        // Cap the max iteration count for all keys.
+        HashMap<String, Integer> iterationCounts = new HashMap<>();
         boolean stop = false;
         Checkpoint checkpoint = new Checkpoint(3);
 
@@ -389,6 +391,12 @@ public class App {
                 if (stableKeys.containsKey(instrumentationPoint)) {
                     Logger.debug("Skipping generation for stable key " + instrumentationPoint);
                     continue;
+                }
+
+                iterationCounts.put(instrumentationPoint, iterationCounts.getOrDefault(instrumentationPoint, 3));
+                if (iterationCounts.get(instrumentationPoint) == 0) {
+                    Logger.warn("Key " + instrumentationPoint + " did not stabilize within 100 iterations.");
+                    stableKeys.put(instrumentationPoint, iterations);
                 }
 
                 Logger.debug(String.format("Working on unstable key: %s (%d)", instrumentationPoint,
