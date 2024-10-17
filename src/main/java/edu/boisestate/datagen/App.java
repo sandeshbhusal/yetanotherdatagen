@@ -17,7 +17,6 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -97,7 +96,7 @@ public class App {
 
         argParser.addArgument("-m", "--max_iterations")
                 .help("Max iteration count for a key")
-                .required(false).setDefault(25).type(Integer.class);
+                .required(false).setDefault(0).type(Integer.class);
 
         boolean skipAugmentation = false;
         int maxIterationCount = 0;
@@ -200,12 +199,8 @@ public class App {
                 skipAugmentation);
         ImportInstrumenter importer = new ImportInstrumenter();
 
-        // Keys that have stabilized across checks.
-        HashMap<String, Integer> stableKeys = new HashMap<>();
-        // Cap the max iteration count for all keys.
-        HashMap<String, Integer> iterationCounts = new HashMap<>();
-        boolean stop = false;
-        Checkpoint checkpoint = new Checkpoint(3);
+        // Code in the reporting directory is instrumented with reporting code.
+        HashSet<String> instrumentationPoints = new HashSet<>();
 
         // Main loop.
         do {
@@ -232,8 +227,6 @@ public class App {
             FileOps.recursivelyCopyFolder(sourceDir, new File(augmentedPath));
             FileOps.recursivelyCopyFolder(sourceDir, new File(reportingPath));
 
-            // Code in the reporting directory is instrumented with reporting code.
-            HashSet<String> instrumentationPoints = new HashSet<>();
             for (File file : new File(reportingPath).listFiles()) {
                 if (file.getName().endsWith(".java")) {
                     Logger.info("Instrumenting file: " + file.getName());
@@ -287,9 +280,7 @@ public class App {
                         String.format("-projectCP=%s", compiledFilePath),
                         String.format("-class=%s", className),
                         String.format("-Dassertions=false"),
-                        "-Dalgorithm=MOSA",
-                        "-Dprimitive_pool=0.0",
-                        "-Dprimitive_reuse_probability=0.01" // Very low prob. of reusing constants in case required.
+                        "-Dcriterion=BRANCH"
                 };
 
                 runProcess(evoruncommand);
@@ -397,70 +388,6 @@ public class App {
             Logger.info("Generating code for Daikon and DIG.");
             Cache.getInstance().writeTracesTo(codePath);
 
-            // Now run DIG/Daikon on the files.
-            for (String instrumentationPoint : instrumentationPoints) {
-                if (stableKeys.containsKey(instrumentationPoint)) {
-                    Logger.debug("Skipping generation for stable key " + instrumentationPoint);
-                    continue;
-                }
-
-                iterationCounts.put(instrumentationPoint,
-                        iterationCounts.getOrDefault(instrumentationPoint, maxIterationCount) - 1);
-                if (iterationCounts.get(instrumentationPoint) == 0) {
-                    Logger.warn("Key " + instrumentationPoint + " did not stabilize within 100 iterations.");
-                    stableKeys.put(instrumentationPoint, iterations);
-                }
-
-                Logger.debug(String.format("Working on unstable key: %s (%d:%d)", instrumentationPoint,
-                        iterations - checkpoint.getConsideredIterationDaikon(instrumentationPoint),
-                        iterations - checkpoint.getConsideredIterationDaikon(instrumentationPoint)));
-
-                // Run Dig and Daikon on the path.
-                runDaikonOnDtraceFile(
-                        new File(String.format("%s/%s.dtrace", codePath.getAbsolutePath(), instrumentationPoint)),
-                        classpaths,
-                        new File(
-                                String.format("%s/%s.daikonoutput", codePath.getAbsolutePath(), instrumentationPoint)));
-
-                runDigOnCSVFile(
-                        instrumentationPoint,
-                        iterations,
-                        checkpoint,
-                        new File(String.format("%s/%s.csv", codePath.getAbsolutePath(),
-                                instrumentationPoint)),
-                        new File(String.format("%s/%s.digoutput", codePath.getAbsolutePath(),
-                                instrumentationPoint)));
-            }
-
-            // For each Daikon and DIG file, check if it has changed from the last iteration
-            // using our checkpoint.
-            int totalChangedInvariants = 0;
-            for (String key : instrumentationPoints) {
-                // No need to compare stable keys.
-                if (stableKeys.containsKey(key))
-                    continue;
-
-                String thisIterationDaikonFileContents = FileOps
-                        .readFile(new File(String.format("%s/%s.daikonoutput", codePath.getAbsolutePath(), key)));
-
-                String thisIterationDigFileContents = FileOps
-                        .readFile(new File(String.format("%s/%s.digoutput", codePath.getAbsolutePath(), key)));
-
-                if (checkpoint.hasChangedDaikon(key, iterations, thisIterationDaikonFileContents)) {
-                    totalChangedInvariants += 1;
-                }
-                if (checkpoint.hasChangedDig(key, iterations, thisIterationDigFileContents)) {
-                    totalChangedInvariants += 1;
-                }
-
-                // If nothing changes, the key is stable.
-                if (totalChangedInvariants == 0) {
-                    stableKeys.put(key, iterations);
-                }
-            }
-
-            stop = totalChangedInvariants == 0;
-
             long endTime = System.currentTimeMillis();
             Logger.debug(
                     "Iteration " +
@@ -468,51 +395,35 @@ public class App {
                             " took " +
                             (endTime - startTime) +
                             " ms.");
+        } while (iterations < maxIterationCount);
 
-            if (stop) {
-                Logger.info("Running the final invariant generation for all instrumentation points");
-                for (String key : instrumentationPoints) {
-                    // Put all generated invariants directly in the workdir, like
-                    // "checkpoint_datagen/a_lt_b_truebranch.daikonoutput". Makes it
-                    // easier to see what the final invariants were.
-                    runDaikonOnDtraceFile(
-                            new File(
-                                    String.format(
-                                            "%s/%s.dtrace",
-                                            codePath.getAbsolutePath(),
-                                            key)),
-                            classpaths,
-                            new File(String.format("%s/%s.daikonoutput", workdir, key)));
+        for (String key : instrumentationPoints) {
+            // Put all generated invariants directly in the workdir, like
+            // "checkpoint_datagen/a_lt_b_truebranch.daikonoutput". Makes it
+            // easier to see what the final invariants were.
+            runDaikonOnDtraceFile(
+                    new File(
+                            String.format(
+                                    "%s/checkpoint/%d/code/%s.dtrace",
+                                    workdir,
+                                    iterations,
+                                    key)),
+                    classpaths,
+                    new File(String.format("%s/%s.daikonoutput", workdir, key)));
 
-                    runDigOnCSVFile(key,
-                            iterations,
-                            checkpoint,
-                            new File(
-                                    String.format(
-                                            "%s/%s.csv",
-                                            codePath.getAbsolutePath(),
-                                            key)),
-                            new File(
-                                    String.format(
-                                            "%s/%s.digoutput",
-                                            workdir,
-                                            key)));
-                }
-            }
-        } while (!stop);
-
-        System.out.println(
-                "----------------------------------------------------------");
-        System.out.println(
-                "The following iterations caused each key's stabilization:");
-        for (String key : stableKeys.keySet()) {
-            System.out.println(
-                    String.format(
-                            "Key: %s, iteration: %d",
-                            key,
-                            stableKeys.get(key)));
+            runDigOnCSVFile(
+                    new File(
+                            String.format(
+                                    "%s/checkpoint/%d/code/%s.csv",
+                                    workdir,
+                                    iterations,
+                                    key)),
+                    new File(
+                            String.format(
+                                    "%s/%s.digoutput",
+                                    workdir,
+                                    key)));
         }
-
         // Required to shutdown the RMI server, etc. TODO: Find a better way to do this
         // later.
         System.exit(0);
@@ -537,8 +448,7 @@ public class App {
         FileOps.writeFile(outputFile, daikonOutput);
     }
 
-    private static void runDigOnCSVFile(String instrumentationPoint, Integer iteration, Checkpoint cp, File CSVFile,
-            File outputFile) {
+    private static void runDigOnCSVFile(File CSVFile, File outputFile) {
         // Run Dig on the trace csv file.
         String[] digCommand = {
                 "python3",
@@ -609,19 +519,8 @@ public class App {
 
         } catch (InterruptedException e) {
             process.destroyForcibly();
-            Logger.warn("DIG did not complete in time for " + CSVFile.getName()
-                    + "; " + instrumentationPoint + " will be reset to current iteration " + iteration);
-
-            String oldFilePath = String.format("%s/checkpoint/%d/%s.digoutput", (new File(workdir)).getAbsolutePath(),
-                    iteration - 1,
-                    instrumentationPoint);
-
-            // Copy over the file from the last iteration to this one.
-            FileOps.copyFile(
-                    new File(oldFilePath),
-                    outputFile);
-
-            cp.deleteDigInfo(instrumentationPoint);
+            System.err.println("Dig timed out: " + CSVFile.getName());
+            System.exit(-1);
             return;
 
         } catch (IOException e) {

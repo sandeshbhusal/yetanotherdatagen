@@ -1,0 +1,20 @@
+Starting DataPointServer on port 18069
+DataPointServer bound on port 18069 as DataPointServer_18069
+16:28:44.540 INFO: Starting datagen.
+
+16:28:44.557 INFO: ---------------------- Starting iteration 1--------------------
+16:28:44.565 INFO: Instrumenting file: A_LT_B.java
+16:28:44.795 DEBUG: Augmenting guard entermethod
+[Lcom.github.javaparser.ast.expr.Expression;@385c9627
+16:28:44.801 INFO: Compiling augmented file A_LT_B.java
+16:28:45.308 INFO: Running evosuite on augmented file A_LT_B.java
+16:28:50.304 DEBUG: Evosuite run took 5744 ms.
+16:28:50.304 INFO: Compiling reporting file A_LT_B.java
+16:28:51.363 INFO: Compiling evosuite test file for A_LT_B.java
+16:28:53.356 INFO: Running JUnit tests generated for A_LT_B.java
+16:28:54.248 INFO: The following instrumentation points were hit in this run:
+16:28:54.248 INFO: {exitmethod_a_lt_b=2, entermethod=2, a_lt_b_falsebranch=1, a_lt_b_truebranch=1}
+16:28:54.251 INFO: Generating code for Daikon and DIG.
+16:28:54.252 INFO: Generated 3 Daikon trace files for instrumentation data.
+16:28:54.253 INFO: Generated 3 DiG trace files for instrumentation data.
+16:28:54.296 DEBUG: Iteration 1 took 9727 ms.

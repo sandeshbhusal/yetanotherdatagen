@@ -1,0 +1,46 @@
+decl-version 2.0
+var-comparability none
+
+ppt Faker.startingconds(int,\_int,\_int,\_int):::DATAGEN
+ppt-type enter
+variable cp1_off
+  var-kind variable
+  dec-type int
+  rep-type int
+  flags is_param
+  comparability 22
+variable n1
+  var-kind variable
+  dec-type int
+  rep-type int
+  flags is_param
+  comparability 22
+variable n2
+  var-kind variable
+  dec-type int
+  rep-type int
+  flags is_param
+  comparability 22
+variable MAXDATA
+  var-kind variable
+  dec-type int
+  rep-type int
+  flags is_param
+  comparability 22
+
+Faker.startingconds(int,\_int,\_int,\_int):::DATAGEN
+this_invocation_nonce
+1
+cp1_off
+128
+1
+n1
+132
+1
+n2
+693
+1
+MAXDATA
+2232
+1
+

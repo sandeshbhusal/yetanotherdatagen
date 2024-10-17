@@ -1,0 +1,46 @@
+Starting DataPointServer on port 16476
+DataPointServer bound on port 16476 as DataPointServer_16476
+09:24:12.357 INFO: Starting datagen.
+
+09:24:12.395 INFO: ---------------------- Starting iteration 1--------------------
+09:24:12.416 INFO: Instrumenting file: MADWiFi.java
+09:24:13.005 DEBUG: No augmentation selected for funcguard
+09:24:13.023 INFO: Compiling augmented file MADWiFi.java
+09:24:14.030 INFO: Running evosuite on augmented file MADWiFi.java
+09:25:24.544 DEBUG: Evosuite run took 72139 ms.
+09:25:24.546 INFO: Compiling reporting file MADWiFi.java
+09:25:26.454 INFO: Compiling evosuite test file for MADWiFi.java
+09:25:30.585 INFO: Running JUnit tests generated for MADWiFi.java
+09:25:32.690 INFO: The following instrumentation points were hit in this run:
+09:25:32.690 INFO: {funcguard=2, loop_o_lteq_p=20, loop_p_bufsize0=20}
+09:25:32.694 INFO: Generating code for Daikon and DIG.
+09:25:32.698 INFO: Generated 2 Daikon trace files for instrumentation data.
+09:25:32.701 INFO: Generated 2 DiG trace files for instrumentation data.
+09:25:32.723 DEBUG: Working on unstable key: loop_o_lteq_p (1:1)
+09:25:35.735 DEBUG: Working on unstable key: loop_p_bufsize0 (1:1)
+09:25:38.972 DEBUG: Iteration 1 took 86558 ms.
+
+09:25:38.972 INFO: ---------------------- Starting iteration 2--------------------
+09:25:38.973 INFO: Instrumenting file: MADWiFi.java
+09:25:39.039 DEBUG: No augmentation selected for funcguard
+09:25:39.048 INFO: Compiling augmented file MADWiFi.java
+09:25:40.119 INFO: Running evosuite on augmented file MADWiFi.java
+09:26:51.306 DEBUG: Evosuite run took 72334 ms.
+09:26:51.306 INFO: Compiling reporting file MADWiFi.java
+09:26:53.498 INFO: Compiling evosuite test file for MADWiFi.java
+09:26:57.630 INFO: Running JUnit tests generated for MADWiFi.java
+09:26:59.383 INFO: The following instrumentation points were hit in this run:
+09:26:59.384 INFO: {funcguard=4, loop_o_lteq_p=20, loop_p_bufsize0=20}
+09:26:59.385 INFO: Generating code for Daikon and DIG.
+09:26:59.387 INFO: Generated 2 Daikon trace files for instrumentation data.
+09:26:59.387 INFO: Generated 2 DiG trace files for instrumentation data.
+09:26:59.402 DEBUG: Working on unstable key: loop_o_lteq_p (1:1)
+09:27:02.369 DEBUG: Working on unstable key: loop_p_bufsize0 (1:1)
+09:27:06.223 INFO: Running SMT check
+09:27:06.582 DEBUG: Iteration 2 took 87610 ms.
+
+09:27:06.583 INFO: ---------------------- Starting iteration 3--------------------
+09:27:06.585 INFO: Instrumenting file: MADWiFi.java
+09:27:06.629 DEBUG: No augmentation selected for funcguard
+09:27:06.642 INFO: Compiling augmented file MADWiFi.java
+09:27:07.636 INFO: Running evosuite on augmented file MADWiFi.java

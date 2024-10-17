@@ -1,0 +1,31 @@
+Starting DataPointServer on port 18713
+DataPointServer bound on port 18713 as DataPointServer_18713
+10:10:41.111 INFO: Starting datagen.
+
+10:10:41.149 INFO: ---------------------- Starting iteration 1--------------------
+10:10:41.170 INFO: Instrumenting file: BindExpandsVars2.java
+10:10:41.639 DEBUG: No augmentation selected for funcguard
+10:10:41.652 INFO: Compiling augmented file BindExpandsVars2.java
+10:10:42.731 INFO: Running evosuite on augmented file BindExpandsVars2.java
+10:10:55.086 DEBUG: Evosuite run took 13930 ms.
+10:10:55.087 INFO: Compiling reporting file BindExpandsVars2.java
+10:10:56.984 INFO: Compiling evosuite test file for BindExpandsVars2.java
+10:11:01.363 INFO: Running JUnit tests generated for BindExpandsVars2.java
+10:11:05.119 INFO: The following instrumentation points were hit in this run:
+10:11:05.119 INFO: {loopinvariant=693, funcguard=1, startingconds=1}
+10:11:05.121 INFO: Generating code for Daikon and DIG.
+10:11:05.152 INFO: Generated 2 Daikon trace files for instrumentation data.
+10:11:05.170 INFO: Generated 2 DiG trace files for instrumentation data.
+10:11:05.192 DEBUG: Working on unstable key: loopinvariant (1:1)
+10:11:51.607 DEBUG: Working on unstable key: startingconds (1:1)
+10:11:55.838 DEBUG: Iteration 1 took 74673 ms.
+
+10:11:55.838 INFO: ---------------------- Starting iteration 2--------------------
+10:11:55.839 INFO: Instrumenting file: BindExpandsVars2.java
+10:11:55.895 DEBUG: No augmentation selected for funcguard
+10:11:55.904 INFO: Compiling augmented file BindExpandsVars2.java
+10:11:56.845 INFO: Running evosuite on augmented file BindExpandsVars2.java
+10:12:09.024 DEBUG: Evosuite run took 13186 ms.
+10:12:09.024 INFO: Compiling reporting file BindExpandsVars2.java
+10:12:10.959 INFO: Compiling evosuite test file for BindExpandsVars2.java
+10:12:15.173 INFO: Running JUnit tests generated for BindExpandsVars2.java

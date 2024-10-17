@@ -1,0 +1,19 @@
+Starting DataPointServer on port 15075
+DataPointServer bound on port 15075 as DataPointServer_15075
+16:28:16.851 INFO: Starting datagen.
+
+16:28:16.867 INFO: ---------------------- Starting iteration 1--------------------
+16:28:16.875 INFO: Instrumenting file: A_LT_B.java
+16:28:17.099 DEBUG: No augmentation selected for entermethod
+16:28:17.104 INFO: Compiling augmented file A_LT_B.java
+16:28:17.566 INFO: Running evosuite on augmented file A_LT_B.java
+16:28:22.404 DEBUG: Evosuite run took 5533 ms.
+16:28:22.404 INFO: Compiling reporting file A_LT_B.java
+16:28:23.435 INFO: Compiling evosuite test file for A_LT_B.java
+16:28:25.543 INFO: Running JUnit tests generated for A_LT_B.java
+16:28:26.433 INFO: The following instrumentation points were hit in this run:
+16:28:26.434 INFO: {exitmethod_a_lt_b=2, entermethod=2, a_lt_b_falsebranch=1, a_lt_b_truebranch=1}
+16:28:26.436 INFO: Generating code for Daikon and DIG.
+16:28:26.437 INFO: Generated 3 Daikon trace files for instrumentation data.
+16:28:26.438 INFO: Generated 3 DiG trace files for instrumentation data.
+16:28:26.472 DEBUG: Iteration 1 took 9598 ms.
