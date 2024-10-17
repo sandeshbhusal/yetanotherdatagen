@@ -29,11 +29,65 @@ public class Checkpoint {
         this.windowSize = windowSize;
     }
 
+    // Delete information for dig.
+    public void deleteDigInfo(String key) {
+        this.compareForDig.remove(key);
+    }
+
+    // Delete information for daikon.
+    public void deleteDaikonInfo(String key, int iteration) {
+        this.compareForDaikon.remove(key);
+    }
+
     public int getConsideredIterationDaikon(String key) {
         CheckpointInformation cpi = this.compareForDaikon.get(key);
         if (cpi == null)
             return 0;
         return cpi.iteration;
+    }
+
+    public boolean hasChangedDig(String key, int iteration, String content) {
+        CheckpointInformation storedInfo = compareForDig.get(key);
+        // If we have nothing here, then return early.
+        if (storedInfo == null) {
+            CheckpointInformation resetInfo = new CheckpointInformation(content, iteration);
+            this.compareForDig.put(key, resetInfo);
+            return true;
+        }
+        String storedContents = compareForDig.get(key).content;
+
+        // Check if the content is _exactly_ the same, i.e. text diff. If so,
+        // these are the same (we do this to avoid doing expensive z3 analyses).
+        if (content.equals(storedContents)) {
+            // If content is the same, we leave the map as-is, since no change is
+            // required, and return that the invariants have not changed at all.
+            int windowSize = iteration - this.compareForDig.get(key).iteration;
+            // If window is smaller, then the invariants have changed.
+            return windowSize < this.windowSize;
+        } else {
+            // If the content is not exactly the same, we require a compiler
+            InvCompiler compiler = new InvCompiler();
+
+            CompiledExpression newExpr = compiler.digFileToInvariantsConjunction(new StringReader(content));
+            CompiledExpression oldExpr = compiler.digFileToInvariantsConjunction(new StringReader(storedContents));
+
+            // If the expressions are different, that means our invariants have changed.
+            // so we return early.
+            if (!newExpr.equals(oldExpr)) {
+                // Store this as a new checkpoint, and return early.
+                CheckpointInformation resetInfo = new CheckpointInformation(content, iteration);
+                this.compareForDig.put(key, resetInfo);
+                return true;
+            }
+        }
+
+        // At this point, since we did not return early, the invariants generated
+        // are exactly the same. So, we just need to check window size, i.e. if stored
+        // iteration
+        // exceeds the iteration # by window size.
+        int windowSize = iteration - this.compareForDig.get(key).iteration;
+        // if the window is smaller, then the invariants have changed.
+        return windowSize < this.windowSize;
     }
 
     // Returns if daikon content is different from the one we have stored.

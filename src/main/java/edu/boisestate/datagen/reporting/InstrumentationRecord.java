@@ -1,6 +1,7 @@
 package edu.boisestate.datagen.reporting;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.io.Serializable;
 
 /* A record at a particular point in the instrumentation process */
@@ -69,5 +70,10 @@ public class InstrumentationRecord implements Serializable {
         // Well, everything matches at this point.
         // These records are identical.
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.recordType, this.RecordId, this.values);
     }
 }

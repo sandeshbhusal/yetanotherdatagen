@@ -25,6 +25,17 @@ public class FileOps {
         }
     }
 
+    public static void copyFile(File source, File destination) {
+        try {
+            Files.copy(source.toPath(), new FileOutputStream(destination));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error copying file. Fatal");
+            System.exit(-1);
+        }
+    }
+
     public static String readFile(File file) {
         StringBuilder sb = new StringBuilder();
         try {

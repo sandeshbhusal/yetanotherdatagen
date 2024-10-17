@@ -1,26 +1,24 @@
 package edu.boisestate.datagen.instrumenters;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
+import org.tinylog.Logger;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
-import com.github.javaparser.ast.expr.EnclosedExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.EmptyStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
@@ -29,6 +27,8 @@ import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import edu.boisestate.datagen.reporting.Cache;
+import edu.boisestate.datagen.reporting.Correlationbreaker;
+import edu.boisestate.datagen.reporting.Exprgen;
 import edu.boisestate.datagen.rmi.DataPointServerImpl;
 
 public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
@@ -228,69 +228,59 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
     }
 
     public Expression generateAugmentedExpression(String guardId) {
-        // If we are skipping augmentation, return a true expression.
         if (this.skipAugmentation) {
-            return new BooleanLiteralExpr(true);
-        }
-
-        List<HashMap<String, Object>> data = Cache.getInstance().get_seen_guard_data(guardId);
-        if (data != null) {
-            HashSet<UnaryExpr> datapoints_negated = new HashSet<>();
-            HashSet<String> dedupset = new HashSet<>(); // For some reason,
-                                                        // the same expression is not deduped by hashset.
-
-            // Generate a bunch of Not_equals expressions for each variable,
-            // and values.
-            for (HashMap<String, Object> trace : data) {
-                ArrayList<BinaryExpr> binaryExprs = new ArrayList<>();
-
-                for (String variable : trace.keySet()) {
-                    BinaryExpr binaryExpr = new BinaryExpr();
-                    binaryExpr.setLeft(new NameExpr(variable));
-                    // TODO: IntegerLiteralExpr only supported for now.
-                    binaryExpr.setRight(
-                            new IntegerLiteralExpr(String.valueOf(trace.get(variable))));
-                    binaryExpr.setOperator(BinaryExpr.Operator.EQUALS);
-                    binaryExprs.add(binaryExpr);
-                }
-
-                // Join the binary expressions with "AND"
-                BinaryExpr combinedExpr = binaryExprs.get(0);
-                for (int j = 1; j < binaryExprs.size(); j++) {
-                    combinedExpr = new BinaryExpr(
-                            combinedExpr.clone(),
-                            binaryExprs.get(j),
-                            BinaryExpr.Operator.AND);
-                }
-
-                EnclosedExpr enclosedExpr = new EnclosedExpr(combinedExpr);
-
-                // Negate the expression
-                UnaryExpr negatedExpr = new UnaryExpr(enclosedExpr, UnaryExpr.Operator.LOGICAL_COMPLEMENT);
-                if (!dedupset.contains(negatedExpr.toString())) {
-                    dedupset.add(negatedExpr.toString());
-                    datapoints_negated.add(negatedExpr);
-                }
-            }
-
-            // Join all negated exprs with "AND"
-            BinaryExpr replacementExpression = new BinaryExpr();
-            replacementExpression.setLeft(new BooleanLiteralExpr(true));
-            replacementExpression.setOperator(BinaryExpr.Operator.AND);
-
-            for (UnaryExpr expr : datapoints_negated) {
-                replacementExpression.setRight(expr);
-                replacementExpression.setOperator(BinaryExpr.Operator.AND);
-                replacementExpression.setLeft(replacementExpression.clone());
-            }
-
-            // TODO: Might also need to fix that the variable values cannot be equal to each other.
-            return replacementExpression;
-
+            Logger.debug("No augmentation selected for " + guardId);
+            return generateExpressionCombination(null);
         } else {
-            // return a "true" expression.
+            Logger.debug("Augmenting guard " + guardId);
+            // This is an example of how an augmented expression might be built.
+            // here, we build augmentation with negation and correlation-breaking.
+            Exprgen exprgen = new Exprgen();
+            Expression augmentedExpression = exprgen.generateBinaryExprFromData(guardId);
+
+            Expression correlationBustedExpression = Correlationbreaker.getInstance().genExpression(guardId,
+                    Cache.getInstance().guard_cache.get(guardId));
+
+            Expression[] allExpressions = {
+                    augmentedExpression,
+                    correlationBustedExpression
+            };
+
+            System.out.println(allExpressions);
+
+            return generateExpressionCombination(allExpressions);
+
+        }
+    }
+
+    public Expression generateExpressionCombination(Expression[] expressions) {
+        // Handle null or empty input
+        if (expressions == null || expressions.length == 0) {
             return new BooleanLiteralExpr(true);
         }
+
+        // Handle single expression
+        if (expressions.length == 1) {
+            return expressions[0];
+        }
+
+        // Use a stack to build the expression tree
+        Deque<Expression> stack = new ArrayDeque<>();
+        for (Expression expr : expressions) {
+            stack.push(expr);
+        }
+
+        // Combine expressions
+        while (stack.size() > 1) {
+            Expression right = stack.pop();
+            Expression left = stack.pop();
+            BinaryExpr combined = new BinaryExpr(left, right, BinaryExpr.Operator.AND);
+            stack.push(combined);
+        }
+
+        Expression result = stack.pop();
+        System.out.println("CombinedExpression: " + result);
+        return result;
     }
 
     public MethodCallExpr createMethodCallExpr(String guardId, Iterator<String> args) {

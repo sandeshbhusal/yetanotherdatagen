@@ -10,6 +10,7 @@ import edu.boisestate.datagen.rmi.DataPointServerImpl;
 import edu.boisestate.datagen.utils.FileOps;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.io.InputStreamReader;
 import java.rmi.AlreadyBoundException;
@@ -18,10 +19,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
+
 import org.tinylog.Logger;
 
 public class App {
@@ -35,6 +38,8 @@ public class App {
     private static String evosuiteJarPath;
     private static String junitJarPath;
     private static String daikonJarPath;
+
+    private static final int DIG_TIMEOUT = 1500;
 
     public static void main(String[] args) {
         // Arguments:
@@ -253,9 +258,7 @@ public class App {
                 }
                 String className = file.getName().replace(".java", "");
 
-                Logger.info("Augmenting input file " + file.getName());
                 if (file.getName().endsWith(".java")) {
-                    Logger.info("Augmenting file: " + file.getName());
                     CompilationUnit cu = parseJavaFile(file).orElseThrow();
                     augmenter.instrument(cu);
                     FileOps.writeFile(file, cu.toString());
@@ -285,6 +288,9 @@ public class App {
                         String.format("-class=%s", className),
                         String.format("-Dassertions=false"),
                         "-Dcriterion=BRANCH",
+                        "-Dalgorithm=MOSA",
+                        "-Dprimitive_pool=0.0",
+                        "-Dprimitive_reuse_probability=0.05" // Very low prob. of reusing constants in case required.
                 };
 
                 runProcess(evoruncommand);
@@ -399,7 +405,8 @@ public class App {
                     continue;
                 }
 
-                iterationCounts.put(instrumentationPoint, iterationCounts.getOrDefault(instrumentationPoint, maxIterationCount) - 1);
+                iterationCounts.put(instrumentationPoint,
+                        iterationCounts.getOrDefault(instrumentationPoint, maxIterationCount) - 1);
                 if (iterationCounts.get(instrumentationPoint) == 0) {
                     Logger.warn("Key " + instrumentationPoint + " did not stabilize within 100 iterations.");
                     stableKeys.put(instrumentationPoint, iterations);
@@ -415,11 +422,14 @@ public class App {
                         new File(
                                 String.format("%s/%s.daikonoutput", codePath.getAbsolutePath(), instrumentationPoint)));
 
-                // runDigOnCSVFile(
-                // new File(String.format("%s/%s.csv", codePath.getAbsolutePath(),
-                // instrumentationPoint)),
-                // new File(String.format("%s/%s.digoutput", codePath.getAbsolutePath(),
-                // instrumentationPoint)));
+                runDigOnCSVFile(
+                        instrumentationPoint,
+                        iterations,
+                        checkpoint,
+                        new File(String.format("%s/%s.csv", codePath.getAbsolutePath(),
+                                instrumentationPoint)),
+                        new File(String.format("%s/%s.digoutput", codePath.getAbsolutePath(),
+                                instrumentationPoint)));
             }
 
             // For each Daikon and DIG file, check if it has changed from the last iteration
@@ -433,10 +443,21 @@ public class App {
                 String thisIterationDaikonFileContents = FileOps
                         .readFile(new File(String.format("%s/%s.daikonoutput", codePath.getAbsolutePath(), key)));
 
+                String thisIterationDigFileContents = FileOps
+                        .readFile(new File(String.format("%s/%s.digoutput", codePath.getAbsolutePath(), key)));
+
+                // We perform the preliminary check on Daikon only, because DIG is
+                // expensive to compute. In either case, BOTH Daikon and DIG must stabilize for
+                // a program
+                // point.
                 if (checkpoint.hasChangedDaikon(key, iterations, thisIterationDaikonFileContents)) {
                     totalChangedInvariants += 1;
                 } else {
-                    stableKeys.put(key, iterations);
+                    if (checkpoint.hasChangedDig(key, iterations, thisIterationDigFileContents)) {
+                        totalChangedInvariants += 1;
+                    } else {
+                        stableKeys.put(key, iterations);
+                    }
                 }
             }
 
@@ -464,6 +485,20 @@ public class App {
                                             key)),
                             classpaths,
                             new File(String.format("%s/%s.daikonoutput", workdir, key)));
+
+                    runDigOnCSVFile(key,
+                            iterations,
+                            checkpoint,
+                            new File(
+                                    String.format(
+                                            "%s/%s.csv",
+                                            codePath.getAbsolutePath(),
+                                            key)),
+                            new File(
+                                    String.format(
+                                            "%s/%s.digoutput",
+                                            workdir,
+                                            key)));
                 }
             }
         } while (!stop);
@@ -504,7 +539,8 @@ public class App {
         FileOps.writeFile(outputFile, daikonOutput);
     }
 
-    private static void runDigOnCSVFile(File CSVFile, File outputFile) {
+    private static void runDigOnCSVFile(String instrumentationPoint, Integer iteration, Checkpoint cp, File CSVFile,
+            File outputFile) {
         // Run Dig on the trace csv file.
         String[] digCommand = {
                 "python3",
@@ -515,32 +551,87 @@ public class App {
                 CSVFile.getAbsolutePath(),
         };
 
-        /*
-         * Here is the issue with this - unlike Daikon, dig prints out the file names
-         * in the output, and also prints the minimization count, trace count, etc. So
-         * the output of DIG will ALWAYS change between iterations, and fixed point will
-         * never be reached in the output string. So we strip all metadata from dig
-         * output,
-         * and just store the line starting at vtrace ({count} invs):, and following
-         * invariants.
-         */
+        // DIG cannot be run with the runProcess command, because it times out sometimes
+        // so we need a custom implementation.
+        ProcessBuilder pb = new ProcessBuilder(digCommand);
+        Process process = null;
+        try {
+            StringBuilder sb = new StringBuilder();
 
-        String digOutput = runProcess(digCommand);
-        StringBuilder sb = new StringBuilder();
-        String[] digOutputLines = digOutput.split(System.lineSeparator());
-        boolean vtraceLineFound = false;
-        for (String line : digOutputLines) {
-            if (line.startsWith("vtrace"))
-                vtraceLineFound = true;
-            if (vtraceLineFound) {
-                sb.append(line);
+            // Set pb to cwd.
+            pb.directory(new File(System.getProperty("user.dir")));
+            pb.redirectErrorStream(true);
+
+            process = pb.start();
+            // Add the timeout here
+            boolean completed = process.waitFor(DIG_TIMEOUT, TimeUnit.SECONDS);
+
+            if (!completed) {
+                // Process didn't complete within the timeout period
+                throw new InterruptedException("Process timed out");
+            }
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+
+            String lineStdout;
+            while ((lineStdout = reader.readLine()) != null) {
+                sb.append(lineStdout);
                 sb.append("\n");
             }
-        }
-        String toSaveString = sb.toString();
 
-        // Store the dig invariants generated with digoutput extension.
-        FileOps.writeFile(outputFile, toSaveString);
+            String digOutput = sb.toString();
+
+            /*
+             * Here is the issue with this - unlike Daikon, dig prints out the file names
+             * in the output, and also prints the minimization count, trace count, etc. So
+             * the output of DIG will ALWAYS change between iterations, and fixed point will
+             * never be reached in the output string. So we strip all metadata from dig
+             * output,
+             * and just store the line starting at vtrace ({count} invs):, and following
+             * invariants.
+             */
+
+            sb = new StringBuilder(); // Discard old string.
+
+            String[] digOutputLines = digOutput.split(System.lineSeparator());
+            boolean vtraceLineFound = false;
+            for (String line : digOutputLines) {
+                if (line.startsWith("vtrace"))
+                    vtraceLineFound = true;
+                if (vtraceLineFound) {
+                    sb.append(line);
+                    sb.append("\n");
+                }
+            }
+            String toSaveString = sb.toString();
+
+            // Store the dig invariants generated with digoutput extension.
+            FileOps.writeFile(outputFile, toSaveString);
+
+        } catch (InterruptedException e) {
+            process.destroyForcibly();
+            Logger.warn("DIG did not complete in time for " + CSVFile.getName()
+                    + "; " + instrumentationPoint + " will be reset to current iteration " + iteration);
+
+            String oldFilePath = String.format("%s/checkpoint/%d/%s.digoutput", (new File(workdir)).getAbsolutePath(),
+                    iteration - 1,
+                    instrumentationPoint);
+
+            // Copy over the file from the last iteration to this one.
+            FileOps.copyFile(
+                    new File(oldFilePath),
+                    outputFile);
+
+            cp.deleteDigInfo(instrumentationPoint);
+            return;
+
+        } catch (IOException e) {
+            // IOException means we couldn't run the process. Fatal crash.
+            e.printStackTrace();
+            System.err.println(">> There was an error running the DIG tool <<");
+            System.exit(-1);
+        }
     }
 
     // Run a process and return the stdout+stderr of that process.

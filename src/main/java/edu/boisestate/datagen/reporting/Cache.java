@@ -41,7 +41,7 @@ public class Cache {
     // from the source program, and not the evosuite run.
     // Reset information about which branches were targeted.
     public void resetTargetedInformation(HashSet<String> keys) {
-        for (String key: keys) {
+        for (String key : keys) {
             this.wasTargeted.put(key, 0);
             // Also insert the key to the instrumentation cache.
             instrumentation_cache.putIfAbsent(key, new HashSet<>());
@@ -197,30 +197,34 @@ public class Cache {
             sb.append("vtrace1");
 
             // Get the variable names.
-            Set<String> variableNames = cache.get(key).iterator().next().keySet();
+            Iterator<HashMap<String, Object>> dataIterator = cache.getOrDefault(key, new HashSet<>()).iterator();
+            if (dataIterator.hasNext()) {
+                HashMap<String, Object> dataInstance = dataIterator.next();
+                Set<String> variableNames = dataInstance.keySet();
 
-            for (String variableName : variableNames) {
-                sb.append("; I " + variableName);
-            }
-            sb.append("\n");
-
-            // Get the data for the key.
-            HashSet<HashMap<String, Object>> data = cache.get(key);
-
-            // Check empty.
-            if (data.isEmpty()) {
-                continue;
-            }
-
-            for (HashMap<String, Object> dat : data) {
-                sb.append("vtrace1");
                 for (String variableName : variableNames) {
-                    sb.append("; " + dat.get(variableName));
+                    sb.append("; I " + variableName);
                 }
                 sb.append("\n");
-            }
 
-            traceFiles.put(key, sb.toString());
+                // Get the data for the key.
+                HashSet<HashMap<String, Object>> data = cache.get(key);
+
+                // Check empty.
+                if (data.isEmpty()) {
+                    continue;
+                }
+
+                for (HashMap<String, Object> dat : data) {
+                    sb.append("vtrace1");
+                    for (String variableName : variableNames) {
+                        sb.append("; " + dat.get(variableName));
+                    }
+                    sb.append("\n");
+                }
+
+                traceFiles.put(key, sb.toString());
+            }
         }
 
         return traceFiles;
@@ -230,7 +234,7 @@ public class Cache {
         HashMap<String, String> traceFiles = new HashMap<>();
         for (String key : instrumentation_cache.keySet()) {
             // Get the data for the key.
-            HashSet<HashMap<String, Object>> data = instrumentation_cache.get(key);
+            HashSet<HashMap<String, Object>> data = instrumentation_cache.getOrDefault(key, new HashSet<>());
 
             // Check empty.
             if (data.isEmpty()) {
