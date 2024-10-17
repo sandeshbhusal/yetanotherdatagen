@@ -287,10 +287,9 @@ public class App {
                         String.format("-projectCP=%s", compiledFilePath),
                         String.format("-class=%s", className),
                         String.format("-Dassertions=false"),
-                        "-Dcriterion=BRANCH",
                         "-Dalgorithm=MOSA",
                         "-Dprimitive_pool=0.0",
-                        "-Dprimitive_reuse_probability=0.05" // Very low prob. of reusing constants in case required.
+                        "-Dprimitive_reuse_probability=0.01" // Very low prob. of reusing constants in case required.
                 };
 
                 runProcess(evoruncommand);
@@ -412,8 +411,9 @@ public class App {
                     stableKeys.put(instrumentationPoint, iterations);
                 }
 
-                Logger.debug(String.format("Working on unstable key: %s (%d)", instrumentationPoint,
-                        checkpoint.getConsideredIterationDaikon(instrumentationPoint) - iterations));
+                Logger.debug(String.format("Working on unstable key: %s (%d:%d)", instrumentationPoint,
+                        iterations - checkpoint.getConsideredIterationDaikon(instrumentationPoint),
+                        iterations - checkpoint.getConsideredIterationDaikon(instrumentationPoint)));
 
                 // Run Dig and Daikon on the path.
                 runDaikonOnDtraceFile(
@@ -446,18 +446,16 @@ public class App {
                 String thisIterationDigFileContents = FileOps
                         .readFile(new File(String.format("%s/%s.digoutput", codePath.getAbsolutePath(), key)));
 
-                // We perform the preliminary check on Daikon only, because DIG is
-                // expensive to compute. In either case, BOTH Daikon and DIG must stabilize for
-                // a program
-                // point.
                 if (checkpoint.hasChangedDaikon(key, iterations, thisIterationDaikonFileContents)) {
                     totalChangedInvariants += 1;
-                } else {
-                    if (checkpoint.hasChangedDig(key, iterations, thisIterationDigFileContents)) {
-                        totalChangedInvariants += 1;
-                    } else {
-                        stableKeys.put(key, iterations);
-                    }
+                }
+                if (checkpoint.hasChangedDig(key, iterations, thisIterationDigFileContents)) {
+                    totalChangedInvariants += 1;
+                }
+
+                // If nothing changes, the key is stable.
+                if (totalChangedInvariants == 0) {
+                    stableKeys.put(key, iterations);
                 }
             }
 

@@ -46,6 +46,13 @@ public class Checkpoint {
         return cpi.iteration;
     }
 
+    public int getConsideredIterationDig(String key) {
+        CheckpointInformation cpi = this.compareForDig.get(key);
+        if (cpi == null) 
+            return 0;
+        return cpi.iteration;
+    }
+
     public boolean hasChangedDig(String key, int iteration, String content) {
         CheckpointInformation storedInfo = compareForDig.get(key);
         // If we have nothing here, then return early.

@@ -243,7 +243,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
 
             Expression[] allExpressions = {
                     augmentedExpression,
-                    correlationBustedExpression
+                    // correlationBustedExpression
             };
 
             System.out.println(allExpressions);

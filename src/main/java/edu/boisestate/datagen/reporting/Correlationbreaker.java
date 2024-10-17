@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.Expression;
@@ -72,9 +71,9 @@ public class Correlationbreaker {
                 String probabilityKey = guardId + "_" + var1 + "_" + var2;
 
                 // Update probability
-                float currentProb = probability.getOrDefault(probabilityKey, 0.5f);
+                float currentProb = probability.getOrDefault(probabilityKey, 1.0f);
 
-                // If within 2 iterations we find 100% correlation, we will continue to treat these 
+                // If within 4 iterations we find 100% correlation, we will continue to treat these 
                 // variables normally.
 
                 float newProb = Math.max(0, currentProb - 0.25f);
