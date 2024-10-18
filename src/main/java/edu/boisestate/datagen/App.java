@@ -10,7 +10,6 @@ import edu.boisestate.datagen.rmi.DataPointServerImpl;
 import edu.boisestate.datagen.utils.FileOps;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.io.InputStreamReader;
 import java.rmi.AlreadyBoundException;
@@ -18,7 +17,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -37,8 +35,6 @@ public class App {
     private static String evosuiteJarPath;
     private static String junitJarPath;
     private static String daikonJarPath;
-
-    private static final int DIG_TIMEOUT = 1500;
 
     public static void main(String[] args) {
         // Arguments:
@@ -397,138 +393,7 @@ public class App {
                             " ms.");
         } while (iterations < maxIterationCount);
 
-        for (String key : instrumentationPoints) {
-            // Put all generated invariants directly in the workdir, like
-            // "checkpoint_datagen/a_lt_b_truebranch.daikonoutput". Makes it
-            // easier to see what the final invariants were.
-            runDaikonOnDtraceFile(
-                    new File(
-                            String.format(
-                                    "%s/checkpoint/%d/code/%s.dtrace",
-                                    workdir,
-                                    iterations,
-                                    key)),
-                    classpaths,
-                    new File(String.format("%s/%s.daikonoutput", workdir, key)));
-
-            runDigOnCSVFile(
-                    new File(
-                            String.format(
-                                    "%s/checkpoint/%d/code/%s.csv",
-                                    workdir,
-                                    iterations,
-                                    key)),
-                    new File(
-                            String.format(
-                                    "%s/%s.digoutput",
-                                    workdir,
-                                    key)));
-        }
-        // Required to shutdown the RMI server, etc. TODO: Find a better way to do this
-        // later.
         System.exit(0);
-    }
-
-    private static void runDaikonOnDtraceFile(
-            File DTraceFile,
-            String[] classpaths,
-            File outputFile) {
-        // Run daikon on the dtrace file.
-        String[] daikonCommand = {
-                "java",
-                "-cp",
-                String.join(":", classpaths),
-                "daikon.Daikon",
-                DTraceFile.getAbsolutePath(),
-                // codePath + "/" + key + ".dtrace",
-        };
-
-        String daikonOutput = runProcess(daikonCommand);
-        // Store the file in the code path with daikonoutput extension.
-        FileOps.writeFile(outputFile, daikonOutput);
-    }
-
-    private static void runDigOnCSVFile(File CSVFile, File outputFile) {
-        // Run Dig on the trace csv file.
-        String[] digCommand = {
-                "python3",
-                "-O",
-                "../../../../dig/src/dig.py",
-                "--seed",
-                "12345", // Help for debugging later.
-                CSVFile.getAbsolutePath(),
-        };
-
-        // DIG cannot be run with the runProcess command, because it times out sometimes
-        // so we need a custom implementation.
-        ProcessBuilder pb = new ProcessBuilder(digCommand);
-        Process process = null;
-        try {
-            StringBuilder sb = new StringBuilder();
-
-            // Set pb to cwd.
-            pb.directory(new File(System.getProperty("user.dir")));
-            pb.redirectErrorStream(true);
-
-            process = pb.start();
-            // Add the timeout here
-            boolean completed = process.waitFor(DIG_TIMEOUT, TimeUnit.SECONDS);
-
-            if (!completed) {
-                // Process didn't complete within the timeout period
-                throw new InterruptedException("Process timed out");
-            }
-
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
-
-            String lineStdout;
-            while ((lineStdout = reader.readLine()) != null) {
-                sb.append(lineStdout);
-                sb.append("\n");
-            }
-
-            String digOutput = sb.toString();
-
-            /*
-             * Here is the issue with this - unlike Daikon, dig prints out the file names
-             * in the output, and also prints the minimization count, trace count, etc. So
-             * the output of DIG will ALWAYS change between iterations, and fixed point will
-             * never be reached in the output string. So we strip all metadata from dig
-             * output,
-             * and just store the line starting at vtrace ({count} invs):, and following
-             * invariants.
-             */
-
-            sb = new StringBuilder(); // Discard old string.
-
-            String[] digOutputLines = digOutput.split(System.lineSeparator());
-            boolean vtraceLineFound = false;
-            for (String line : digOutputLines) {
-                if (line.startsWith("vtrace"))
-                    vtraceLineFound = true;
-                if (vtraceLineFound) {
-                    sb.append(line);
-                    sb.append("\n");
-                }
-            }
-            String toSaveString = sb.toString();
-
-            // Store the dig invariants generated with digoutput extension.
-            FileOps.writeFile(outputFile, toSaveString);
-
-        } catch (InterruptedException e) {
-            process.destroyForcibly();
-            System.err.println("Dig timed out: " + CSVFile.getName());
-            System.exit(-1);
-            return;
-
-        } catch (IOException e) {
-            // IOException means we couldn't run the process. Fatal crash.
-            e.printStackTrace();
-            System.err.println(">> There was an error running the DIG tool <<");
-            System.exit(-1);
-        }
     }
 
     // Run a process and return the stdout+stderr of that process.
