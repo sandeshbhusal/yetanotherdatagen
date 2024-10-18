@@ -5,7 +5,7 @@ set -e  # Exit immediately if a command exits with a non-zero status.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BENCHMARK_DIR="${SCRIPT_DIR}/benchmarks"
 CWD="${SCRIPT_DIR}"
-ITERAIONS=${ITERATIONS:-2}
+ITERATIONS=${ITERATIONS:-2}
 
 clean_build() {
     mvn clean package
@@ -24,7 +24,7 @@ aug_target() {
     cp "smtgen.py" "${WORKDIR}/smtgen.py"
    
     cd "${WORKDIR}" || exit
-    java -cp "${CWD}/target/classes:${CWD}/libs/*" edu.boisestate.datagen.App -s "${TARGET_DIR}" -w "${WORKDIR}" -m ${ITERAIONS} | tee -a "${WORKDIR}/trace.log"
+    java -cp "${CWD}/target/classes:${CWD}/libs/*" edu.boisestate.datagen.App -s "${TARGET_DIR}" -w "${WORKDIR}" -m ${ITERATIONS} | tee -a "${WORKDIR}/trace.log"
     if [ ${PIPESTATUS[0]} -ne 0 ]; then
         echo "Java command failed in aug_target" >&2
         exit 1
@@ -44,7 +44,7 @@ noaug_target() {
     cp "smtgen.py" "${WORKDIR}/smtgen.py"
    
     cd "${WORKDIR}" || exit
-    java -cp "${CWD}/target/classes:${CWD}/libs/*" edu.boisestate.datagen.App -s "${TARGET_DIR}" -w "${WORKDIR}" -m ${ITERAIONS} -k true | tee -a "${WORKDIR}/trace.log"
+    java -cp "${CWD}/target/classes:${CWD}/libs/*" edu.boisestate.datagen.App -s "${TARGET_DIR}" -w "${WORKDIR}" -m ${ITERATIONS} -k true | tee -a "${WORKDIR}/trace.log"
     if [ ${PIPESTATUS[0]} -ne 0 ]; then
         echo "Java command failed in noaug_target" >&2
         exit 1
@@ -66,12 +66,3 @@ run_all() {
     echo "COMPLETED RUNNING TARGETS FOR $1"
     echo "__________________________________"
 }
-
-run_all "A_LT_B"
-#run_all "MADWiFi"
-#run_all "DaggerEX1"
-#run_all "Ex1"
-#run_all "TriangleCheck"
-#run_all "IntDivision"
-#run_all "Cars"
-#run_all "BindExpandsVars2"
