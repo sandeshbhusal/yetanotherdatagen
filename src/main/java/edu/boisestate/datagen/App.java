@@ -581,6 +581,9 @@ public class App {
                             (endTime - startTime) +
                             " ms.");
         } while (iterations < numIterations);
+        // At this point, we have to exit manually because the RMI server is still running.
+        // TODO: Find a better way to exit the RMI server.
+        System.exit(0); // Graceful stop.
     }
 
     private static void runDaikonOnDtraceFile(
