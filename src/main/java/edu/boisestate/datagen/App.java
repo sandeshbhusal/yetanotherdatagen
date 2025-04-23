@@ -191,14 +191,15 @@ public class App {
 
         // Before starting datagen, dump all the configuration options to stdout.
         System.out.println("Starting datagen with options:");
-        System.out.println("Source: " + sourceDir.getAbsolutePath());
-        System.out.println("Workdir: " + workdir);
-        System.out.println("Evosuite jar: " + evosuiteJarPath);
-        System.out.println("JUnit jar: " + junitJarPath);
-        System.out.println("Daikon jar: " + daikonJarPath);
-        System.out.println("Skip augmentation: " + skipAugmentation);
-        System.out.println("Skip invariant generation: " + skipInvariantGeneration);
-        System.out.println("Number of iterations: " + numIterations);
+        System.out.println("---------------------------");
+        System.out.println("Source: \t\t" + sourceDir.getAbsolutePath());
+        System.out.println("Workdir: \t\t" + workdir);
+        System.out.println("Evosuite jar: \t\t" + evosuiteJarPath);
+        System.out.println("JUnit jar: \t\t" + junitJarPath);
+        System.out.println("Daikon jar: \t\t" + daikonJarPath);
+        System.out.println("Skip augmentation: \t\t" + skipAugmentation);
+        System.out.println("Skip invariant generation: \t\t" + skipInvariantGeneration);
+        System.out.println("Number of iterations: \t\t" + numIterations);
 
         System.out.println("=========================="); 
 

@@ -4,3 +4,9 @@
 target/
 .vscode/*
 /env/*
+/evosuite-report/*
+/evosuite-tests/*
+/input/*
+
+*.inv.gz
+*.smt2
