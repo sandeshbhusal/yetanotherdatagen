@@ -36,6 +36,11 @@ import edu.boisestate.datagen.rmi.DataPointServerImpl;
 public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implements Instrumenter {
     private InstrumentationMode mode;
     private boolean skipAugmentation;
+    private boolean minifyBranchConditions = false;
+
+    public CommentChangingInstrumenter(boolean minifyBranchConditions) {
+        this.minifyBranchConditions = minifyBranchConditions;
+    }
 
     @Override
     public void visit(BlockStmt block, Void arg) {
@@ -61,12 +66,13 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
     }
 
     public CommentChangingInstrumenter(InstrumentationMode mode) {
-        this(mode, false);
+        this(mode, false, true);
     }
 
-    public CommentChangingInstrumenter(InstrumentationMode mode, boolean skipAugmentation) {
+    public CommentChangingInstrumenter(InstrumentationMode mode, boolean skipAugmentation, boolean minifyBranchConditions) {
         this.mode = mode;
         this.skipAugmentation = skipAugmentation;
+        this.minifyBranchConditions = minifyBranchConditions;
     }
 
     // Drop all the empty marker statements at the end.
@@ -233,7 +239,7 @@ public class CommentChangingInstrumenter extends VoidVisitorAdapter<Void> implem
             return new BooleanLiteralExpr(true);
         }
 
-        List<HashMap<String, Object>> data = Cache.getInstance().get_seen_guard_data(guardId);
+        List<HashMap<String, Object>> data = Cache.getInstance().get_seen_guard_data(guardId, minifyBranchConditions);
         if (data != null) {
             HashSet<UnaryExpr> datapoints_negated = new HashSet<>();
             HashSet<String> dedupset = new HashSet<>(); // For some reason,

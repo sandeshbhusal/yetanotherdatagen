@@ -69,8 +69,22 @@ public class Cache {
         }
     }
 
+    public List<HashMap<String, Object>> get_seen_guard_data(String guardId, boolean optimize) {
+        if (optimize) {
+            return get_seen_guard_data_optimized(guardId);
+        } else {
+            return get_seen_guard_data_full(guardId);
+        }
+    }
+
+    private List<HashMap<String, Object>> get_seen_guard_data_full(String guardId) {
+        ArrayList<HashMap<String, Object>> cacheData = new ArrayList<>();
+        cacheData.addAll(guard_cache.get(guardId));
+        return cacheData;
+    }
+
     // so that we can split the same path in multiple ways.
-    public List<HashMap<String, Object>> get_seen_guard_data(String guardId) {
+    private List<HashMap<String, Object>> get_seen_guard_data_optimized(String guardId) {
         // With some probability, return a random sample of the data.
         // The data points may not have the same number of variables.
         HashSet<HashMap<String, Object>> data = guard_cache.get(guardId);

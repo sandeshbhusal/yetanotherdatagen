@@ -26,6 +26,7 @@ import org.tinylog.Logger;
 public class App {
     private static boolean skipInvariantGeneration = false;
     private static boolean skipAugmentation = false;
+    private static boolean minifyBranchConditions = true;
     private static int numIterations = 20;
 
     private static String workdir;
@@ -102,6 +103,13 @@ public class App {
                 "Number of iterations to run Datagen for. Each iteration will exclude the observed data from iterations before it for every branch.")
                 .required(false)
                 .setDefault(20).type(Integer.class);
+
+        argParser.addArgument("-m", "--minify-branch-conditions").help(
+                "Datagen produces a lot of data, and consequently a lot of branch conditions. This flag turns on the optimizations"
+                + " that select the least diverse variable for a guard according to the standard deviation to reduce these.")
+                .required(false)
+                .setDefault(true)
+                .type(Boolean.class);
 
         // Parse arguments.
         try {
@@ -199,6 +207,7 @@ public class App {
         System.out.println("Daikon jar: \t\t" + daikonJarPath);
         System.out.println("Skip augmentation: \t\t" + skipAugmentation);
         System.out.println("Skip invariant generation: \t\t" + skipInvariantGeneration);
+        System.out.println("Minify branch conditions: \t\t" + minifyBranchConditions);
         System.out.println("Number of iterations: \t\t" + numIterations);
 
         System.out.println("=========================="); 
@@ -210,10 +219,10 @@ public class App {
         int iterations = 0;
         CommentChangingInstrumenter augmenter = new CommentChangingInstrumenter(
                 InstrumentationMode.AUGMENTATION,
-                skipAugmentation);
+                skipAugmentation, minifyBranchConditions);
         CommentChangingInstrumenter reporter = new CommentChangingInstrumenter(
                 InstrumentationMode.INSTRUMENTATION,
-                skipAugmentation);
+                skipAugmentation, minifyBranchConditions);
         ImportInstrumenter importer = new ImportInstrumenter();
 
         /*
