@@ -104,7 +104,7 @@ public class App {
                 .required(false)
                 .setDefault(20).type(Integer.class);
 
-        argParser.addArgument("-m", "--minify-branch-conditions").help(
+        argParser.addArgument("-m", "--minify_branch_conditions").help(
                 "Datagen produces a lot of data, and consequently a lot of branch conditions. This flag turns on the optimizations"
                 + " that select the least diverse variable for a guard according to the standard deviation to reduce these.")
                 .required(false)
@@ -125,6 +125,7 @@ public class App {
             skipAugmentation = ns.getBoolean("skip_augmentation");
             skipInvariantGeneration = ns.getBoolean("skip_invariant_gen");
             numIterations = ns.getInt("iteration_count");
+            minifyBranchConditions = ns.getBoolean("minify_branch_conditions");
         } catch (ArgumentParserException e) {
             argParser.handleError(e);
             System.exit(1);

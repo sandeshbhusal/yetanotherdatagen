@@ -79,7 +79,7 @@ public class Cache {
 
     private List<HashMap<String, Object>> get_seen_guard_data_full(String guardId) {
         ArrayList<HashMap<String, Object>> cacheData = new ArrayList<>();
-        cacheData.addAll(guard_cache.get(guardId));
+        cacheData.addAll(guard_cache.getOrDefault(guardId, new HashSet<HashMap<String, Object>>()));
         return cacheData;
     }
 
